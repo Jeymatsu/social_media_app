@@ -9,7 +9,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:background="@color/hamburger"
+        android:background="@color/add_post_blue"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -61,7 +61,7 @@
         android:elevation="0dp"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/postSelectorBtnColor"
+        app:cardBackgroundColor="@color/add_post_blue"
         app:cardCornerRadius="4dp"
         app:cardElevation="0dp">
 

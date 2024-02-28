@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.company.exchange_learning">
+    package="com.company.scoolsocialmedia">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -15,7 +15,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SearchActivity"></activity>
+        <activity
+            android:name=".Profile.CreateProfile"
+            android:exported="false" />
+        <activity
+            android:name=".activities.SearchActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.ChatActivity"
             android:parentActivityName=".activities.ChatRoomsActivity" />
@@ -23,37 +28,49 @@
         <activity android:name=".activities.CreateImagePostActivity" />
         <activity
             android:name=".activities.ChatRoomsActivity"
+            android:exported="false"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Settings"
+            android:exported="false"
             android:theme="@style/FollowersTheme" />
         <activity
             android:name=".bookCity.BookDetail"
+            android:exported="false"
             android:parentActivityName=".bookCity.BookCityMain" />
         <activity android:name=".bookCity.UploadBookActivity" />
         <activity
             android:name=".bookCity.BookCityMain"
+            android:exported="false"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".activities.CreateNoImagePostActivity" />
         <activity
             android:name=".Proposals.ProposalListActivity"
+            android:exported="false"
             android:theme="@style/FollowersTheme" />
         <activity
             android:name=".Proposals.ViewProposalActivity"
+            android:exported="false"
             android:theme="@style/FollowersTheme" />
         <activity
             android:name=".activities.PostDetailActivity"
+            android:exported="false"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".FollowersActivity"
+            android:exported="false"
             android:theme="@style/FollowersTheme" />
         <activity
             android:name=".Profile.EditProfile"
             android:parentActivityName=".Profile.ProfileActivity"
             android:theme="@style/AppTheme" />
-        <activity android:name=".loginsignup.signupActivity" />
-        <activity android:name=".loginsignup.loginActivity">
+        <activity
+            android:name=".loginsignup.signupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".loginsignup.loginActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,12 +79,15 @@
         </activity>
         <activity
             android:name=".Profile.ProfileActivity"
+            android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

@@ -57,20 +57,21 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/montserrat"
-            android:text="Sign in with your email"
-            android:textColor="@color/drawerMenuGray"
-            android:textSize="16sp" />
+            android:text="Sign In"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="20sp" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/emailLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/loginSignUpBackground"
             android:layout_below="@id/text1"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:elevation="0dp"
-            android:foreground="@drawable/background_rectangle_ouline"
             app:cardCornerRadius="2dp"
             app:cardElevation="0dp">
 
@@ -78,17 +79,14 @@
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:backgroundTint="@color/fullwhite"
+                android:background="@drawable/edt_input"
+
                 android:fontFamily="@font/open_sans_light"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:lines="1"
                 android:maxLines="1"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
+                android:padding="20dp"
                 android:textColor="@color/darkGray"
                 android:textColorHint="@color/darkGray"
                 android:textSize="18sp"
@@ -101,11 +99,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/emailLayout"
+            android:background="@color/loginSignUpBackground"
+
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:elevation="0dp"
-            android:foreground="@drawable/background_rectangle_ouline"
             app:cardCornerRadius="2dp"
             app:cardElevation="0dp">
 
@@ -113,21 +112,18 @@
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:backgroundTint="@color/fullwhite"
+                android:background="@drawable/edt_input"
                 android:fontFamily="@font/open_sans_light"
                 android:hint="Password"
+
                 android:inputType="textPassword"
                 android:lines="1"
                 android:maxLines="1"
-                android:paddingStart="8dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp"
+                android:padding="20dp"
                 android:textColor="@color/darkGray"
                 android:textColorHint="@color/darkGray"
                 android:textSize="18sp"
-                android:theme="@style/LoginEditTextStyle" />
+                 />
         </androidx.cardview.widget.CardView>
 
 
@@ -155,15 +151,13 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@color/fullwhite"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/btn"
+            android:backgroundTint="@color/add_post_blue"
             android:clickable="true"
-            android:elevation="0dp"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            app:cardCornerRadius="4dp"
-            app:cardElevation="0dp">
+            android:elevation="10dp"
+            android:padding="20dp"
+            android:focusable="true">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -173,7 +167,7 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="SIGN IN"
-                android:textColor="@color/hamburger"
+                android:textColor="@color/whiteTextColor"
                 android:textSize="20sp" />
         </androidx.cardview.widget.CardView>
 
@@ -190,7 +184,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:text="Forgot your Password?"
             android:textColor="@color/darkGray"
-            android:textSize="15sp" />
+            android:textSize="18sp" />
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/progressBar"
