@@ -43,6 +43,7 @@
     <color name="colorPrimaryDark2">#001E8C</color>
     <color name="colorAccent2">#001E8C</color>
 
+    <color name="bottomNavigationBackground">#001E8C</color>
 
     <color name="background">#f8f9fa</color>
     <color name="inputHintColor">#7d7c7c</color>

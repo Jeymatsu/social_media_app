@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/navigationHome"
+        android:enabled="true"
+        android:iconTint="@color/whiteTextColor"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Home" />
+    <item
+        android:id="@+id/navigationAdd"
+        android:enabled="true"
+        android:iconTint="@color/whiteTextColor"
+        android:icon="@drawable/baseline_add_box_24"
+        android:title="Post" />
+    <item
+        android:id="@+id/navigationSearch"
+        android:iconTint="@color/whiteTextColor"
+
+        android:enabled="true"
+        android:icon="@drawable/baseline_person_search_24"
+        android:title="Search" />
+
+
+
+</menu>

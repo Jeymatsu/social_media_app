@@ -79,6 +79,13 @@
         <item name="android:paddingBottom">8dp</item>
     </style>
 
+    <style name="BottomNavigationViewStyle">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/whiteTextColor</item>
+        <item name="android:fontFamily">@font/montserrat</item>
+    </style>
+
     <style name="LoginInCheckBoxStyle" parent="AppTheme">
         <item name="colorAccent">@color/hamburger</item>
         <item name="android:textSize">14sp</item>
