@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="8dp"
@@ -12,9 +13,9 @@
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/post_item_postedUserImg_imgView"
@@ -25,28 +26,23 @@
             android:src="@drawable/main_user_profile_avatar"
             app:civ_border_color="@color/hamburger"
             app:civ_border_width="2dp"
-            app:layout_constraintBottom_toTopOf="@id/first_line"
-            app:layout_constraintEnd_toStartOf="@+id/post_item_postedUserName_txtview"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"/>
 
         <TextView
             android:id="@+id/post_item_postedUserName_txtview"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
-            android:fontFamily="@font/montserrat"
             android:lines="1"
             android:maxLines="1"
             android:textColor="@android:color/black"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/post_item_postType_txtview"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/post_item_postedUserImg_imgView"
-            app:layout_constraintTop_toTopOf="@+id/post_item_postedUserImg_imgView" />
+            android:layout_toEndOf="@id/post_item_postedUserImg_imgView"
+            android:layout_alignBottom="@id/post_item_postedUserImg_imgView"/>
 
         <TextView
             android:id="@+id/post_item_postType_txtview"
@@ -54,41 +50,21 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="2dp"
-            android:fontFamily="@font/basic"
             android:textColor="@color/drawerMenuGray"
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/post_item_postedUserImg_imgView"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
-            app:layout_constraintStart_toEndOf="@+id/post_item_postedUserImg_imgView"
-            app:layout_constraintTop_toBottomOf="@+id/post_item_postedUserName_txtview" />
+            android:layout_below="@id/post_item_postedUserName_txtview"
+            android:layout_toEndOf="@id/post_item_postedUserImg_imgView"/>
 
         <TextView
             android:id="@+id/post_item_postTime_txtview"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="16dp"
-            android:textAlignment="viewStart"
             android:textColor="@color/drawerMenuGray"
-            android:textDirection="ltr"
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/post_item_postType_txtview"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="@+id/post_item_postType_txtview" />
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="4dp"
-            android:layout_height="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="3dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/post_item_point_icon"
-            app:layout_constraintBottom_toBottomOf="@+id/post_item_postType_txtview"
-            app:layout_constraintEnd_toStartOf="@+id/post_item_postTime_txtview"
-            app:layout_constraintStart_toEndOf="@+id/post_item_postType_txtview"
-            app:layout_constraintTop_toTopOf="@+id/post_item_postType_txtview" />
+            android:layout_below="@id/post_item_postType_txtview"
+            android:layout_toEndOf="@id/post_item_postedUserImg_imgView"/>
 
         <View
             android:id="@+id/first_line"
@@ -96,10 +72,7 @@
             android:layout_height="0.2dp"
             android:layout_marginTop="12dp"
             android:background="@color/lessGray"
-            app:layout_constraintBottom_toTopOf="@+id/titleAndBodyLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/post_item_postedUserImg_imgView" />
+            android:layout_below="@id/post_item_postedUserImg_imgView"/>
 
         <LinearLayout
             android:id="@+id/titleAndBodyLayout"
@@ -111,10 +84,7 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:orientation="vertical"
-            app:layout_constraintBottom_toTopOf="@id/second_line"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/first_line">
+            android:layout_below="@id/first_line">
 
             <TextView
                 android:id="@+id/post_item_postTitle_txtview"
@@ -130,11 +100,7 @@
                 android:paddingEnd="8dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeMaxTextSize="100sp"
-                app:autoSizeMinTextSize="16sp"
-                app:autoSizeStepGranularity="2dp"
-                app:autoSizeTextType="uniform" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/post_item_postBody_txtview"
@@ -148,34 +114,23 @@
                 android:paddingEnd="8dp"
                 android:paddingBottom="6dp"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
-                app:autoSizeMaxTextSize="100sp"
-                app:autoSizeMinTextSize="16sp"
-                app:autoSizeStepGranularity="2dp"
-                app:autoSizeTextType="uniform" />
+                android:textSize="16sp"/>
 
         </LinearLayout>
-
 
         <View
             android:id="@+id/second_line"
             android:layout_width="match_parent"
             android:layout_height="0.2dp"
             android:background="@color/lessGray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/footer"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/titleAndBodyLayout" />
+            android:layout_below="@id/titleAndBodyLayout"/>
 
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/second_line">
+            android:layout_alignParentBottom="true">
 
             <TextView
                 android:id="@+id/textView5"
@@ -230,14 +185,37 @@
 
                 </LinearLayout>
 
-
             </HorizontalScrollView>
-
 
         </LinearLayout>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/footer"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content">
+            <!-- Like icon -->
+            <ImageView
+                android:id="@+id/like_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_thumb_up_24"
+                android:tint="@color/add_post_blue"
+                tools:ignore="UseAppTint" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Comment icon -->
+            <ImageView
+                android:id="@+id/comment_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="@color/add_post_blue"
+                android:src="@drawable/baseline_comment_24"
+                tools:ignore="UseAppTint" />
+        </RelativeLayout>
 
+
+
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

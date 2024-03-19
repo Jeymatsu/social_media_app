@@ -23,208 +23,207 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:id="@+id/main_header"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="115dp"-->
-<!--                android:layout_marginStart="8dp"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:layout_marginEnd="8dp"-->
-<!--                android:clickable="true"-->
-<!--                android:elevation="4dp"-->
-<!--                android:focusable="true"-->
-<!--                app:cardCornerRadius="4dp"-->
-<!--                app:cardElevation="4dp">-->
+            <!--            <androidx.cardview.widget.CardView-->
+            <!--                android:id="@+id/main_header"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="115dp"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginTop="8dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:clickable="true"-->
+            <!--                android:elevation="4dp"-->
+            <!--                android:focusable="true"-->
+            <!--                app:cardCornerRadius="4dp"-->
+            <!--                app:cardElevation="4dp">-->
 
-<!--                <RelativeLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content">-->
+            <!--                <RelativeLayout-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content">-->
 
-<!--                    <LinearLayout-->
-<!--                        android:id="@+id/pic_text"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:orientation="horizontal">-->
+            <!--                    <LinearLayout-->
+            <!--                        android:id="@+id/pic_text"-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:orientation="horizontal">-->
 
-<!--                        <de.hdodenhof.circleimageview.CircleImageView-->
-<!--                            android:id="@+id/main_user_img_imgView"-->
-<!--                            android:layout_width="40dp"-->
-<!--                            android:layout_height="40dp"-->
-<!--                            android:layout_margin="16dp"-->
-<!--                            android:src="@drawable/main_user_profile_avatar"-->
-<!--                            app:civ_border_color="@color/hamburger"-->
-<!--                            app:civ_border_width="2dp" />-->
+            <!--                        <de.hdodenhof.circleimageview.CircleImageView-->
+            <!--                            android:id="@+id/main_user_img_imgView"-->
+            <!--                            android:layout_width="40dp"-->
+            <!--                            android:layout_height="40dp"-->
+            <!--                            android:layout_margin="16dp"-->
+            <!--                            android:src="@drawable/main_user_profile_avatar"-->
+            <!--                            app:civ_border_color="@color/hamburger"-->
+            <!--                            app:civ_border_width="2dp" />-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/main_welcome_txtView"-->
-<!--                            android:lines="1"-->
-<!--                            android:maxLines="1"-->
-<!--                            android:ellipsize="end"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_gravity="center_vertical"-->
-<!--                            android:fontFamily="@font/montserrat"-->
-<!--                            android:text="Welcome, logged In User!"-->
-<!--                            android:textColor="@color/darkGray"-->
-<!--                            android:textSize="18sp" />-->
+            <!--                        <TextView-->
+            <!--                            android:id="@+id/main_welcome_txtView"-->
+            <!--                            android:lines="1"-->
+            <!--                            android:maxLines="1"-->
+            <!--                            android:ellipsize="end"-->
+            <!--                            android:layout_width="wrap_content"-->
+            <!--                            android:layout_height="wrap_content"-->
+            <!--                            android:layout_gravity="center_vertical"-->
+            <!--                            android:fontFamily="@font/montserrat"-->
+            <!--                            android:text="Welcome, logged In User!"-->
+            <!--                            android:textColor="@color/darkGray"-->
+            <!--                            android:textSize="18sp" />-->
 
-<!--                    </LinearLayout>-->
+            <!--                    </LinearLayout>-->
 
-<!--                    <View-->
-<!--                        android:id="@+id/view1"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="0.2dp"-->
-<!--                        android:layout_below="@id/pic_text"-->
-<!--                        android:background="@color/lessGray" />-->
+            <!--                    <View-->
+            <!--                        android:id="@+id/view1"-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="0.2dp"-->
+            <!--                        android:layout_below="@id/pic_text"-->
+            <!--                        android:background="@color/lessGray" />-->
 
-<!--                    <RelativeLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_below="@id/view1">-->
+            <!--                    <RelativeLayout-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="match_parent"-->
+            <!--                        android:layout_below="@id/view1">-->
 
-<!--                        <View-->
-<!--                            android:id="@+id/view2"-->
-<!--                            android:layout_width="0.2dp"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:layout_centerHorizontal="true"-->
-<!--                            android:background="@color/lessGray" />-->
+            <!--                        <View-->
+            <!--                            android:id="@+id/view2"-->
+            <!--                            android:layout_width="0.2dp"-->
+            <!--                            android:layout_height="match_parent"-->
+            <!--                            android:layout_centerHorizontal="true"-->
+            <!--                            android:background="@color/lessGray" />-->
 
-<!--                        <LinearLayout-->
-<!--                            android:id="@+id/main_create_post_btn"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:layout_toStartOf="@id/view2"-->
-<!--                            android:clickable="true"-->
-<!--                            android:focusable="true"-->
-<!--                            android:foreground="?attr/selectableItemBackground"-->
-<!--                            android:orientation="horizontal">-->
+            <!--                        <LinearLayout-->
+            <!--                            android:id="@+id/main_create_post_btn"-->
+            <!--                            android:layout_width="match_parent"-->
+            <!--                            android:layout_height="match_parent"-->
+            <!--                            android:layout_toStartOf="@id/view2"-->
+            <!--                            android:clickable="true"-->
+            <!--                            android:focusable="true"-->
+            <!--                            android:foreground="?attr/selectableItemBackground"-->
+            <!--                            android:orientation="horizontal">-->
 
-<!--                            <ImageView-->
-<!--                                android:layout_width="25dp"-->
-<!--                                android:layout_height="25dp"-->
-<!--                                android:layout_marginStart="16dp"-->
-<!--                                android:layout_marginTop="8dp"-->
-<!--                                android:layout_marginBottom="8dp"-->
-<!--                                android:src="@drawable/main_create_post_icon" />-->
+            <!--                            <ImageView-->
+            <!--                                android:layout_width="25dp"-->
+            <!--                                android:layout_height="25dp"-->
+            <!--                                android:layout_marginStart="16dp"-->
+            <!--                                android:layout_marginTop="8dp"-->
+            <!--                                android:layout_marginBottom="8dp"-->
+            <!--                                android:src="@drawable/main_create_post_icon" />-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_gravity="center_vertical"-->
-<!--                                android:layout_marginStart="16dp"-->
-<!--                                android:text="Create Post"-->
-<!--                                android:textColor="@color/lessGray" />-->
+            <!--                            <TextView-->
+            <!--                                android:layout_width="wrap_content"-->
+            <!--                                android:layout_height="wrap_content"-->
+            <!--                                android:layout_gravity="center_vertical"-->
+            <!--                                android:layout_marginStart="16dp"-->
+            <!--                                android:text="Create Post"-->
+            <!--                                android:textColor="@color/lessGray" />-->
 
-<!--                        </LinearLayout>-->
+            <!--                        </LinearLayout>-->
 
-<!--                        <LinearLayout-->
-<!--                            android:id="@+id/main_upload_image_btn"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="match_parent"-->
-<!--                            android:layout_toEndOf="@id/view2"-->
-<!--                            android:clickable="true"-->
-<!--                            android:focusable="true"-->
-<!--                            android:foreground="?attr/selectableItemBackground"-->
-<!--                            android:orientation="horizontal">-->
+            <!--                        <LinearLayout-->
+            <!--                            android:id="@+id/main_upload_image_btn"-->
+            <!--                            android:layout_width="match_parent"-->
+            <!--                            android:layout_height="match_parent"-->
+            <!--                            android:layout_toEndOf="@id/view2"-->
+            <!--                            android:clickable="true"-->
+            <!--                            android:focusable="true"-->
+            <!--                            android:foreground="?attr/selectableItemBackground"-->
+            <!--                            android:orientation="horizontal">-->
 
-<!--                            <ImageView-->
-<!--                                android:layout_width="25dp"-->
-<!--                                android:layout_height="25dp"-->
-<!--                                android:layout_marginStart="16dp"-->
-<!--                                android:layout_marginTop="8dp"-->
-<!--                                android:layout_marginBottom="8dp"-->
-<!--                                android:src="@drawable/main_upload_photo_icon" />-->
+            <!--                            <ImageView-->
+            <!--                                android:layout_width="25dp"-->
+            <!--                                android:layout_height="25dp"-->
+            <!--                                android:layout_marginStart="16dp"-->
+            <!--                                android:layout_marginTop="8dp"-->
+            <!--                                android:layout_marginBottom="8dp"-->
+            <!--                                android:src="@drawable/main_upload_photo_icon" />-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_gravity="center_vertical"-->
-<!--                                android:layout_marginStart="16dp"-->
-<!--                                android:text="Upload Image"-->
-<!--                                android:textColor="@color/lessGray" />-->
-<!--                        </LinearLayout>-->
-<!--                    </RelativeLayout>-->
-<!--                </RelativeLayout>-->
-<!--            </androidx.cardview.widget.CardView>-->
+            <!--                            <TextView-->
+            <!--                                android:layout_width="wrap_content"-->
+            <!--                                android:layout_height="wrap_content"-->
+            <!--                                android:layout_gravity="center_vertical"-->
+            <!--                                android:layout_marginStart="16dp"-->
+            <!--                                android:text="Upload Image"-->
+            <!--                                android:textColor="@color/lessGray" />-->
+            <!--                        </LinearLayout>-->
+            <!--                    </RelativeLayout>-->
+            <!--                </RelativeLayout>-->
+            <!--            </androidx.cardview.widget.CardView>-->
 
             <RelativeLayout
-                android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp">
 
                 <LinearLayout
-                    android:gravity="center_horizontal"
-                    android:visibility="gone"
                     android:id="@+id/empty_msg"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <ImageView
-                        android:alpha="0.7"
                         android:layout_width="75dp"
                         android:layout_height="75dp"
+                        android:alpha="0.7"
                         android:src="@drawable/main_empty_msg_icon" />
 
                     <TextView
-                        android:gravity="center"
-                        android:layout_marginTop="16dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:textColor="@color/lessGray"
+                        android:layout_marginTop="16dp"
                         android:fontFamily="@font/montserrat"
-                        android:text="Nothing to show here!" />
+                        android:gravity="center"
+                        android:text="Nothing to show here!"
+                        android:textColor="@color/lessGray"
+                        android:textSize="16sp" />
 
                     <LinearLayout
-                        android:orientation="horizontal"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/emptyMsgCreatePost"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            android:focusable="true"
-                            android:textStyle="bold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
                             android:text="Create Post"
                             android:textColor="@color/hamburger"
-                            android:textSize="17sp" />
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
 
                         <TextView
-                            android:layout_marginStart="4dp"
-                            android:layout_marginEnd="4dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/lessGray"
-                            android:text="OR" />
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:text="OR"
+                            android:textColor="@color/lessGray" />
 
                         <TextView
                             android:id="@+id/emptyMsgUploadImg"
-                            android:textStyle="bold"
-                            android:clickable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            android:focusable="true"
-                            android:textColor="@color/hamburger"
-                            android:textSize="17sp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Upload Image" />
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?attr/selectableItemBackground"
+                            android:text="Upload Image"
+                            android:textColor="@color/hamburger"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:layout_marginBottom="48dp"
                     android:id="@+id/posts_recylerview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="48dp" />
 
             </RelativeLayout>
         </LinearLayout>

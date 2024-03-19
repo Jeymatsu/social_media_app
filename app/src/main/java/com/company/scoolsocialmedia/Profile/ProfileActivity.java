@@ -71,6 +71,11 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView backBtn;
 
     private TextView toolbarTitle;
+    int followersCount=0;
+
+    private TextView txtFollowers;
+    private TextView txtFollowing;
+
 
 
     @Override
@@ -84,6 +89,8 @@ public class ProfileActivity extends AppCompatActivity {
                 mode = false;
             }
         }
+         getFollowersCount();
+        getFollowingCount();
         loadData(mode);
     }
 
@@ -101,6 +108,8 @@ public class ProfileActivity extends AppCompatActivity {
         universityView = findViewById(R.id.university_text);
         departmentContainer = findViewById(R.id.department_container);
         departmentView = findViewById(R.id.department_text);
+        txtFollowers=findViewById(R.id.txtFollowers);
+        txtFollowing=findViewById(R.id.txtFollowing);
         addressContainer = findViewById(R.id.address_container);
         addressView = findViewById(R.id.address_text);
         communityContainer = findViewById(R.id.community_container);
@@ -247,6 +256,62 @@ public class ProfileActivity extends AppCompatActivity {
         }
         loadImage();
     }
+
+
+    public void getFollowersCount(){
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference("Followers").child(uid).child("followers");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {};
+                List<String> following = dataSnapshot.getValue(t); // Ensure to specify the generic type
+                  followersCount = following != null ? following.size() : 0;
+                if (followersCount == 0) {
+//                    showErrorLayout("No " + key +" found", 0);
+                } else {
+                    // Update your UI to display the followers count
+                    // For example, if you have a TextView named followersCountTextView:
+                    txtFollowers.setText(String.valueOf(followersCount)+ " Followers");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i(TAG,"Error occurred fetching data");
+                Log.i(TAG,databaseError.getMessage());
+//                showErrorLayout("Some error occurred while loading data", 1);
+            }
+        });
+    }
+
+    public void getFollowingCount(){
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference myRef = database.getReference("Followers").child(uid).child("following");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GenericTypeIndicator<List<String>> t = new GenericTypeIndicator<List<String>>() {};
+                List<String> following = dataSnapshot.getValue(t); // Ensure to specify the generic type
+                followersCount = following != null ? following.size() : 0;
+                if (followersCount == 0) {
+//                    showErrorLayout("No " + key +" found", 0);
+                } else {
+                    // Update your UI to display the followers count
+                    // For example, if you have a TextView named followersCountTextView:
+                    txtFollowing.setText(String.valueOf(followersCount)+ " Following");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.i(TAG,"Error occurred fetching data");
+                Log.i(TAG,databaseError.getMessage());
+//                showErrorLayout("Some error occurred while loading data", 1);
+            }
+        });
+    }
+
 
     private void loadImage() {
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("profileImages/" + uid);

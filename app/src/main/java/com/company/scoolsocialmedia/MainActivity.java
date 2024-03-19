@@ -181,14 +181,14 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
 //            }
 //        });
 
-//        goToProfile.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent i = new Intent(MainActivity.this, ProfileActivity.class);
-//                i.putExtra("uid", Constants.getConstantUid());
-//                startActivity(i);
-//            }
-//        });
+        profileImagePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(MainActivity.this, ProfileActivity.class);
+                i.putExtra("uid", Constants.getConstantUid());
+                startActivity(i);
+            }
+        });
 //
 //
 //
