@@ -1,46 +1,41 @@
 package com.company.scoolsocialmedia.fragements;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.lifecycle.viewmodel.CreationExtras;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.company.scoolsocialmedia.Constants;
+import com.company.scoolsocialmedia.ChatRoom.CreateChatRoomActivity;
 import com.company.scoolsocialmedia.R;
-import com.company.scoolsocialmedia.activities.ChatActivity;
+import com.company.scoolsocialmedia.activities.GroupChat;
+import com.company.scoolsocialmedia.adapters.ChatRoomAdapter;
 import com.company.scoolsocialmedia.adapters.ChatRoomsAdapter;
-import com.company.scoolsocialmedia.listeners.OnChatRoomLongClickListener;
-import com.company.scoolsocialmedia.listeners.OnChatRoomMainLayoutClicked;
+import com.company.scoolsocialmedia.model.ChatRoom;
 import com.company.scoolsocialmedia.model.ChatRoomModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BooksChatRoomsFragment extends Fragment implements OnChatRoomMainLayoutClicked, OnChatRoomLongClickListener {
+public class BooksChatRoomsFragment extends Fragment implements ChatRoomAdapter.OnChatRoomClickListener {
 
     private AVLoadingIndicatorView avi;
     private ImageView chatIcon;
@@ -53,6 +48,14 @@ public class BooksChatRoomsFragment extends Fragment implements OnChatRoomMainLa
     private DatabaseReference chatsRef;
     private StorageReference storageRef;
     private ValueEventListener eventListener;
+    private Button create_chatroom_button;
+
+    //New
+    private RecyclerView chatRoomsRecyclerView;
+    private ChatRoomAdapter chatRoomAdapter;
+    private List<ChatRoom> chatRoomsList;
+    private DatabaseReference chatRoomsRef;
+
 
     public BooksChatRoomsFragment() {
     }
@@ -66,139 +69,76 @@ public class BooksChatRoomsFragment extends Fragment implements OnChatRoomMainLa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_books_chat_rooms, container, false);
-        avi = view.findViewById(R.id.bookChatRoomAvi);
-        chatIcon = view.findViewById(R.id.bookChatRoomChatIcon);
-        emptyMsg = view.findViewById(R.id.bookChatRoomEmptyMsg);
-        recyclerView = view.findViewById(R.id.bookChatRoomRecyclerView);
-        initRecyclerView();
-        try {
-            fetchBooksChatRooms();
-        } catch (Exception e) {
-        }
+//        avi = view.findViewById(R.id.bookChatRoomAvi);
+//        chatIcon = view.findViewById(R.id.bookChatRoomChatIcon);
+        create_chatroom_button = view.findViewById(R.id.create_chatroom_button);
+
+        create_chatroom_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), CreateChatRoomActivity.class));
+            }
+        });
+
+        chatRoomsRecyclerView = view.findViewById(R.id.chat_rooms_recycler_view);
+        chatRoomsList = new ArrayList<>();
+        chatRoomAdapter = new ChatRoomAdapter(chatRoomsList);
+        chatRoomsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        chatRoomsRecyclerView.setAdapter(chatRoomAdapter);
+
+        chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("chatrooms");
+        fetchChatRooms();
+
+
+//        emptyMsg = view.findViewById(R.id.bookChatRoomEmptyMsg);
+//        recyclerView = view.findViewById(R.id.bookChatRoomRecyclerView);
+//        initRecyclerView();
+//        try {
+//            fetchBooksChatRooms();
+//        } catch (Exception e) {
+//        }
         return view;
     }
 
-    private void fetchBooksChatRooms() {
-        showProgress();
-        mChatRooms.clear();
-        chatsRef = FirebaseDatabase.getInstance().getReference("Chats_Table").child("Books_Chats");
-        eventListener = chatsRef.addValueEventListener(new ValueEventListener() {
+    private void fetchChatRooms() {
+        chatRoomsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    if (dataSnapshot.hasChildren()) {
-                        for (DataSnapshot dsp : dataSnapshot.getChildren()) {
-                            String chatRoomId = dsp.getKey();
-                            if (chatRoomId.contains(Constants.getConstantUid())) {
-                                String lastMsg = "";
-                                int unSeenCount = 0;
-                                boolean isWelcomeMsg = false;
-                                for (DataSnapshot dsp2 : dsp.getChildren()) {
-                                    lastMsg = dsp2.child("message").getValue().toString();
-                                    if (dsp2.child("status").getValue().toString().equalsIgnoreCase("unseen") && !dsp2.child("sender_id").getValue().toString().equalsIgnoreCase(Constants.getConstantUid())) {
-                                        unSeenCount++;
-                                    }
-                                    isWelcomeMsg = dsp2.child("date").getValue().toString().equalsIgnoreCase("welcome");
-                                }
-                                int pos = mAdapter.getItemPosition(chatRoomId);
-                                ChatRoomModel chatRoom;
-                                if (pos == -1) {
-                                    chatRoom = new ChatRoomModel(chatRoomId, null, null, isWelcomeMsg ? "Proposal Acceptance" : lastMsg, String.valueOf(unSeenCount));
-                                    mChatRooms.add(chatRoom);
-                                    fetchOtherUserDetails();
-                                } else {
-                                    chatRoom = mAdapter.getDataSet().get(pos);
-                                    chatRoom.setUnseenMsgCount(String.valueOf(unSeenCount));
-                                    chatRoom.setLastMsg(lastMsg);
-                                    chatRoom.setUserName(chatRoom.getUserName());
-                                    chatRoom.setUserImgUrl(chatRoom.getUserImgUrl());
-                                    chatRoom.setChatRoomId(chatRoom.getChatRoomId());
-                                    mAdapter.notifyItemChanged(pos);
-                                }
-                            }
-                        }
-
-                    } else {
-                        hideProgress();
-                        showEmptyMsg();
-                    }
-                } else {
-                    hideProgress();
-                    showEmptyMsg();
+                chatRoomsList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ChatRoom chatRoom = snapshot.getValue(ChatRoom.class);
+                    chatRoomsList.add(chatRoom);
                 }
+                chatRoomAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                hideProgress();
-                showEmptyMsg();
+                Toast.makeText(getActivity(), "Failed to load chat rooms", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void fetchOtherUserDetails() {
-        showProgress();
-        chatsRef = FirebaseDatabase.getInstance().getReference("User_Information");
-        final int[] userFetched = {0};
-        String userId = "";
-        for (final ChatRoomModel room : mChatRooms) {
-            userId = room.getChatRoomId().replace(Constants.getConstantUid(), "");
-            chatsRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        room.setUserName(dataSnapshot.child("name").getValue().toString());
-                        userFetched[0]++;
-                        if (userFetched[0] == mChatRooms.size()) {
-                            hideProgress();
-                            hideEmptyMsg();
-                            mAdapter.notifyDataSetChanged();
-                            fetchOtherUserImage();
-                        }
-                    }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    hideProgress();
-                    showEmptyMsg();
-                }
-            });
-        }
+    @Override
+    public void onChatRoomClick(ChatRoom chatRoom) {
+
     }
 
-    private void fetchOtherUserImage() {
-        storageRef = FirebaseStorage.getInstance().getReference();
-        String userId = "";
-        for (int i = 0; i < mChatRooms.size(); i++) {
-            userId = mChatRooms.get(i).getChatRoomId().replace(Constants.getConstantUid(), "");
-            final int finalI = i;
-            storageRef.child("profileImages/" + userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    if (uri != null && !mChatRooms.isEmpty()) {
-                        mChatRooms.get(finalI).setUserImgUrl(uri.toString());
-                        mAdapter.notifyItemChanged(finalI);
-                    }
-                }
-            });
-        }
+    @Override
+    public void onChatRoomClick(int position) {
+
+        ChatRoom clickedChatRoom = chatRoomsList.get(position);
+        // Handle click event here
+        Intent intent = new Intent(getActivity(), GroupChat.class);
+        intent.putExtra("CHAT_ROOM_ID", clickedChatRoom.getRoomId());
+        intent.putExtra("CHAT_ROOM_NAME", clickedChatRoom.getName());
+        startActivity(intent);
+        Log.d("BooksChatRoomsFragment", "Clicked on chat room: " + clickedChatRoom.getName());
+
+
     }
 
-    private void removeChatRoom(String id) {
-        chatsRef = FirebaseDatabase.getInstance().getReference("Chats_Table").child("Books_Chats");
-        chatsRef.child(id).removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(getContext(), "Conversation deleted", Toast.LENGTH_LONG).show();
-                    fetchBooksChatRooms();
-                } else {
-                    Toast.makeText(getContext(), "Could not remove conversation", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
 
     @Override
     public void onDestroyView() {
@@ -207,36 +147,7 @@ public class BooksChatRoomsFragment extends Fragment implements OnChatRoomMainLa
         super.onDestroyView();
     }
 
-    public void showChatRoomDeleteConfirmation(final String id) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MyDialogTheme);
-        builder.setTitle("Confirm Deletion?");
-        builder.setMessage("Are you sure you want to delete this conversation?");
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                showProgress();
-                removeChatRoom(id);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        final AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
-    private void initRecyclerView() {
-        mChatRooms = new ArrayList<>();
-        mAdapter = new ChatRoomsAdapter(mChatRooms, this, this);
-        LinearLayoutManager lm = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(lm);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
-    }
 
     @Override
     public void onDestroy() {
@@ -268,13 +179,21 @@ public class BooksChatRoomsFragment extends Fragment implements OnChatRoomMainLa
         avi.show();
     }
 
-    @Override
-    public void initChat(ChatRoomModel room) {
-        startActivity(new Intent(getContext(), ChatActivity.class).putExtra("chatRoom", room).putExtra("type", "book").putExtra("action", "chat"));
-    }
+//    @Override
+//    public void initChat(ChatRoomModel room) {
+//        startActivity(new Intent(getContext(), ChatActivity.class).putExtra("chatRoom", room).putExtra("type", "book").putExtra("action", "chat"));
+//    }
+//
+//    @Override
+//    public void deleteChatRoom(String id) {
+//        showChatRoomDeleteConfirmation(id);
+//    }
 
+
+
+    @NonNull
     @Override
-    public void deleteChatRoom(String id) {
-        showChatRoomDeleteConfirmation(id);
+    public CreationExtras getDefaultViewModelCreationExtras() {
+        return super.getDefaultViewModelCreationExtras();
     }
 }

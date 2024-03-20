@@ -55,7 +55,8 @@ public class PostDetailActivity extends AppCompatActivity implements PopupMenu.O
 
     Toolbar toolbar;
     CircleImageView userImage;
-    TextView userName, postType, postTimeDate, postTitle, postBody, exchangeTxt, learningTxt, submitProposalButtonText;
+//    TextView exchangeTxt;
+    TextView userName, postType, postTimeDate, postTitle, postBody,  learningTxt, submitProposalButtonText;
     LinearLayout firstCategory, secondCategory, thirdCategory, firstSkills, secondSkills, thirdSkills, skillsHolder, communityHolder;
     ImageView postMainImage, moreBtn;
     CardView submitProposalBtn, retryBtn;
@@ -181,7 +182,7 @@ public class PostDetailActivity extends AppCompatActivity implements PopupMenu.O
     private void handlePostWithImage(final PostModel post, boolean isProposalSubmitted, boolean isCurrentUser) {
         setContentView(R.layout.activity_image_post_detail);
         initToolbar();
-        exchangeTxt.setText("Post Detail");
+//        exchangeTxt.setText("Post Detail");
         userImage = findViewById(R.id.postImageDetailUserImgView);
         userName = findViewById(R.id.postImageDetailPostedUserName);
         postType = findViewById(R.id.postImageDetailPostType);
@@ -273,7 +274,7 @@ public class PostDetailActivity extends AppCompatActivity implements PopupMenu.O
     private void handlePostWithNoImage(final PostModel post, boolean isProposalSubmitted, boolean isCurrentUser) {
         setContentView(R.layout.activity_no_image_post_detail);
         initToolbar();
-        exchangeTxt.setText("Post Detail");
+//        exchangeTxt.setText("Post Detail");
         userImage = findViewById(R.id.noPostImageDetailUserImgView);
         userName = findViewById(R.id.noPostImageDetailPostedUserName);
         postType = findViewById(R.id.noPostImageDetailPostType);
@@ -629,9 +630,9 @@ public class PostDetailActivity extends AppCompatActivity implements PopupMenu.O
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        exchangeTxt = findViewById(R.id.exchange_txt);
+//        exchangeTxt = findViewById(R.id.exchange_txt);
         learningTxt = findViewById(R.id.learning_txt);
-        learningTxt.setVisibility(View.GONE);
+//        learningTxt.setVisibility(View.GONE);
     }
 
     @Override

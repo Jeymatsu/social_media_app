@@ -85,7 +85,7 @@ public class CreateProfile extends AppCompatActivity {
         } else {
             try {
                 FirebaseUser user = mAuth.getCurrentUser();
-                BasicUser newUser = new BasicUser(fname + " " + lname, gender, country, city, community, user.getEmail(), "none");
+                BasicUser newUser = new BasicUser(fname + " " + lname, gender, country, city, community, user.getEmail(), "none",user.getUid());
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("User_Information").child(user.getUid());
                 myRef.setValue(newUser, new DatabaseReference.CompletionListener() {

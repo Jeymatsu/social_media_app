@@ -13,10 +13,21 @@ public class BasicUser implements Serializable {
     private String email;
     private String android_device_token;
 
+    private String userId; // Unique identifier for the user
+
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public BasicUser(){
     }
 
-    public BasicUser(String name, String gender, String country_name, String city_name, String community, String email, String android_device_token) {
+    public BasicUser(String name, String gender, String country_name, String city_name, String community, String email, String android_device_token, String userId) {
         this.name = name;
         this.gender = gender;
         this.country_name = country_name;
@@ -24,8 +35,8 @@ public class BasicUser implements Serializable {
         this.community = community;
         this.email = email;
         this.android_device_token = android_device_token;
+        this.userId = userId;
     }
-
 
     public String getName() {
         return name;

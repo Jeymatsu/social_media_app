@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.company.scoolsocialmedia.ChatRoom.ChatEntry;
 import com.company.scoolsocialmedia.Profile.ProfileActivity;
 import com.company.scoolsocialmedia.Proposals.ProposalListActivity;
 import com.company.scoolsocialmedia.activities.ChatRoomsActivity;
@@ -818,6 +819,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
             return true;
         } else if (id == R.id.action_chat_rooms) {
             // Handle chat rooms action
+            startActivity(new Intent(MainActivity.this, ChatEntry.class));
             return true;
         }
 

@@ -16,6 +16,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ChatRoom.ChatEntry"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ChatRoomNew"
+            android:exported="false" />
+        <activity
+            android:name=".activities.GroupChat"
+            android:exported="false" />
+        <activity
+            android:name=".ChatRoom.CreateChatRoomActivity"
+            android:exported="false" />
+        <activity
             android:name=".Profile.CreateProfile"
             android:exported="false" />
         <activity
