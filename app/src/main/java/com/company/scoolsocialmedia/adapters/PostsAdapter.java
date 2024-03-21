@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -34,7 +38,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     public static final int POST_NO_IMAGE_TYPE = 1;
     public static final int POST_IMAGE_TYPE = 2;
-    public static final int POST_NO_MORE_POST_TYPE = 3;
+    public static final int POST_VIDEO_TYPE = 3;
+    public static final int POST_NO_MORE_POST_TYPE = 4;
 
     private List<PostModel> mPostsList;
     private Context mContex;
@@ -52,10 +57,13 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public int getItemViewType(int position) {
         PostModel post = mPostsList.get(position);
-        if ((post.getPost_image() == null || post.getPost_image().equals("")) && !post.getPost_type().equals("NoMorePost")) {
+        if ((post.getPost_image() == null || post.getPost_image().equals("")) && !post.getPost_type().equals("NoMorePost")&& post.getPost_video()==null) {
             return POST_NO_IMAGE_TYPE;
         } else if (post.getPost_type().equals("NoMorePost")) {
             return POST_NO_MORE_POST_TYPE;
+        } else if (post.getPost_image()==null) {
+            return POST_VIDEO_TYPE;
+
         } else {
             return POST_IMAGE_TYPE;
         }
@@ -71,6 +79,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             return new PostNoMorePostViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_no_more_posts_layout, parent, false));
         } else if (viewType == POST_IMAGE_TYPE) {
             return new PostsWithImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_img_post_item__layout, parent, false));
+        } else if (viewType == POST_VIDEO_TYPE) {
+            return new PostsWithVideoViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.main_video_post_item_layout, parent, false));
         } else {
             return null;
         }
@@ -89,6 +99,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 break;
             case POST_IMAGE_TYPE:
                 handlePostWithImage(holder, post);
+                break;
+            case POST_VIDEO_TYPE:
+                handlePostWithVideo(holder, post);
                 break;
         }
     }
@@ -347,6 +360,150 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
+
+    private void handlePostWithVideo(final RecyclerView.ViewHolder holder, final PostModel post) {
+        ((PostsWithVideoViewHolder) holder).setIsRecyclable(false);
+        ((PostsWithVideoViewHolder) holder).postImageItemImageInfo.setText(post.getPost_image_info());
+        ((PostsWithVideoViewHolder) holder).postImageItemType.setText("Video");
+        ((PostsWithVideoViewHolder) holder).postImageItemDate.setText(post.getPost_date());
+        ((PostsWithVideoViewHolder) holder).postImageItemUserName.setText(WordUtils.capitalize(post.getPost_user_posted_name()));
+        ((PostsWithVideoViewHolder) holder).postImageItemUserImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.showProfile(post.getUser_id());
+            }
+        });
+        ((PostsWithVideoViewHolder) holder).postImageItemUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.showProfile(post.getUser_id());
+            }
+        });
+        Uri videoUri = Uri.parse(post.getPost_video()); // Assuming getPost_video() returns the URI of the video
+        ((PostsWithVideoViewHolder) holder).createVideoPostMainVideo.setVideoURI(videoUri);
+        ((PostsWithVideoViewHolder) holder).createVideoPostMainVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                // Adjust the size of the video view
+                mediaPlayer.start();
+            }
+        });
+        ((PostsWithVideoViewHolder) holder).createVideoPostMainVideo.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                Log.e("VideoError", "Error occurred while playing video: " + what + ", " + extra);
+                return false;
+            }
+        });
+
+//        ((PostsWithVideoViewHolder) holder).postImageMainImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                ((PostsWithVideoViewHolder) holder).itemView.getContext().startActivity(new Intent(((PostsWithImageViewHolder) holder).itemView.getContext(), ImageDetailActivity.class).putExtra("imageUrl", post.getPost_image()));
+//            }
+//        });
+        ((PostsWithVideoViewHolder) holder).postImageItemImageInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mOnPostClickListener.showPostDetail(post);
+            }
+        });
+
+        if (post.getTagged_communities().size() > 0) {
+            int n = post.getTagged_communities().size();
+            if (n <= 2) {
+                ((PostsWithVideoViewHolder) holder).secondCateogryHolder.setVisibility(View.GONE);
+                ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.setVisibility(View.GONE);
+                for (int i = 0; i < post.getTagged_communities().size(); i++) {
+                    TextView textView = new TextView(mContex);
+                    textView.setText(post.getTagged_communities().get(i));
+                    textView.setTextColor(Color.WHITE);
+                    textView.setTextSize(14);
+                    textView.setBackgroundResource(R.drawable.background_search);
+                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    lp.setMarginStart(16);
+                    textView.setLayoutParams(lp);
+                    textView.setPadding(8, 4, 8, 4);
+                    ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
+                }
+            } else {
+                int dist = 0;
+                if (n <= 6) {
+                    ((PostsWithVideoViewHolder) holder).secondCateogryHolder.setVisibility(View.VISIBLE);
+                    dist = 2;
+                } else {
+                    ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.setVisibility(View.VISIBLE);
+                    dist = 3;
+                }
+                int len = 0;
+                int layoutToAdd = 1;
+                for (int i = 0; i < post.getTagged_communities().size(); i++) {
+                    TextView textView = new TextView(mContex);
+                    textView.setText(post.getTagged_communities().get(i));
+                    textView.setTextColor(Color.WHITE);
+                    textView.setTextSize(14);
+                    textView.setBackgroundResource(R.drawable.background_search);
+                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    lp.setMarginStart(16);
+                    textView.setLayoutParams(lp);
+                    textView.setPadding(8, 4, 8, 4);
+                    if (dist == 2) {
+                        if (layoutToAdd == 1) {
+                            ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
+                            len += post.getTagged_communities().get(i).length();
+                            if (len > 35) {
+                                layoutToAdd = 2;
+                                len = 0;
+                            } else {
+                                layoutToAdd = 1;
+                            }
+                        } else {
+                            ((PostsWithVideoViewHolder) holder).secondCateogryHolder.addView(textView);
+                            len += post.getTagged_communities().get(i).length();
+                            if (len > 35) {
+                                layoutToAdd = 1;
+                                len = 0;
+                            } else {
+                                layoutToAdd = 2;
+                            }
+                        }
+                    } else {
+                        if (layoutToAdd == 1) {
+                            ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
+                            len += post.getTagged_communities().get(i).length();
+                            if (len > 35) {
+                                layoutToAdd = 2;
+                                len = 0;
+                            } else {
+                                layoutToAdd = 1;
+                            }
+                        } else if (layoutToAdd == 2) {
+                            ((PostsWithVideoViewHolder) holder).secondCateogryHolder.addView(textView);
+                            len += post.getTagged_communities().get(i).length();
+                            if (len > 35) {
+                                layoutToAdd = 3;
+                                len = 0;
+                            } else {
+                                layoutToAdd = 2;
+                            }
+                        } else {
+                            ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.addView(textView);
+                            len += post.getTagged_communities().get(i).length();
+                            if (len > 35) {
+                                layoutToAdd = 2;
+                                len = 0;
+                            } else {
+                                layoutToAdd = 3;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public void setDataSet(List<PostModel> posts) {
         this.mPostsList = posts;
         notifyDataSetChanged();
@@ -424,6 +581,34 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             postImageItemUserImg = itemView.findViewById(R.id.post_image_item_postedUserImg_imgView);
             postImageItemUserName = itemView.findViewById(R.id.post_image_item_postedUserName_txtview);
             postImageMainImage = itemView.findViewById(R.id.main_image_post_image_imgview);
+            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
+            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
+            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);
+        }
+    }
+
+
+
+    public static class PostsWithVideoViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView postImageItemImageInfo;
+        private TextView postImageItemDate;
+        private TextView postImageItemType;
+        private CircleImageView postImageItemUserImg;
+        private VideoView createVideoPostMainVideo;
+        private TextView postImageItemUserName;
+        private LinearLayout firstCateogryHolder;
+        private LinearLayout secondCateogryHolder;
+        private LinearLayout thirdCateogryHolder;
+
+        public PostsWithVideoViewHolder(@NonNull View itemView) {
+            super(itemView);
+            postImageItemImageInfo = itemView.findViewById(R.id.post_image_item_postBody_txtview);
+            postImageItemDate = itemView.findViewById(R.id.post_image_item_postTime_txtview);
+            postImageItemType = itemView.findViewById(R.id.post_image_item_postType_txtview);
+            postImageItemUserImg = itemView.findViewById(R.id.post_image_item_postedUserImg_imgView);
+            postImageItemUserName = itemView.findViewById(R.id.post_image_item_postedUserName_txtview);
+            createVideoPostMainVideo = itemView.findViewById(R.id.createVideoPostMainVideo);
             firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
             secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
             thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);

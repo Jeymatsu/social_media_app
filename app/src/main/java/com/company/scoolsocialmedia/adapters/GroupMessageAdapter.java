@@ -14,6 +14,11 @@ import com.company.scoolsocialmedia.Constants;
 import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.listeners.OnMsgLayoutLongClick;
 import com.company.scoolsocialmedia.model.ChatMessageModel;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.apache.commons.text.WordUtils;
 
@@ -112,7 +117,10 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void handleReceivedMessage(ViewHolder holder, final ChatMessageModel message) {
+        ReceivedMessageViewHolder receivedViewHolder = (ReceivedMessageViewHolder) holder;
         ((ReceivedMessageViewHolder) holder).mainReceivedMsg.setText(message.getMessage());
+        // Fetch and set sender's name
+        fetchUserName(message.getSender_id(), receivedViewHolder.text_view_sender_name);
         ((ReceivedMessageViewHolder) holder).mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -171,5 +179,23 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
             mainWelcomeMsg = itemView.findViewById(R.id.welcome_msg_text_body_textview);
         }
+    }
+
+    private void fetchUserName(String userId, final TextView textViewSenderName) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("User_Information").child(userId).child("name");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    String userName = dataSnapshot.getValue(String.class);
+                    textViewSenderName.setText(userName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle error
+            }
+        });
     }
 }

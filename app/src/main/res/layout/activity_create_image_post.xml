@@ -12,16 +12,13 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary">
 
-        <include
-            android:id="@+id/toolbarLayout"
-            layout="@layout/toolbar" />
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/createImgPostBodyLayoutLayout"
             android:layout_width="match_parent"
             android:foreground="@drawable/background_rectangle_ouline"
             android:layout_height="wrap_content"
-            android:layout_below="@id/toolbarLayout"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -93,6 +90,36 @@
                         android:textSize="16sp" />
                 </LinearLayout>
 
+                <!-- VideoView for displaying video -->
+                <VideoView
+                    android:id="@+id/createVideoPostMainVideo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="32dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="32dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- EditText for text content -->
+                <EditText
+                    android:id="@+id/createTextPostContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter your text here"
+                    android:inputType="textMultiLine"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- ImageView for displaying image -->
                 <ImageView
                     android:id="@+id/createImgPostMainImage"
                     android:layout_width="match_parent"
@@ -110,6 +137,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <!-- ImageView to remove the selected image/video -->
                 <ImageView
                     android:id="@+id/mainImgRemoveBtn"
                     android:layout_width="32dp"
@@ -123,8 +151,6 @@
                     app:layout_constraintEnd_toEndOf="@+id/createImgPostMainImage"
                     app:layout_constraintStart_toEndOf="@+id/createImgPostMainImage"
                     app:layout_constraintTop_toTopOf="@+id/createImgPostMainImage" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
@@ -193,7 +219,7 @@
             android:id="@+id/typeLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/skillLayout"
+            android:layout_below="@id/createImgPostBodyLayoutLayout"
             android:layout_marginStart="8dp"
             android:foreground="@drawable/background_rectangle_ouline"
             android:layout_marginTop="16dp"
@@ -220,7 +246,7 @@
             android:id="@+id/postImgMultiLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/typeLayout"
+            android:layout_below="@id/skillLayout"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:clickable="true"

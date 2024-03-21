@@ -14,16 +14,25 @@ public class PostModel implements Serializable {
     public String user_id;
     public String post_id;
     public String post_image;
+
     public String post_image_info;
     public String post_user_posted_image;
     public String post_user_posted_name;
 
+    public String post_video;
+
     public PostModel() {
     }
 
+    public String getPost_video() {
+        return post_video;
+    }
 
+    public void setPost_video(String post_video) {
+        this.post_video = post_video;
+    }
 
-    public PostModel(String post_body, String post_date, List<String> tagged_communities, String post_title, String post_type, String show_skills, String user_id, String post_id, String post_image, String post_image_info, String post_user_posted_image, String post_user_posted_name) {
+    public PostModel(String post_body, String post_date, List<String> tagged_communities, String post_title, String post_type, String show_skills, String user_id, String post_id, String post_image, String post_image_info, String post_user_posted_image, String post_user_posted_name, String post_video) {
         this.post_body = post_body;
         this.post_date = post_date;
         this.tagged_communities = tagged_communities;
@@ -36,6 +45,7 @@ public class PostModel implements Serializable {
         this.post_image_info = post_image_info;
         this.post_user_posted_image = post_user_posted_image;
         this.post_user_posted_name = post_user_posted_name;
+        this.post_video = post_video;
     }
 
     public static PostModel getPostMode(int type) {
@@ -48,8 +58,16 @@ public class PostModel implements Serializable {
             post.post_type = null;
             post.user_id = null;
             post.show_skills = null;
-        } else {
+        } else if (type == 2) {
             post.post_image = null;
+            post.post_image_info = null;
+            post.tagged_communities = new ArrayList<>();
+            post.post_date = null;
+            post.post_type = null;
+            post.user_id = null;
+            post.show_skills = null;
+        } else {
+            post.post_video = null;
             post.post_image_info = null;
             post.tagged_communities = new ArrayList<>();
             post.post_date = null;
