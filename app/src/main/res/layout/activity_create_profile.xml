@@ -318,10 +318,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:clickable="true"
-            android:backgroundTint="@color/add_post_blue"
+            android:backgroundTint="@color/bottomNavigationBackground"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:background="@color/add_post_blue"
+            android:background="@color/bottomNavigationBackground"
             android:elevation="0dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
@@ -350,7 +350,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
             android:visibility="gone"
-            app:indicatorColor="@color/hamburger"
+            app:indicatorColor="@color/bottomNavigationBackground"
             app:indicatorName="BallClipRotateMultipleIndicator" />
 
 

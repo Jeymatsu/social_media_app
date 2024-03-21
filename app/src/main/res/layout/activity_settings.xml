@@ -10,27 +10,110 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/disable_account"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical"
-            >
-
-            <TextView
+            android:layout_height="match_parent"
+            android:background="@color/bottomNavigationBackground">
+            <RelativeLayout
+                android:id="@+id/ContainerUserInfo"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:text="Disable Account"
-                android:textSize="20sp"
-                ></TextView>
+                android:layout_height="wrap_content"
+                android:elevation="20dp"
+                android:background="@drawable/user_profile_bg">
 
-            <View
+
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/userImgProfile"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/ic_user"
+                    android:layout_centerHorizontal="true"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/userLblName"
+                    android:text="Loading..."
+                    android:textSize="25sp"
+                    android:fontFamily="@font/montserrat"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_below="@id/userImgProfile"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/userLblEmail"
+                    android:text="Loading..."
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="15sp"
+                    android:layout_below="@id/userLblName"
+                    android:layout_centerHorizontal="true"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="10dp"/>
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/userContainerInfo"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/darkGray"></View>
-        </LinearLayout>
+                android:layout_height="match_parent"
+                android:layout_below="@id/ContainerUserInfo"
+                android:background="@drawable/user_other_info_bg"
+                android:layout_marginTop="20dp"
+                android:elevation="20dp">
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/userLblChangepass"
+                    android:text="Change Password"
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="16sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:drawableStart="@drawable/ic_change_password"
+                    android:drawablePadding="10dp"
+                    android:layout_marginStart="15dp"
+                    android:drawableTint="@color/bottomNavigationBackground" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/userLblLogout"
+                    android:text="Log out"
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="16sp"
+                    android:textColor="#666666"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:drawableStart="@drawable/ic_logout"
+                    android:drawablePadding="10dp"
+                    android:layout_marginStart="15dp"
+                    android:drawableTint="@color/bottomNavigationBackground"
+                    android:layout_below="@id/userLblChangepass"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/userLblDelete"
+                    android:text="Delete Account"
+                    android:fontFamily="@font/montserrat"
+                    android:textSize="16sp"
+                    android:textColor="#A50000"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:drawableStart="@drawable/ic_delete"
+                    android:drawablePadding="10dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_below="@id/userLblLogout"
+                    android:drawableTint="@color/bottomNavigationBackground"/>
+            </RelativeLayout>
+        </RelativeLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

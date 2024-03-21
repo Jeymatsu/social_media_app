@@ -3,6 +3,6 @@
 
     <solid android:color="@color/fullwhite"/>
     <corners android:radius="20dp"/>
-    <stroke android:color="@color/add_post_blue" android:width="0.1dp"/>
+    <stroke android:color="@color/bottomNavigationBackground" android:width="0.1dp"/>
 
 </shape>

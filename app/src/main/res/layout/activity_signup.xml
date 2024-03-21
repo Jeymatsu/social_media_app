@@ -171,10 +171,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:clickable="true"
-            android:backgroundTint="@color/add_post_blue"
+            android:backgroundTint="@color/bottomNavigationBackground"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
-            android:background="@color/add_post_blue"
+            android:background="@color/bottomNavigationBackground"
             android:elevation="0dp"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
@@ -235,7 +235,7 @@
                 android:fontFamily="@font/montserrat"
                 android:foreground="?attr/selectableItemBackground"
                 android:text="Sign In"
-                android:textColor="@color/hamburger"
+                android:textColor="@color/bottomNavigationBackground"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>

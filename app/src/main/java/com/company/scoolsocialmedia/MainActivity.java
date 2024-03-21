@@ -849,6 +849,8 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
 
         if (id == R.id.action_settings) {
             // Handle settings action
+            startActivity(new Intent(MainActivity.this, Settings.class));
+
             return true;
         } else if (id == R.id.action_chat_rooms) {
             // Handle chat rooms action

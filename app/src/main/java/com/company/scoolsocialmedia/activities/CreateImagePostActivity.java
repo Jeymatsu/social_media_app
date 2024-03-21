@@ -932,9 +932,6 @@ public class CreateImagePostActivity extends AppCompatActivity {
             return null;
         }
     }
-
-
-
     @Override
     protected void onDestroy() {
         post = null;

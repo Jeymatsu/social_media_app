@@ -153,7 +153,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/btn"
-            android:backgroundTint="@color/add_post_blue"
+            android:backgroundTint="@color/bottomNavigationBackground"
             android:clickable="true"
             android:elevation="10dp"
             android:padding="20dp"
@@ -163,10 +163,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/basic"
+                android:fontFamily="@font/montserrat"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="SIGN IN"
+
                 android:textColor="@color/whiteTextColor"
                 android:textSize="20sp" />
         </androidx.cardview.widget.CardView>
@@ -195,7 +196,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="48dp"
             android:visibility="gone"
-            app:indicatorColor="@color/hamburger"
+            app:indicatorColor="@color/bottomNavigationBackground"
             app:indicatorName="BallClipRotateMultipleIndicator" />
 
         <LinearLayout
@@ -226,7 +227,7 @@
                 android:fontFamily="@font/montserrat"
                 android:foreground="?attr/selectableItemBackground"
                 android:text="Sign Up"
-                android:textColor="@color/hamburger"
+                android:textColor="@color/bottomNavigationBackground"
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
