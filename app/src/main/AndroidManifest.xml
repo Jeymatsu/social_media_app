@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".loginsignup.AdminLogin"
+            android:exported="false" />
+        <activity
             android:name=".ChatRoom.ChatEntry"
             android:exported="false" />
         <activity

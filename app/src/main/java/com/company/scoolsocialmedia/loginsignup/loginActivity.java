@@ -35,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -91,7 +92,7 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (perfromCheck()) {
-                    login(emailView.getText().toString().trim(), passwordView.getText().toString().trim());
+                    loginWithAcademicNumber(emailView.getText().toString().trim(), passwordView.getText().toString().trim());
                 }
             }
         });
@@ -133,7 +134,7 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 BasicUser basicUser = dataSnapshot.getValue(BasicUser.class);
-                if (basicUser != null) {
+                if (basicUser != null && !basicUser.getName().isEmpty()) {
                     Constants.uName = basicUser.getName();
                     Constants.uCommunity = basicUser.getCommunity();
                     Intent i = new Intent(loginActivity.this, MainActivity
@@ -157,7 +158,9 @@ public class loginActivity extends AppCompatActivity {
     }
 
     private void openCreateProfile(){
-        startActivity(new Intent(loginActivity.this,CreateProfile.class));
+        Intent intent=new Intent(loginActivity.this,CreateProfile.class);
+        intent.putExtra("ACADEMIC_NUMBER",emailView.getText().toString().trim());
+        startActivity(intent);
     }
 
     private void showErrorLayout() {
@@ -171,6 +174,46 @@ public class loginActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void loginWithAcademicNumber(final String academicNumber, final String password) {
+        // Hide keyboard and show progress bar
+        hideKeyboard(loginActivity.this);
+        loginbtn.setEnabled(false);
+        progressBar.show();
+
+        // Query the database to find the user with the entered academic number
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("User_Information");
+        Query query = usersRef.orderByChild("academic_number").equalTo(academicNumber);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // If academic number exists, retrieve the associated email
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        String email = userSnapshot.child("email").getValue(String.class);
+                        if (email != null) {
+                            // Sign in with retrieved email and entered password
+                            login(email, password);
+                            return;
+                        }
+                    }
+                }
+                // If academic number not found or email retrieval failed, show error
+                progressBar.hide();
+                Toast.makeText(loginActivity.this, "Invalid academic number or password", Toast.LENGTH_SHORT).show();
+                loginbtn.setEnabled(true);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Show error if database query is cancelled
+                progressBar.hide();
+                Toast.makeText(loginActivity.this, "Database query cancelled", Toast.LENGTH_SHORT).show();
+                loginbtn.setEnabled(true);
+            }
+        });
+    }
+
 
     private void login(final String email, final String password) {
         hideKeyboard(loginActivity.this);

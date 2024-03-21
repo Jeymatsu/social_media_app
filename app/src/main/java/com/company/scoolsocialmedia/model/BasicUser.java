@@ -11,9 +11,12 @@ public class BasicUser implements Serializable {
     private String city_name;
     private String community;
     private String email;
+
     private String android_device_token;
 
     private String userId; // Unique identifier for the user
+
+    private  String academic_number;
 
 
     public String getUserId() {
@@ -27,7 +30,15 @@ public class BasicUser implements Serializable {
     public BasicUser(){
     }
 
-    public BasicUser(String name, String gender, String country_name, String city_name, String community, String email, String android_device_token, String userId) {
+    public String getAcademic_number() {
+        return academic_number;
+    }
+
+    public void setAcademic_number(String academic_number) {
+        this.academic_number = academic_number;
+    }
+
+    public BasicUser(String name, String gender, String country_name, String city_name, String community, String email, String android_device_token, String userId, String academic_number) {
         this.name = name;
         this.gender = gender;
         this.country_name = country_name;
@@ -36,6 +47,7 @@ public class BasicUser implements Serializable {
         this.email = email;
         this.android_device_token = android_device_token;
         this.userId = userId;
+        this.academic_number = academic_number;
     }
 
     public String getName() {

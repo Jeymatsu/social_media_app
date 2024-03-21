@@ -38,6 +38,7 @@ public class CreateProfile extends AppCompatActivity {
     private AVLoadingIndicatorView progressBar;
     private RadioGroup rgroup;
     private FirebaseAuth mAuth;
+    private String academicNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,9 @@ public class CreateProfile extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mAuth = FirebaseAuth.getInstance();
+
+        Intent intent=new Intent();
+        academicNumber=intent.getStringExtra("ACADEMIC_NUMBER");
         fname_v = findViewById(R.id.signUpFNametextInputEditText);
         lname_v = findViewById(R.id.signUpLNametextInputEditText);
         city_v = findViewById(R.id.signUpCitySignup);
@@ -85,7 +89,7 @@ public class CreateProfile extends AppCompatActivity {
         } else {
             try {
                 FirebaseUser user = mAuth.getCurrentUser();
-                BasicUser newUser = new BasicUser(fname + " " + lname, gender, country, city, community, user.getEmail(), "none",user.getUid());
+                BasicUser newUser = new BasicUser(fname + " " + lname, gender, country, city, community, user.getEmail(), "none",user.getUid(),academicNumber);
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("User_Information").child(user.getUid());
                 myRef.setValue(newUser, new DatabaseReference.CompletionListener() {

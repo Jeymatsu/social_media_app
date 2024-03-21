@@ -21,11 +21,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.company.scoolsocialmedia.R;
+import com.company.scoolsocialmedia.model.BasicUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +43,8 @@ public class signupActivity extends AppCompatActivity {
     private AVLoadingIndicatorView progressBar;
     private FirebaseAuth mAuth;
 
+    private EditText AcademicNumbertextInputEditText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,7 @@ public class signupActivity extends AppCompatActivity {
         password_v = findViewById(R.id.signUpPasswordtextInputEditText);
         c_password=findViewById(R.id.ConfirmsignUpPasswordtextInputEditText);
         email_v = findViewById(R.id.signUpEmailtextInputEditText);
+        AcademicNumbertextInputEditText=findViewById(R.id.AcademicNumbertextInputEditText);
         signUp = findViewById(R.id.signUpButton);
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +91,7 @@ public class signupActivity extends AppCompatActivity {
 
 
         final String email = email_v.getText().toString().trim();
-
+        final String academicNumber =AcademicNumbertextInputEditText.getText().toString().trim();
         String password = password_v.getText().toString().trim();
         String cPassword=c_password.getText().toString().trim();
 
@@ -106,16 +112,34 @@ public class signupActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                user.sendEmailVerification()
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                   showEmailSentDialog();
-                                                } else {
-                                                }
-                                            }
-                                        });
+                                // Create a BasicUser object with user information
+                                BasicUser basicUser = new BasicUser("", "", "", "", "", email, "", user.getUid(), academicNumber);
+                                // Store user information in Firebase Database
+                                DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("User_Information");
+                                usersRef.child(user.getUid()).setValue(basicUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+
+                                        if (task.isSuccessful()) {
+                                            // Send verification email
+                                            user.sendEmailVerification()
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                showEmailSentDialog();
+                                                            }
+                                                        }
+                                                    });
+                                        } else {
+                                            progressBar.hide();
+                                            Toast.makeText(signupActivity.this, "Registration failed.",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+
+                                });
 
                             } else {
                                 signUp.setVisibility(View.VISIBLE);
