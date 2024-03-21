@@ -29,6 +29,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -104,6 +105,11 @@ public class CreateImagePostActivity extends AppCompatActivity {
 
     private VideoView createVideoPostMainVideo;
 
+    private EditText createNoImgPostBody;
+
+    private ConstraintLayout constraintMedia;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +128,9 @@ public class CreateImagePostActivity extends AppCompatActivity {
 
         createTextPostContent=findViewById(R.id.createTextPostContent);
         createVideoPostMainVideo=findViewById(R.id.createVideoPostMainVideo);
+        constraintMedia=findViewById(R.id.constraintMedia);
+
+        createNoImgPostBody=findViewById(R.id.createNoImgPostBody);
         exchangeTxt = findViewById(R.id.exchange_txt);
 //        learningTxt = findViewById(R.id.learning_txt);
 //        learningTxt.setVisibility(View.GONE);
@@ -159,20 +168,21 @@ public class CreateImagePostActivity extends AppCompatActivity {
 
                 // Show/hide views based on spinner selection
                 switch (selectedItem) {
-                    case "Image":
+                    case "Media":
+
+                          createNoImgPostBody.setVisibility(View.GONE);
+                        constraintMedia.setVisibility(View.VISIBLE);
 //                        mainImage.setVisibility(View.VISIBLE);
 //                        createVideoPostMainVideo.setVisibility(View.GONE);
 //                        createTextPostContent.setVisibility(View.GONE);
                         break;
-                    case "Video":
+                    case "Text":
+
+                        createNoImgPostBody.setVisibility(View.VISIBLE);
+                        constraintMedia.setVisibility(View.GONE);
 //                        mainImage.setVisibility(View.GONE);
 //                        createVideoPostMainVideo.setVisibility(View.VISIBLE);
 //                        createTextPostContent.setVisibility(View.GONE);
-                        break;
-                    case "Text":
-//                        mainImage.setVisibility(View.GONE);
-//                        createVideoPostMainVideo.setVisibility(View.GONE);
-//                        createTextPostContent.setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -200,8 +210,11 @@ public class CreateImagePostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if(isImageLoaded){
                     shareOrUpdatePost();
-                }else {
+                } else if (isVideoLoaded) {
                     shareOrUpdateVideoPost();
+
+                } else {
+                    shareOrUpdateTextPost();
                 }
 
             }
@@ -628,6 +641,107 @@ public class CreateImagePostActivity extends AppCompatActivity {
     }
 
 
+
+
+    private void shareOrUpdateTextPost() {
+        String postTitle = postImgInfo.getText().toString().trim();
+        String postBody = createNoImgPostBody.getText().toString().trim();
+        String skillShow = getSkillStatus();
+        String postType = typeSpinner.getSelectedItem().toString().trim();
+
+        if (isActionNewPost) {
+            if (postTitle.length() == 0 || postBody.length() == 0) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            } else {
+                if (mSelectedCommunities != null) {
+                    if (mSelectedCommunities.size() == 0) {
+                        Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (!postTitle.isEmpty() && !postBody.isEmpty()) {
+                            postRef = FirebaseDatabase.getInstance().getReference("Posts_Table");
+                            showProgress();
+                            post = PostModel.getPostMode(1);
+                            post.setPost_title(postTitle);
+                            post.setPost_body(postBody);
+                            post.setPost_type(postType);
+                            post.setShow_skills(skillShow);
+                            post.setUser_id(Constants.getConstantUid());
+                            post.setPost_date(getTimeDate());
+                            post.getTagged_communities().addAll(mSelectedCommunities);
+
+                            postRef.push().setValue(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        hideProgress();
+                                        Toast.makeText(getApplicationContext(), "Post shared successfully", Toast.LENGTH_LONG).show();
+                                        gotoMainActivity();
+                                    } else {
+                                        hideProgress();
+                                        Toast.makeText(getApplicationContext(), "Error sharing the post", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                        } else {
+                            hideProgress();
+                            Toast.makeText(this, "Title and body should be at least 10 and 60 characters respectively", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            if (postTitle.length() != 0 || postBody.length() != 0) {
+                if (postTitle.equalsIgnoreCase(post.getPost_title()) && postBody.equalsIgnoreCase(post.getPost_body())
+                        && postType.equalsIgnoreCase(post.getPost_type()) && skillShow.equalsIgnoreCase(post.getShow_skills()) && !isCommunitiesChangedOnUpdate) {
+                    Toast.makeText(getApplicationContext(), "No changes made", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (mSelectedCommunities != null) {
+                        if (mSelectedCommunities.size() == 0) {
+                            Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (!postBody.isEmpty() && !postTitle.isEmpty()) {
+                                postRef = FirebaseDatabase.getInstance().getReference("Posts_Table").child(post.getPost_id());
+                                showProgress();
+                                Map<String, Object> updates = new HashMap<>();
+                                updates.put("post_title", postTitle);
+                                updates.put("post_body", postBody);
+                                updates.put("post_type", postType);
+                                updates.put("show_skills", skillShow);
+                                updates.put("user_id", post.getUser_id());
+                                updates.put("post_date", post.getPost_date());
+                                updates.put("tagged_communities", mSelectedCommunities);
+
+                                postRef.updateChildren(updates, new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                        if (databaseError == null) {
+                                            hideProgress();
+                                            Toast.makeText(getApplicationContext(), "Post updated Successfully", Toast.LENGTH_LONG).show();
+                                            gotoMainActivity();
+                                        } else {
+                                            hideProgress();
+                                            Toast.makeText(getApplicationContext(), "Error updating the post", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            } else {
+                                hideProgress();
+                                Toast.makeText(this, "Title and body should be at least 10 and 60 characters respectively", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    } else {
+                        Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
     private void chooseImageOrVideoToUpload() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -819,6 +933,8 @@ public class CreateImagePostActivity extends AppCompatActivity {
         }
     }
 
+
+
     @Override
     protected void onDestroy() {
         post = null;
@@ -868,7 +984,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
     }
 
     private void populateTypeSpinner() {
-        String[] spinnerArray = {"Image", "Video", "Text"};
+        String[] spinnerArray = {"Media", "Text"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, spinnerArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
