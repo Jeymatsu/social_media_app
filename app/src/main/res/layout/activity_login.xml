@@ -186,6 +186,21 @@
             android:textColor="@color/darkGray"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/adminLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/forgetPass"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/basic"
+            android:foreground="?attr/selectableItemBackground"
+            android:text="Log in as Admin"
+            android:textColor="@color/darkGray"
+            android:textSize="18sp" />
+
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/progressBar"
             style="@style/AVLoadingIndicatorView"

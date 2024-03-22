@@ -50,6 +50,9 @@ public class CreateProfile extends AppCompatActivity {
 
         Intent intent=new Intent();
         academicNumber=intent.getStringExtra("ACADEMIC_NUMBER");
+
+        Toast.makeText(this, academicNumber, Toast.LENGTH_SHORT).show();
+
         fname_v = findViewById(R.id.signUpFNametextInputEditText);
         lname_v = findViewById(R.id.signUpLNametextInputEditText);
         city_v = findViewById(R.id.signUpCitySignup);

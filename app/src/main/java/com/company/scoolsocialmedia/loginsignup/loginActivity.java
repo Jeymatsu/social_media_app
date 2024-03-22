@@ -54,6 +54,7 @@ public class loginActivity extends AppCompatActivity {
     private SharedPreferences prefs;
     private FirebaseAuth mAuth;
 
+    private TextView adminLogin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +88,14 @@ public class loginActivity extends AppCompatActivity {
         goToSignUpBtn = findViewById(R.id.createOne);
         passwordView = findViewById(R.id.password);
         emailView = findViewById(R.id.email);
+        adminLogin=findViewById(R.id.adminLogin);
+
+        adminLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), AdminLogin.class));
+            }
+        });
 
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +168,8 @@ public class loginActivity extends AppCompatActivity {
 
     private void openCreateProfile(){
         Intent intent=new Intent(loginActivity.this,CreateProfile.class);
-        intent.putExtra("ACADEMIC_NUMBER",emailView.getText().toString().trim());
+        Toast.makeText(this,emailView.getText().toString() , Toast.LENGTH_SHORT).show();
+        intent.putExtra("ACADEMIC_NUMBER",emailView.getText().toString());
         startActivity(intent);
     }
 
