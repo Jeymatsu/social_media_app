@@ -284,10 +284,8 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-
         BottomNavigationView bnve = (BottomNavigationView)
                 findViewById(R.id.navigation);
-
 
         bnve.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {

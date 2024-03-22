@@ -220,13 +220,13 @@
 
         </LinearLayout>
 
+
         <LinearLayout
             android:id="@+id/singularFollowFollowingButtonLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/aboutContent"
             app:layout_constraintTop_toBottomOf="@id/titleViewUpper"
             tools:visibility="gone">
@@ -364,171 +364,171 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/university_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/university_container"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:layout_marginBottom="4dp">-->
 
-                <ImageView
-                    android:id="@+id/uniImageView"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_graduation_hat" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/uniImageView"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:src="@drawable/ic_graduation_hat" />-->
 
-                <TextView
-                    android:id="@+id/uniTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/uniImageView"
-                    android:text="University"
-                    android:textColor="@color/drawerMenuGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/uniTextView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/uniImageView"-->
+<!--                    android:text="University"-->
+<!--                    android:textColor="@color/drawerMenuGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-                <TextView
-                    android:id="@+id/university_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/uniTextView"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/uniImageView"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:text="National University of Science"
-                    android:textColor="@color/lessGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/university_text"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/uniTextView"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/uniImageView"-->
+<!--                    android:ellipsize="end"-->
+<!--                    android:maxLines="2"-->
+<!--                    android:text="National University of Science"-->
+<!--                    android:textColor="@color/lessGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
 
-            <RelativeLayout
-                android:id="@+id/department_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/department_container"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:layout_marginBottom="4dp">-->
 
-                <ImageView
-                    android:id="@+id/dptImageView"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_department" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/dptImageView"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:src="@drawable/ic_department" />-->
 
-                <TextView
-                    android:id="@+id/dptTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/dptImageView"
-                    android:text="Department"
-                    android:textColor="@color/drawerMenuGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/dptTextView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/dptImageView"-->
+<!--                    android:text="Department"-->
+<!--                    android:textColor="@color/drawerMenuGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-                <TextView
-                    android:id="@+id/department_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/dptTextView"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/dptImageView"
-                    android:text="Computer Science"
-                    android:textColor="@color/lessGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/department_text"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/dptTextView"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/dptImageView"-->
+<!--                    android:text="Computer Science"-->
+<!--                    android:textColor="@color/lessGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
 
-            <RelativeLayout
-                android:id="@+id/community_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/community_container"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:layout_marginBottom="4dp">-->
 
-                <ImageView
-                    android:id="@+id/commImageView"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_community" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/commImageView"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:src="@drawable/ic_community" />-->
 
-                <TextView
-                    android:id="@+id/commTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/commImageView"
-                    android:text="Community"
-                    android:textColor="@color/drawerMenuGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/commTextView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/commImageView"-->
+<!--                    android:text="Community"-->
+<!--                    android:textColor="@color/drawerMenuGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-                <TextView
-                    android:id="@+id/community_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/commTextView"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/commImageView"
-                    android:text="Software Engineer"
-                    android:textColor="@color/lessGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/community_text"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/commTextView"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/commImageView"-->
+<!--                    android:text="Software Engineer"-->
+<!--                    android:textColor="@color/lessGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
 
-            <RelativeLayout
-                android:id="@+id/location_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/location_container"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:layout_marginBottom="4dp">-->
 
-                <ImageView
-                    android:id="@+id/locImageView"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_location" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/locImageView"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:src="@drawable/ic_location" />-->
 
-                <TextView
-                    android:id="@+id/locTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/locImageView"
-                    android:text="Location"
-                    android:textColor="@color/drawerMenuGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/locTextView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/locImageView"-->
+<!--                    android:text="Location"-->
+<!--                    android:textColor="@color/drawerMenuGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-                <TextView
-                    android:id="@+id/location_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/locTextView"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/locImageView"
-                    android:text="Islamabad, Pakistan"
-                    android:textColor="@color/lessGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/location_text"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/locTextView"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/locImageView"-->
+<!--                    android:text="Islamabad, Pakistan"-->
+<!--                    android:textColor="@color/lessGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
 
             <RelativeLayout
                 android:id="@+id/skills_container"
@@ -612,49 +612,49 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/address_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/address_container"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:layout_marginBottom="8dp">-->
 
-                <ImageView
-                    android:id="@+id/addressImageView"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_location" />
+<!--                <ImageView-->
+<!--                    android:id="@+id/addressImageView"-->
+<!--                    android:layout_width="24dp"-->
+<!--                    android:layout_height="24dp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginStart="16dp"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:src="@drawable/ic_location" />-->
 
-                <TextView
-                    android:id="@+id/address_textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/addressImageView"
-                    android:text="Address"
-                    android:textColor="@color/drawerMenuGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/address_textView"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/addressImageView"-->
+<!--                    android:text="Address"-->
+<!--                    android:textColor="@color/drawerMenuGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-                <TextView
-                    android:id="@+id/address_text"
-                    android:inputType="textMultiLine"
-                    android:minLines="1"
-                    android:maxLines="2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/address_textView"
-                    android:layout_marginStart="8dp"
-                    android:layout_toEndOf="@id/addressImageView"
-                    android:text="my address"
-                    android:textColor="@color/lessGray"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/address_text"-->
+<!--                    android:inputType="textMultiLine"-->
+<!--                    android:minLines="1"-->
+<!--                    android:maxLines="2"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_below="@id/address_textView"-->
+<!--                    android:layout_marginStart="8dp"-->
+<!--                    android:layout_toEndOf="@id/addressImageView"-->
+<!--                    android:text="my address"-->
+<!--                    android:textColor="@color/lessGray"-->
+<!--                    android:textSize="16sp"-->
+<!--                    android:textStyle="bold" />-->
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -705,6 +705,36 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editProfilebtn">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="POSTS"
+                android:layout_centerHorizontal="true"
+                android:textSize="20dp"
+                android:id="@+id/txtPosts"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/posts_recylerview"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/txtPosts"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="48dp"
+                android:layout_marginHorizontal="3dp"
+                android:layout_marginTop="10dp"
+
+                />
+
+        </RelativeLayout>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -21,12 +21,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.company.scoolsocialmedia.FollowersActivity;
+import com.company.scoolsocialmedia.MainActivity;
+import com.company.scoolsocialmedia.activities.PostDetailActivity;
+import com.company.scoolsocialmedia.adapters.PostsAdapter;
+import com.company.scoolsocialmedia.listeners.OnPostClickListener;
+import com.company.scoolsocialmedia.listeners.OnPostUserImageClickListener;
 import com.company.scoolsocialmedia.model.BasicUser;
 import com.company.scoolsocialmedia.Constants;
 import com.company.scoolsocialmedia.R;
+import com.company.scoolsocialmedia.model.PostModel;
 import com.company.scoolsocialmedia.model.UserProfile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +44,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -48,7 +58,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity  implements OnPostClickListener, OnPostUserImageClickListener {
 
     private static final String TAG = "ProfileActivityTAG";
     private String uid = Constants.getConstantUid();
@@ -63,8 +73,13 @@ public class ProfileActivity extends AppCompatActivity {
     private LinearLayout singularFollowFollowingButtonLayout;
     private ImageView follow_follower_indicator_view;
     private TextView follow_follower_indicator_view_text;
-    private RelativeLayout titleContainer, universityContainer, departmentContainer, communityContainer, location_container, skill_container, email_container,addressContainer;
-    private TextView titleView, universityView, departmentView, communityView, locationView, skillView, emailView, nameView, overviewView, titleUpper,addressView;
+
+//    private RelativeLayout universityContainer,departmentContainer,addressContainer,communityContainer,location_container;
+//    private TextView universityView,departmentView,addressView,communityView,locationView;
+
+
+    private RelativeLayout titleContainer, skill_container, email_container;
+    private TextView titleView, skillView, emailView, nameView, overviewView, titleUpper;
     private LinearLayout data_holder;
     private AVLoadingIndicatorView progressBar;
     private FrameLayout header;
@@ -72,9 +87,17 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView toolbarTitle;
     int followersCount=0;
+    int totalPostsLoaded = 0;
+
+    DatabaseReference postDataRef, userInfoRef, notifDataRef;
 
     private TextView txtFollowers;
     private TextView txtFollowing;
+    RecyclerView recyclerView;
+
+    List<PostModel> mPosts, mTempPosts, mAllPosts;
+    PostsAdapter mAdapter;
+
 
 
 
@@ -89,9 +112,27 @@ public class ProfileActivity extends AppCompatActivity {
                 mode = false;
             }
         }
-         getFollowersCount();
+        getFollowersCount();
         getFollowingCount();
         loadData(mode);
+        initRecyclerView();
+        subscribeToPosts(uid);
+    }
+
+
+    private void initRecyclerView() {
+        recyclerView = findViewById(R.id.posts_recylerview);
+        mPosts = new ArrayList<>();
+        mTempPosts = new ArrayList<>();
+        mAllPosts = new ArrayList<>();
+        mAdapter = new PostsAdapter(mPosts, getApplicationContext(), this, this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 
 
@@ -104,18 +145,18 @@ public class ProfileActivity extends AppCompatActivity {
         overviewView = findViewById(R.id.overview_view);
         titleView = findViewById(R.id.title_view);
         titleContainer = findViewById(R.id.title_container);
-        universityContainer = findViewById(R.id.university_container);
-        universityView = findViewById(R.id.university_text);
-        departmentContainer = findViewById(R.id.department_container);
-        departmentView = findViewById(R.id.department_text);
+//        universityContainer = findViewById(R.id.university_container);
+//        universityView = findViewById(R.id.university_text);
+//        departmentContainer = findViewById(R.id.department_container);
+//        departmentView = findViewById(R.id.department_text);
         txtFollowers=findViewById(R.id.txtFollowers);
         txtFollowing=findViewById(R.id.txtFollowing);
-        addressContainer = findViewById(R.id.address_container);
-        addressView = findViewById(R.id.address_text);
-        communityContainer = findViewById(R.id.community_container);
-        communityView = findViewById(R.id.community_text);
-        location_container = findViewById(R.id.location_container);
-        locationView = findViewById(R.id.location_text);
+//        addressContainer = findViewById(R.id.address_container);
+//        addressView = findViewById(R.id.address_text);
+//        communityContainer = findViewById(R.id.community_container);
+//        communityView = findViewById(R.id.community_text);
+//        location_container = findViewById(R.id.location_container);
+//        locationView = findViewById(R.id.location_text);
         skill_container = findViewById(R.id.skills_container);
         skillView = findViewById(R.id.skills_text);
         email_container = findViewById(R.id.email_container);
@@ -160,6 +201,91 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    private void fetchPostUserInfo(final PostModel post, final long totalPosts) {
+        userInfoRef = FirebaseDatabase.getInstance().getReference("User_Information");
+        userInfoRef.child(post.getUser_id()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.hasChild("name")) {
+                        post.setPost_user_posted_name(dataSnapshot.child("name").getValue().toString());
+                    } else {
+                        post.setPost_user_posted_name("(No Name)");
+                    }
+                    mPosts.add(post);
+                    if (mPosts.size() == totalPosts) {
+                        prepareRecyclerView(true, false);
+                        loadPostsUserImages();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                prepareRecyclerView(true, false);
+                Toast.makeText(getApplicationContext(), "Error While Loading Posts", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void loadPostsUserImages() {
+        if (!mPosts.isEmpty()) {
+            for (int i = 0; i < mPosts.size(); i++) {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("profileImages/" + mPosts.get(i).getUser_id());
+                final int finalI = i;
+                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String imageURL = uri.toString();
+                        mPosts.get(finalI).setPost_user_posted_image(imageURL);
+                        mAdapter.notifyImageLoaded(finalI);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                });
+            }
+        }
+    }
+
+    private void subscribeToPosts(String userId) {
+        mPosts.clear();
+        mAllPosts.clear();
+        mTempPosts.clear();
+        totalPostsLoaded = 0;
+        postDataRef = FirebaseDatabase.getInstance().getReference("Posts_Table");
+
+        // Query posts where user_id equals the provided userId
+        Query query = postDataRef.orderByChild("user_id").equalTo(userId);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.hasChildren()) {
+                        long totalPosts = dataSnapshot.getChildrenCount();
+                        for (DataSnapshot dsp : dataSnapshot.getChildren()) {
+                            PostModel post = dsp.getValue(PostModel.class);
+                            post.setPost_id(dsp.getKey());
+                            fetchPostUserInfo(post, totalPosts);
+                        }
+                    } else {
+                        prepareRecyclerView(true, false);
+                    }
+                } else {
+                    prepareRecyclerView(true, false);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "Error While Loading Posts", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+
     public void populateViews(final UserProfile profile, boolean mode) {
         toolbarTitle.setText(WordUtils.capitalize(profile.getUser().getName()));
         Log.i("TESTABC", String.valueOf(mode));
@@ -173,6 +299,7 @@ public class ProfileActivity extends AppCompatActivity {
             editBtn.setVisibility(View.VISIBLE);
             followersButtons.setVisibility(View.VISIBLE);
             singularFollowFollowingButtonLayout.setVisibility(View.INVISIBLE);
+
         }
         singularFollowFollowingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,6 +312,9 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
         editBtn.setClickable(true);
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,15 +325,15 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         if (profile.getUser() != null) {
-            communityContainer.setVisibility(View.VISIBLE);
+//            communityContainer.setVisibility(View.VISIBLE);
             email_container.setVisibility(View.VISIBLE);
             String location = profile.getUser().getCity_name() + "," + profile.getUser().getCountry_name();
-            locationView.setText(location);
-            communityView.setText(profile.getUser().getCommunity());
+//            locationView.setText(location);
+//            communityView.setText(profile.getUser().getCommunity());
             emailView.setText(profile.getUser().getEmail());
             nameView.setText(WordUtils.capitalize(profile.getUser().getName()));
         } else {
-            communityContainer.setVisibility(View.GONE);
+//            communityContainer.setVisibility(View.GONE);
             email_container.setVisibility(View.GONE);
             nameView.setVisibility(View.GONE);
         }
@@ -216,17 +346,17 @@ public class ProfileActivity extends AppCompatActivity {
             overviewView.setVisibility(View.GONE);
         }
         if (profile.getMy_address() != null && !profile.getMy_address().equals("")){
-            addressContainer.setVisibility(View.VISIBLE);
-            addressView.setText(profile.getMy_address());
+//            addressContainer.setVisibility(View.VISIBLE);
+//            addressView.setText(profile.getMy_address());
         }
         else{
-            addressContainer.setVisibility(View.GONE);
+//            addressContainer.setVisibility(View.GONE);
         }
         if (profile.getMy_department() != null && !profile.getMy_department().equals("")) {
-            departmentContainer.setVisibility(View.VISIBLE);
-            departmentView.setText(profile.getMy_department());
+//            departmentContainer.setVisibility(View.VISIBLE);
+//            departmentView.setText(profile.getMy_department());
         } else {
-            departmentContainer.setVisibility(View.GONE);
+//            departmentContainer.setVisibility(View.GONE);
         }
         if (profile.getMy_title() != null && !profile.getMy_title().equals("")) {
             titleContainer.setVisibility(View.VISIBLE);
@@ -238,10 +368,10 @@ public class ProfileActivity extends AppCompatActivity {
             titleContainer.setVisibility(View.GONE);
         }
         if (profile.getMy_university() != null && !profile.getMy_university().equals("")) {
-            universityContainer.setVisibility(View.VISIBLE);
-            universityView.setText(WordUtils.capitalize(profile.getMy_university()));
+//            universityContainer.setVisibility(View.VISIBLE);
+//            universityView.setText(WordUtils.capitalize(profile.getMy_university()));
         } else {
-            universityContainer.setVisibility(View.GONE);
+//            universityContainer.setVisibility(View.GONE);
         }
         if (profile.getMy_skills() != null && profile.getMy_skills().size() != 0 && !profile.getMy_skills().get(0).equals("")){
             skill_container.setVisibility(View.VISIBLE);
@@ -622,5 +752,125 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadData(mode);
+    }
+
+    private void changeDisplayedItems(){
+        recyclerView.setAdapter(null);
+        recyclerView.setLayoutManager(null);
+        recyclerView.setAdapter(mAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        mAdapter.notifyDataSetChanged();
+    }
+    private void prepareRecyclerView(boolean showOnlyPublicPosts, boolean showOnlyUserPosts) {
+        if (!showOnlyUserPosts) {
+            if (showOnlyPublicPosts) {
+                if (mPosts.isEmpty()) {
+                    recyclerView.setVisibility(View.GONE);
+                } else {
+                    PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                    mPosts.add(0, post);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    changeDisplayedItems();
+                }
+                mTempPosts.clear();
+            } else {
+                if (!mPosts.isEmpty()) {
+                    mTempPosts.addAll(mPosts);
+                    mTempPosts.remove(0);
+                    mPosts.clear();
+                    for (PostModel post : mTempPosts) {
+                        if (!post.getPost_type().equalsIgnoreCase("NoMorePost")) {
+                            if (checkIfPostCommunityEqualsMyCommunity(post)) {
+                                mPosts.add(post);
+                            }
+                        }
+                    }
+                    if (mPosts.isEmpty()) {
+                        recyclerView.setVisibility(View.GONE);
+
+                    } else {
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        mPosts.add(0,post);
+                        recyclerView.setVisibility(View.VISIBLE);
+
+                        changeDisplayedItems();
+                    }
+                }
+            }
+        } else {
+            if (showOnlyPublicPosts) {
+                if (!mAllPosts.isEmpty()) {
+                    mTempPosts.clear();
+                    mTempPosts.addAll(mAllPosts);
+                    mTempPosts.remove(0);
+                    mPosts.clear();
+                    for (PostModel post : mTempPosts) {
+                        if (!post.getPost_type().equalsIgnoreCase("NoMorePost")) {
+                            if (post.getUser_id().equalsIgnoreCase(Constants.getConstantUid())) {
+                                mPosts.add(post);
+                            }
+                        }
+                    }
+                    if (mPosts.isEmpty()) {
+                        recyclerView.setVisibility(View.GONE);
+
+                    } else {
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        mPosts.add(0,post);
+                        recyclerView.setVisibility(View.VISIBLE);
+
+                        changeDisplayedItems();
+                    }
+                    mTempPosts.clear();
+                }
+            } else {
+                if (!mAllPosts.isEmpty()) {
+                    mTempPosts.addAll(mAllPosts);
+                    mTempPosts.remove(0);
+                    mPosts.clear();
+                    for (PostModel post : mTempPosts) {
+                        if (!post.getPost_type().equalsIgnoreCase("NoMorePost")) {
+                            if (checkIfPostCommunityEqualsMyCommunity(post) && post.getUser_id().equalsIgnoreCase(Constants.getConstantUid())) {
+                                mPosts.add(post);
+                            }
+                        }
+                    }
+                    if (mPosts.isEmpty()) {
+                        recyclerView.setVisibility(View.GONE);
+
+                    } else {
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        mPosts.add(0,post);
+                        recyclerView.setVisibility(View.VISIBLE);
+
+                        changeDisplayedItems();
+                    }
+                    mTempPosts.clear();
+                }
+            }
+        }
+    }
+
+    private boolean checkIfPostCommunityEqualsMyCommunity(PostModel post) {
+        for (String st : post.getTagged_communities()) {
+            if (st.equalsIgnoreCase(Constants.uCommunity)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void showPostDetail(PostModel post) {
+
+    }
+
+    @Override
+    public void showProfile(String id) {
+
     }
 }

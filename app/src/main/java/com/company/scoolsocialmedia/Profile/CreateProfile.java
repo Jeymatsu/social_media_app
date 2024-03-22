@@ -47,10 +47,8 @@ public class CreateProfile extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mAuth = FirebaseAuth.getInstance();
-
         Intent intent=new Intent();
         academicNumber=intent.getStringExtra("ACADEMIC_NUMBER");
-
         Toast.makeText(this, academicNumber, Toast.LENGTH_SHORT).show();
 
         fname_v = findViewById(R.id.signUpFNametextInputEditText);
