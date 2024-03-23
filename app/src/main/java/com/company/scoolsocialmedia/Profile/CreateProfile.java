@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.WordUtils;
 
 public class CreateProfile extends AppCompatActivity {
-
     private EditText fname_v, lname_v, city_v;
     private Spinner countrySpinner, communitySpinner;
     private CardView signUp;

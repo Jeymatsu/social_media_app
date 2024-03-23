@@ -48,10 +48,8 @@ public class GroupChat extends AppCompatActivity {
     private DatabaseReference messagesRef;
     private ValueEventListener messageListener;
     private String CHAT_ROOM_ID,CHAT_ROOM_NAME;
-
     Toolbar toolbar;
     private TextView chat_room_name;
-
     private DatabaseReference chatroomsRef;
 
 
