@@ -30,6 +30,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:id="@+id/btnDelete"
+            android:background="@color/redBorderColor"
+            android:text="Delete"
+            android:textColor="@color/whiteTextColor"
+            app:layout_constraintLeft_toRightOf="@+id/post_image_item_postedUserName_txtview"
+            app:layout_constraintBottom_toTopOf="@id/first_line"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="@font/montserrat"/>
+
         <TextView
             android:id="@+id/post_image_item_postedUserName_txtview"
             android:layout_width="0dp"

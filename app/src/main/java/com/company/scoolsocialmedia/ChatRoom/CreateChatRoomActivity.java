@@ -56,7 +56,7 @@ public class CreateChatRoomActivity extends AppCompatActivity {
         usersRef = FirebaseDatabase.getInstance().getReference().child("User_Information");
 
         userList = new ArrayList<>();
-        userAdapter = new UserAdapter(userList);
+        userAdapter = new UserAdapter(userList,true);
 
         // Set up RecyclerView
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));

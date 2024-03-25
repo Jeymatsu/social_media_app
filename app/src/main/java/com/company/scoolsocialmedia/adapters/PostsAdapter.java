@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -45,13 +46,15 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private Context mContex;
     private OnPostClickListener mOnPostClickListener;
     private OnPostUserImageClickListener listener;
+    private Boolean isAdmin;
 
 
-    public PostsAdapter(List<PostModel> mPostsList, Context mContex, OnPostClickListener listener, OnPostUserImageClickListener listener2) {
+    public PostsAdapter(List<PostModel> mPostsList, Context mContex, OnPostClickListener listener, OnPostUserImageClickListener listener2, Boolean isAdmin) {
         this.mPostsList = mPostsList;
         this.listener = listener2;
         this.mContex = mContex;
         this.mOnPostClickListener = listener;
+        this.isAdmin=isAdmin;
     }
 
     @Override
@@ -107,7 +110,18 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     private void handlePostWithNoImage(RecyclerView.ViewHolder holder, final PostModel post) {
+
         ((PostsWithNoImageViewHolder) holder).setIsRecyclable(false);
+
+
+//        if (isAdmin) {
+//            ((PostsWithNoImageViewHolder) holder).btnDelete.setVisibility(View.VISIBLE);
+//
+//        }else {
+//            ((PostsWithNoImageViewHolder) holder).btnDelete.setVisibility(View.GONE);
+//
+//
+//        }
         ((PostsWithNoImageViewHolder) holder).postItemBody.setText(post.getPost_body());
         ((PostsWithNoImageViewHolder) holder).postItemTitle.setText(post.getPost_title());
         ((PostsWithNoImageViewHolder) holder).postItemType.setText(post.getPost_type());
@@ -545,6 +559,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private LinearLayout firstCateogryHolder;
         private LinearLayout secondCateogryHolder;
         private LinearLayout thirdCateogryHolder;
+        private Button btnDelete;
 
         public PostsWithNoImageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -558,6 +573,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             firstCateogryHolder = itemView.findViewById(R.id.postItemFirstCategoryLayout);
             secondCateogryHolder = itemView.findViewById(R.id.postItemSecondCategoryLayout);
             thirdCateogryHolder = itemView.findViewById(R.id.postItemThirdCategoryLayout);
+            btnDelete=itemView.findViewById(R.id.btnDelete);
         }
     }
 

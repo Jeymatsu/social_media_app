@@ -85,7 +85,7 @@ public class SearchActivity extends AppCompatActivity implements OnPostClickList
         if (type.equalsIgnoreCase("post")) {
             if (!mPosts.isEmpty()) {
                 hideEmptyMsg();
-                mPostAdapter = new PostsAdapter(mPosts, this, this, this);
+                mPostAdapter = new PostsAdapter(mPosts, this, this, this,false);
                 LinearLayoutManager lm = new LinearLayoutManager(this);
                 lm.setReverseLayout(true);
                 lm.setStackFromEnd(true);

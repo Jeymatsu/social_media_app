@@ -42,17 +42,13 @@ public class signupActivity extends AppCompatActivity {
     private TextView goToLogin;
     private AVLoadingIndicatorView progressBar;
     private FirebaseAuth mAuth;
-
     private EditText AcademicNumbertextInputEditText;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mAuth = FirebaseAuth.getInstance();
-
         progressBar = findViewById(R.id.signup_prog);
         password_v = findViewById(R.id.signUpPasswordtextInputEditText);
         c_password=findViewById(R.id.ConfirmsignUpPasswordtextInputEditText);
@@ -74,7 +70,6 @@ public class signupActivity extends AppCompatActivity {
         });
 
     }
-
     public static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = activity.getCurrentFocus();
@@ -83,19 +78,11 @@ public class signupActivity extends AppCompatActivity {
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-
-
-
-
     public void signup() {
-
-
         final String email = email_v.getText().toString().trim();
         final String academicNumber =AcademicNumbertextInputEditText.getText().toString().trim();
         String password = password_v.getText().toString().trim();
         String cPassword=c_password.getText().toString().trim();
-
-
 
         if ( email.length() == 0
         ) {

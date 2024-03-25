@@ -125,7 +125,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
         mPosts = new ArrayList<>();
         mTempPosts = new ArrayList<>();
         mAllPosts = new ArrayList<>();
-        mAdapter = new PostsAdapter(mPosts, getApplicationContext(), this, this);
+        mAdapter = new PostsAdapter(mPosts, getApplicationContext(), this, this,false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);

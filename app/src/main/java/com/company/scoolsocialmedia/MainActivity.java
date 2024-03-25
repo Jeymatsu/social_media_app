@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         initUI();
     }
 
@@ -326,7 +325,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
         mPosts = new ArrayList<>();
         mTempPosts = new ArrayList<>();
         mAllPosts = new ArrayList<>();
-        mAdapter = new PostsAdapter(mPosts, getApplicationContext(), this, this);
+        mAdapter = new PostsAdapter(mPosts, getApplicationContext(), this, this,false);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);

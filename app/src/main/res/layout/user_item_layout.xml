@@ -6,7 +6,6 @@
     android:layout_marginEnd="8dp"
     android:id="@+id/chatRoomLayout"
     android:layout_marginBottom="8dp"
-    android:clickable="true"
     android:elevation="4dp"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -64,6 +63,33 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rlDelete"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete"
+                android:id="@+id/imgDelete"
+                app:tint="@color/redBorderColor" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_warning_24"
+                android:id="@+id/imgWarning"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@+id/imgDelete"
+                app:tint="@color/redBorderColor" />
+
+
+
+        </RelativeLayout>
+
 
     </RelativeLayout>
 
