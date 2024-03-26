@@ -36,6 +36,7 @@ import com.company.scoolsocialmedia.activities.CreateImagePostActivity;
 import com.company.scoolsocialmedia.activities.CreateNoImagePostActivity;
 import com.company.scoolsocialmedia.activities.PostDetailActivity;
 import com.company.scoolsocialmedia.activities.SearchActivity;
+import com.company.scoolsocialmedia.activities.SearchUsersActivity;
 import com.company.scoolsocialmedia.adapters.PostsAdapter;
 import com.company.scoolsocialmedia.bookCity.BookCityMain;
 import com.company.scoolsocialmedia.listeners.OnPostClickListener;
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
                                 break;
                             case R.id.navigationSearch:
 
-                                startActivity(new Intent(MainActivity.this, SearchActivity.class));
+                                startActivity(new Intent(MainActivity.this, SearchUsersActivity.class));
                                 break;
 
 

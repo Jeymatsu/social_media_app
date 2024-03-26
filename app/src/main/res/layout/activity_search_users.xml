@@ -37,7 +37,7 @@
                     android:fontFamily="@font/basic"
                     android:lines="1"
                     android:maxLines="1"
-                    android:text="Manage users"
+                    android:text="Search Friends"
                     android:textColor="@color/bottomNavigationBackground"
                     android:textSize="20sp"
                     android:textStyle="bold" />

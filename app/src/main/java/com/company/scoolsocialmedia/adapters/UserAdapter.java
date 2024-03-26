@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.company.scoolsocialmedia.Profile.ProfileActivity;
 import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.model.BasicUser;
 import com.company.scoolsocialmedia.model.Notification;
@@ -34,13 +37,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private List<BasicUser> userList;
     private List<BasicUser> selectedUsers;
     private boolean showCheckbox;
+    private Context context;
 
 
-    public UserAdapter(List<BasicUser> userList, boolean showCheckbox) {
+    public UserAdapter(Context context,List<BasicUser> userList, boolean showCheckbox) {
         this.userList = userList;
         this.selectedUsers = new ArrayList<>();
         this.showCheckbox = showCheckbox;
+        this.context=context;
 
+    }
+
+    public void setFilteredList(List<BasicUser> filteredList) {
+        this.userList = filteredList;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -73,6 +83,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         private ImageView imgDelete;
 
         private ImageView imgWarning;
+        private CardView chatRoomLayout;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -81,6 +92,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
             rlDelete=itemView.findViewById(R.id.rlDelete);
             imgDelete=itemView.findViewById(R.id.imgDelete);
             imgWarning=itemView.findViewById(R.id.imgWarning);
+            chatRoomLayout=itemView.findViewById(R.id.chatRoomLayout);
+
+            chatRoomLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    BasicUser user = userList.get(getAdapterPosition());
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("uid", user.getUserId());
+                    context.startActivity(intent);
+                }
+            });
 
             userCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override

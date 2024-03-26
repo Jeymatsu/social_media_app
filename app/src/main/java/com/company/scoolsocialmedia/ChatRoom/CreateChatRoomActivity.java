@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.company.scoolsocialmedia.MainActivity;
@@ -41,6 +42,8 @@ public class CreateChatRoomActivity extends AppCompatActivity {
     private RecyclerView usersRecyclerView;
     private UserAdapter userAdapter;
 
+    private SearchView searchView;
+
 
 
     @Override
@@ -56,8 +59,8 @@ public class CreateChatRoomActivity extends AppCompatActivity {
         usersRef = FirebaseDatabase.getInstance().getReference().child("User_Information");
 
         userList = new ArrayList<>();
-        userAdapter = new UserAdapter(userList,true);
-
+        userAdapter = new UserAdapter(this,userList,true);
+        searchView = findViewById(R.id.userSearchView);
         // Set up RecyclerView
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         usersRecyclerView.setAdapter(userAdapter);
@@ -74,8 +77,22 @@ public class CreateChatRoomActivity extends AppCompatActivity {
             }
         });
 
+
+
         // Load users from Firebase database
         loadUsers();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filterList(newText);
+                return true;
+            }
+        });
     }
 
     private void loadUsers() {
@@ -157,6 +174,21 @@ public class CreateChatRoomActivity extends AppCompatActivity {
                 Log.e(TAG, "Failed to retrieve participants: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void filterList(String text) {
+        String query = text.toLowerCase().trim();
+        List<BasicUser> filteredList = new ArrayList<>();
+
+        for (BasicUser user : userList) {
+            // Check if user name contains the search query
+            if (user.getName().toLowerCase().contains(query)) {
+                filteredList.add(user);
+            }
+        }
+
+        // Update the adapter with the filtered list
+        userAdapter.setFilteredList(filteredList);
     }
 
 

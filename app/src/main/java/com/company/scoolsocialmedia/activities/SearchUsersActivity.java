@@ -1,4 +1,4 @@
-package com.company.scoolsocialmedia.admin;
+package com.company.scoolsocialmedia.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.company.scoolsocialmedia.ChatRoom.CreateChatRoomActivity;
 import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.adapters.UserAdapter;
+import com.company.scoolsocialmedia.admin.ManageUsersActivity;
 import com.company.scoolsocialmedia.model.BasicUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,9 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ManageUsersActivity extends AppCompatActivity {
+public class SearchUsersActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     private List<BasicUser> userList;
@@ -32,16 +31,16 @@ public class ManageUsersActivity extends AppCompatActivity {
     private RecyclerView usersRecyclerView;
     private UserAdapter userAdapter;
     private DatabaseReference usersRef;
-
     private SearchView searchView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage_users);
+        setContentView(R.layout.activity_search_users);
 
         toolbar = findViewById(R.id.chatToolbar);
         usersRecyclerView = findViewById(R.id.users_recycler_view);
-        searchView = findViewById(R.id.userSearchView);
 
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -49,10 +48,11 @@ public class ManageUsersActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
+        searchView = findViewById(R.id.userSearchView);
+
         usersRef = FirebaseDatabase.getInstance().getReference().child("User_Information");
         userList = new ArrayList<>();
-        userAdapter = new UserAdapter(this,userList,false);
-
+        userAdapter = new UserAdapter(this,userList,true);
         // Set up RecyclerView
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         usersRecyclerView.setAdapter(userAdapter);
@@ -70,7 +70,6 @@ public class ManageUsersActivity extends AppCompatActivity {
         });
         // Load users from Firebase database
         loadUsers();
-
     }
 
     private void loadUsers() {
@@ -88,7 +87,7 @@ public class ManageUsersActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle error
-                Toast.makeText(ManageUsersActivity.this, "Failed to load users", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchUsersActivity.this, "Failed to load users", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -107,7 +106,6 @@ public class ManageUsersActivity extends AppCompatActivity {
         // Update the adapter with the filtered list
         userAdapter.setFilteredList(filteredList);
     }
-
 
 
     @Override
