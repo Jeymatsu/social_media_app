@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
@@ -13,9 +13,9 @@
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/post_item_postedUserImg_imgView"
@@ -26,23 +26,28 @@
             android:src="@drawable/main_user_profile_avatar"
             app:civ_border_color="@color/hamburger"
             app:civ_border_width="2dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"/>
+            app:layout_constraintBottom_toTopOf="@id/first_line"
+            app:layout_constraintEnd_toStartOf="@+id/post_item_postedUserName_txtview"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/post_item_postedUserName_txtview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="16dp"
             android:ellipsize="end"
+            android:fontFamily="@font/montserrat"
             android:lines="1"
             android:maxLines="1"
             android:textColor="@android:color/black"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_toEndOf="@id/post_item_postedUserImg_imgView"
-            android:layout_alignBottom="@id/post_item_postedUserImg_imgView"/>
+            app:layout_constraintBottom_toTopOf="@+id/post_item_postType_txtview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/post_item_postedUserImg_imgView"
+            app:layout_constraintTop_toTopOf="@+id/post_item_postedUserImg_imgView" />
 
         <TextView
             android:id="@+id/post_item_postType_txtview"
@@ -50,22 +55,41 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginBottom="2dp"
+            android:fontFamily="@font/basic"
             android:textColor="@color/drawerMenuGray"
             android:textSize="13sp"
-            android:layout_below="@id/post_item_postedUserName_txtview"
-            android:layout_toEndOf="@id/post_item_postedUserImg_imgView"/>
+            app:layout_constraintBottom_toBottomOf="@+id/post_item_postedUserImg_imgView"
+            app:layout_constraintEnd_toStartOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/post_item_postedUserImg_imgView"
+            app:layout_constraintTop_toBottomOf="@+id/post_item_postedUserName_txtview" />
 
         <TextView
             android:id="@+id/post_item_postTime_txtview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="16dp"
+            android:textAlignment="viewStart"
             android:textColor="@color/drawerMenuGray"
+            android:textDirection="ltr"
             android:textSize="13sp"
-            android:layout_below="@id/post_item_postType_txtview"
-            android:layout_toEndOf="@id/post_item_postedUserImg_imgView"/>
+            app:layout_constraintBottom_toBottomOf="@+id/post_item_postType_txtview"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="@+id/post_item_postType_txtview" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="3dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/post_item_point_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/post_item_postType_txtview"
+            app:layout_constraintEnd_toStartOf="@+id/post_item_postTime_txtview"
+            app:layout_constraintStart_toEndOf="@+id/post_item_postType_txtview"
+            app:layout_constraintTop_toTopOf="@+id/post_item_postType_txtview" />
 
         <View
             android:id="@+id/first_line"
@@ -73,7 +97,10 @@
             android:layout_height="0.2dp"
             android:layout_marginTop="12dp"
             android:background="@color/lessGray"
-            android:layout_below="@id/post_item_postedUserImg_imgView"/>
+            app:layout_constraintBottom_toTopOf="@+id/titleAndBodyLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/post_item_postedUserImg_imgView" />
 
         <LinearLayout
             android:id="@+id/titleAndBodyLayout"
@@ -85,7 +112,10 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:orientation="vertical"
-            android:layout_below="@id/first_line">
+            app:layout_constraintBottom_toTopOf="@id/second_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/first_line">
 
             <TextView
                 android:id="@+id/post_item_postTitle_txtview"
@@ -101,7 +131,11 @@
                 android:paddingEnd="8dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeMinTextSize="16sp"
+                android:autoSizeStepGranularity="2dp"
+                android:autoSizeTextType="uniform" />
 
             <TextView
                 android:id="@+id/post_item_postBody_txtview"
@@ -115,132 +149,127 @@
                 android:paddingEnd="8dp"
                 android:paddingBottom="6dp"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeMinTextSize="16sp"
+                android:autoSizeStepGranularity="2dp"
+                android:autoSizeTextType="uniform" />
 
         </LinearLayout>
+
 
         <View
             android:id="@+id/second_line"
             android:layout_width="match_parent"
             android:layout_height="0.2dp"
             android:background="@color/lessGray"
-            android:layout_below="@id/titleAndBodyLayout"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/footer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/titleAndBodyLayout" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/second_line">
+
 
             <LinearLayout
-                android:id="@+id/footer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="3dp"
+                android:gravity="end"
+                android:id="@+id/rlLike"
                 android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:id="@+id/textView5"
+                android:layout_below="@+id/second_line"
+                android:layout_height="wrap_content">
+                <!-- Like icon -->
+                <ImageView
+                    android:id="@+id/like_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/open_sans_light"
-                    android:text="@string/postedInText"
-                    android:textColor="@color/lessGray"
-                    android:textSize="14sp" />
+                    android:src="@drawable/baseline_thumb_up_24"
+                    android:tint="@color/bottomNavigationBackground"
+                    tools:ignore="UseAppTint" />
 
-                <HorizontalScrollView
-                    android:id="@+id/postItemCategoryHolder"
+                <!-- Comment icon -->
+                <ImageView
+                    android:id="@+id/comment_icon"
                     android:layout_width="wrap_content"
-                    android:scrollbars="none"
+                    android:layout_toRightOf="@+id/like_icon"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:gravity="center_vertical"
-                            android:id="@+id/postItemFirstCategoryLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"></LinearLayout>
-
-                        <LinearLayout
-                            android:gravity="center_vertical"
-                            android:id="@+id/postItemSecondCategoryLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal"></LinearLayout>
-
-                        <LinearLayout
-                            android:gravity="center_vertical"
-                            android:id="@+id/postItemThirdCategoryLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal"></LinearLayout>
-
-                    </LinearLayout>
-
-                </HorizontalScrollView>
-
+                    android:layout_marginLeft="15dp"
+                    android:tint="@color/bottomNavigationBackground"
+                    android:src="@drawable/baseline_comment_24"
+                    tools:ignore="UseAppTint" />
             </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_below="@+id/footer"
-                android:layout_height="wrap_content">
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView5"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginStart="8dp"-->
+            <!--                android:layout_marginBottom="8dp"-->
+            <!--                android:layout_marginTop="8dp"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:fontFamily="@font/open_sans_light"-->
+            <!--                android:text="@string/postedInText"-->
+            <!--                android:textColor="@color/lessGray"-->
+            <!--                android:textSize="14sp" />-->
 
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_height="wrap_content">
-                    <!-- Like icon -->
-                    <ImageView
-                        android:id="@+id/like_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/baseline_thumb_up_24"
-                        android:tint="@color/bottomNavigationBackground"
-                        tools:ignore="UseAppTint" />
+            <!--            <HorizontalScrollView-->
+            <!--                android:id="@+id/postItemCategoryHolder"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:scrollbars="none"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginEnd="8dp"-->
+            <!--                android:orientation="vertical"-->
+            <!--                android:layout_marginBottom="8dp"-->
+            <!--                android:layout_marginTop="8dp">-->
 
-                    <!-- Comment icon -->
-                    <ImageView
-                        android:id="@+id/comment_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_toRightOf="@+id/like_icon"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:tint="@color/bottomNavigationBackground"
-                        android:src="@drawable/baseline_comment_24"
-                        tools:ignore="UseAppTint" />
-                </RelativeLayout>
+            <!--                <LinearLayout-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:orientation="vertical">-->
+
+            <!--                    <LinearLayout-->
+            <!--                        android:gravity="center_vertical"-->
+            <!--                        android:id="@+id/postItemFirstCategoryLayout"-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:orientation="horizontal"></LinearLayout>-->
+
+            <!--                    <LinearLayout-->
+            <!--                        android:gravity="center_vertical"-->
+            <!--                        android:id="@+id/postItemSecondCategoryLayout"-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginTop="8dp"-->
+            <!--                        android:orientation="horizontal"></LinearLayout>-->
+
+            <!--                    <LinearLayout-->
+            <!--                        android:gravity="center_vertical"-->
+            <!--                        android:id="@+id/postItemThirdCategoryLayout"-->
+            <!--                        android:layout_width="match_parent"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:layout_marginTop="8dp"-->
+            <!--                        android:orientation="horizontal"></LinearLayout>-->
+
+            <!--                </LinearLayout>-->
 
 
-            </RelativeLayout>
-
+            <!--            </HorizontalScrollView>-->
 
 
         </LinearLayout>
 
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-
-
-    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UNILINK</string>
+    <string name="app_name">JULINK</string>
     <string name="title_activity_login">Log in</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

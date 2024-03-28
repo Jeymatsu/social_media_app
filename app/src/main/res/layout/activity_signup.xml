@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="1dp"
                 android:fontFamily="@font/basic"
-                android:text="UNI"
+                android:text="JU"
                 android:textColor="@color/bottomNavigationBackground"
                 android:textSize="22sp"
                 android:textStyle="bold" />

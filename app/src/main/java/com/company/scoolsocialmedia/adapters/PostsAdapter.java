@@ -14,9 +14,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.activities.ImageDetailActivity;
+import com.company.scoolsocialmedia.fragements.CommentBottomSheetDialogFragment;
 import com.company.scoolsocialmedia.listeners.OnPostClickListener;
 import com.company.scoolsocialmedia.listeners.OnPostUserImageClickListener;
 import com.company.scoolsocialmedia.model.PostModel;
@@ -111,7 +114,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void handlePostWithNoImage(RecyclerView.ViewHolder holder, final PostModel post) {
 
-        ((PostsWithNoImageViewHolder) holder).setIsRecyclable(false);
+//        ((PostsWithNoImageViewHolder) holder).setIsRecyclable(false);
 
 
 //        if (isAdmin) {
@@ -149,99 +152,118 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        if (post.getTagged_communities().size() > 0) {
-            int n = post.getTagged_communities().size();
-            if (n <= 2) {
-                ((PostsWithNoImageViewHolder) holder).secondCateogryHolder.setVisibility(View.GONE);
-                ((PostsWithNoImageViewHolder) holder).thirdCateogryHolder.setVisibility(View.GONE);
-                for (int i = 0; i < post.getTagged_communities().size(); i++) {
-                    TextView textView = new TextView(mContex);
-                    textView.setText(post.getTagged_communities().get(i));
-                    textView.setTextColor(Color.WHITE);
-                    textView.setTextSize(14);
-                    textView.setBackgroundResource(R.drawable.background_search);
-                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp.setMarginStart(16);
-                    textView.setLayoutParams(lp);
-                    textView.setPadding(8, 4, 8, 4);
-                    ((PostsWithNoImageViewHolder) holder).firstCateogryHolder.addView(textView);
-                }
-            } else {
-                int dist = 0;
-                if (n <= 6) {
-                    ((PostsWithNoImageViewHolder) holder).secondCateogryHolder.setVisibility(View.VISIBLE);
-                    dist = 2;
-                } else {
-                    ((PostsWithNoImageViewHolder) holder).thirdCateogryHolder.setVisibility(View.VISIBLE);
-                    dist = 3;
-                }
-                int len = 0;
-                int layoutToAdd = 1;
-                for (int i = 0; i < post.getTagged_communities().size(); i++) {
-                    TextView textView = new TextView(mContex);
-                    textView.setText(post.getTagged_communities().get(i));
-                    textView.setTextColor(Color.WHITE);
-                    textView.setTextSize(14);
-                    textView.setBackgroundResource(R.drawable.background_search);
-                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp.setMarginStart(16);
-                    textView.setLayoutParams(lp);
-                    textView.setPadding(8, 4, 8, 4);
-                    if (dist == 2) {
-                        if (layoutToAdd == 1) {
-                            ((PostsWithNoImageViewHolder) holder).firstCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 1;
-                            }
-                        } else {
-                            ((PostsWithNoImageViewHolder) holder).secondCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 1;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 2;
-                            }
-                        }
-                    } else {
-                        if (layoutToAdd == 1) {
-                            ((PostsWithNoImageViewHolder) holder).firstCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 1;
-                            }
-                        } else if (layoutToAdd == 2) {
-                            ((PostsWithNoImageViewHolder) holder).secondCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 3;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 2;
-                            }
-                        } else {
-                            ((PostsWithNoImageViewHolder) holder).thirdCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 3;
-                            }
-                        }
-                    }
-                }
+        ((PostsWithNoImageViewHolder) holder).like_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(mContex, "Liked", Toast.LENGTH_SHORT).show();
+
             }
-        }
+        });
+
+        ((PostsWithNoImageViewHolder) holder).comment_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pass the postId to the CommentBottomSheetDialogFragment constructor
+                String postID=post.getPost_id();
+                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID);
+                bottomSheetDialogFragment.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+
+            }
+        });
+//        if (post.getTagged_communities().size() > 0) {
+//            int n = post.getTagged_communities().size();
+//            if (n <= 2) {
+//                ((PostsWithNoImageViewHolder) holder).secondCateogryHolder.setVisibility(View.GONE);
+//                ((PostsWithNoImageViewHolder) holder).thirdCateogryHolder.setVisibility(View.GONE);
+//                for (int i = 0; i < post.getTagged_communities().size(); i++) {
+//                    TextView textView = new TextView(mContex);
+//                    textView.setText(post.getTagged_communities().get(i));
+//                    textView.setTextColor(Color.WHITE);
+//                    textView.setTextSize(14);
+//                    textView.setBackgroundResource(R.drawable.background_search);
+//                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
+//                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    lp.setMarginStart(16);
+//                    textView.setLayoutParams(lp);
+//                    textView.setPadding(8, 4, 8, 4);
+//                    ((PostsWithNoImageViewHolder) holder).firstCateogryHolder.addView(textView);
+//                }
+//            } else {
+//                int dist = 0;
+//                if (n <= 6) {
+//                    ((PostsWithNoImageViewHolder) holder).secondCateogryHolder.setVisibility(View.VISIBLE);
+//                    dist = 2;
+//                } else {
+//                    ((PostsWithNoImageViewHolder) holder).thirdCateogryHolder.setVisibility(View.VISIBLE);
+//                    dist = 3;
+//                }
+//                int len = 0;
+//                int layoutToAdd = 1;
+//                for (int i = 0; i < post.getTagged_communities().size(); i++) {
+//                    TextView textView = new TextView(mContex);
+//                    textView.setText(post.getTagged_communities().get(i));
+//                    textView.setTextColor(Color.WHITE);
+//                    textView.setTextSize(14);
+//                    textView.setBackgroundResource(R.drawable.background_search);
+//                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
+//                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    lp.setMarginStart(16);
+//                    textView.setLayoutParams(lp);
+//                    textView.setPadding(8, 4, 8, 4);
+//                    if (dist == 2) {
+//                        if (layoutToAdd == 1) {
+//                            ((PostsWithNoImageViewHolder) holder).firstCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 1;
+//                            }
+//                        } else {
+//                            ((PostsWithNoImageViewHolder) holder).secondCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 1;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 2;
+//                            }
+//                        }
+//                    } else {
+//                        if (layoutToAdd == 1) {
+//                            ((PostsWithNoImageViewHolder) holder).firstCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 1;
+//                            }
+//                        } else if (layoutToAdd == 2) {
+//                            ((PostsWithNoImageViewHolder) holder).secondCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 3;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 2;
+//                            }
+//                        } else {
+//                            ((PostsWithNoImageViewHolder) holder).thirdCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 3;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     private void handlePostWithImage(final RecyclerView.ViewHolder holder, final PostModel post) {
@@ -279,99 +301,120 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        if (post.getTagged_communities().size() > 0) {
-            int n = post.getTagged_communities().size();
-            if (n <= 2) {
-                ((PostsWithImageViewHolder) holder).secondCateogryHolder.setVisibility(View.GONE);
-                ((PostsWithImageViewHolder) holder).thirdCateogryHolder.setVisibility(View.GONE);
-                for (int i = 0; i < post.getTagged_communities().size(); i++) {
-                    TextView textView = new TextView(mContex);
-                    textView.setText(post.getTagged_communities().get(i));
-                    textView.setTextColor(Color.WHITE);
-                    textView.setTextSize(14);
-                    textView.setBackgroundResource(R.drawable.background_search);
-                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp.setMarginStart(16);
-                    textView.setLayoutParams(lp);
-                    textView.setPadding(8, 4, 8, 4);
-                    ((PostsWithImageViewHolder) holder).firstCateogryHolder.addView(textView);
-                }
-            } else {
-                int dist = 0;
-                if (n <= 6) {
-                    ((PostsWithImageViewHolder) holder).secondCateogryHolder.setVisibility(View.VISIBLE);
-                    dist = 2;
-                } else {
-                    ((PostsWithImageViewHolder) holder).thirdCateogryHolder.setVisibility(View.VISIBLE);
-                    dist = 3;
-                }
-                int len = 0;
-                int layoutToAdd = 1;
-                for (int i = 0; i < post.getTagged_communities().size(); i++) {
-                    TextView textView = new TextView(mContex);
-                    textView.setText(post.getTagged_communities().get(i));
-                    textView.setTextColor(Color.WHITE);
-                    textView.setTextSize(14);
-                    textView.setBackgroundResource(R.drawable.background_search);
-                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp.setMarginStart(16);
-                    textView.setLayoutParams(lp);
-                    textView.setPadding(8, 4, 8, 4);
-                    if (dist == 2) {
-                        if (layoutToAdd == 1) {
-                            ((PostsWithImageViewHolder) holder).firstCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 1;
-                            }
-                        } else {
-                            ((PostsWithImageViewHolder) holder).secondCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 1;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 2;
-                            }
-                        }
-                    } else {
-                        if (layoutToAdd == 1) {
-                            ((PostsWithImageViewHolder) holder).firstCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 1;
-                            }
-                        } else if (layoutToAdd == 2) {
-                            ((PostsWithImageViewHolder) holder).secondCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 3;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 2;
-                            }
-                        } else {
-                            ((PostsWithImageViewHolder) holder).thirdCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 3;
-                            }
-                        }
-                    }
-                }
+        ((PostsWithImageViewHolder) holder).like_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(mContex, "Liked", Toast.LENGTH_SHORT).show();
+
             }
-        }
+        });
+
+        ((PostsWithImageViewHolder) holder).comment_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pass the postId to the CommentBottomSheetDialogFragment constructor
+                String postID=post.getPost_id();
+                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID);
+                bottomSheetDialogFragment.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+
+            }
+        });
+
+
+//        if (post.getTagged_communities().size() > 0) {
+//            int n = post.getTagged_communities().size();
+//            if (n <= 2) {
+//                ((PostsWithImageViewHolder) holder).secondCateogryHolder.setVisibility(View.GONE);
+//                ((PostsWithImageViewHolder) holder).thirdCateogryHolder.setVisibility(View.GONE);
+//                for (int i = 0; i < post.getTagged_communities().size(); i++) {
+//                    TextView textView = new TextView(mContex);
+//                    textView.setText(post.getTagged_communities().get(i));
+//                    textView.setTextColor(Color.WHITE);
+//                    textView.setTextSize(14);
+//                    textView.setBackgroundResource(R.drawable.background_search);
+//                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
+//                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    lp.setMarginStart(16);
+//                    textView.setLayoutParams(lp);
+//                    textView.setPadding(8, 4, 8, 4);
+//                    ((PostsWithImageViewHolder) holder).firstCateogryHolder.addView(textView);
+//                }
+//            } else {
+//                int dist = 0;
+//                if (n <= 6) {
+//                    ((PostsWithImageViewHolder) holder).secondCateogryHolder.setVisibility(View.VISIBLE);
+//                    dist = 2;
+//                } else {
+//                    ((PostsWithImageViewHolder) holder).thirdCateogryHolder.setVisibility(View.VISIBLE);
+//                    dist = 3;
+//                }
+//                int len = 0;
+//                int layoutToAdd = 1;
+//                for (int i = 0; i < post.getTagged_communities().size(); i++) {
+//                    TextView textView = new TextView(mContex);
+//                    textView.setText(post.getTagged_communities().get(i));
+//                    textView.setTextColor(Color.WHITE);
+//                    textView.setTextSize(14);
+//                    textView.setBackgroundResource(R.drawable.background_search);
+//                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
+//                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    lp.setMarginStart(16);
+//                    textView.setLayoutParams(lp);
+//                    textView.setPadding(8, 4, 8, 4);
+//                    if (dist == 2) {
+//                        if (layoutToAdd == 1) {
+//                            ((PostsWithImageViewHolder) holder).firstCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 1;
+//                            }
+//                        } else {
+//                            ((PostsWithImageViewHolder) holder).secondCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 1;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 2;
+//                            }
+//                        }
+//                    } else {
+//                        if (layoutToAdd == 1) {
+//                            ((PostsWithImageViewHolder) holder).firstCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 1;
+//                            }
+//                        } else if (layoutToAdd == 2) {
+//                            ((PostsWithImageViewHolder) holder).secondCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 3;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 2;
+//                            }
+//                        } else {
+//                            ((PostsWithImageViewHolder) holder).thirdCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 3;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
 
@@ -423,99 +466,119 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-        if (post.getTagged_communities().size() > 0) {
-            int n = post.getTagged_communities().size();
-            if (n <= 2) {
-                ((PostsWithVideoViewHolder) holder).secondCateogryHolder.setVisibility(View.GONE);
-                ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.setVisibility(View.GONE);
-                for (int i = 0; i < post.getTagged_communities().size(); i++) {
-                    TextView textView = new TextView(mContex);
-                    textView.setText(post.getTagged_communities().get(i));
-                    textView.setTextColor(Color.WHITE);
-                    textView.setTextSize(14);
-                    textView.setBackgroundResource(R.drawable.background_search);
-                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp.setMarginStart(16);
-                    textView.setLayoutParams(lp);
-                    textView.setPadding(8, 4, 8, 4);
-                    ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
-                }
-            } else {
-                int dist = 0;
-                if (n <= 6) {
-                    ((PostsWithVideoViewHolder) holder).secondCateogryHolder.setVisibility(View.VISIBLE);
-                    dist = 2;
-                } else {
-                    ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.setVisibility(View.VISIBLE);
-                    dist = 3;
-                }
-                int len = 0;
-                int layoutToAdd = 1;
-                for (int i = 0; i < post.getTagged_communities().size(); i++) {
-                    TextView textView = new TextView(mContex);
-                    textView.setText(post.getTagged_communities().get(i));
-                    textView.setTextColor(Color.WHITE);
-                    textView.setTextSize(14);
-                    textView.setBackgroundResource(R.drawable.background_search);
-                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    lp.setMarginStart(16);
-                    textView.setLayoutParams(lp);
-                    textView.setPadding(8, 4, 8, 4);
-                    if (dist == 2) {
-                        if (layoutToAdd == 1) {
-                            ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 1;
-                            }
-                        } else {
-                            ((PostsWithVideoViewHolder) holder).secondCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 1;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 2;
-                            }
-                        }
-                    } else {
-                        if (layoutToAdd == 1) {
-                            ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 1;
-                            }
-                        } else if (layoutToAdd == 2) {
-                            ((PostsWithVideoViewHolder) holder).secondCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 3;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 2;
-                            }
-                        } else {
-                            ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.addView(textView);
-                            len += post.getTagged_communities().get(i).length();
-                            if (len > 35) {
-                                layoutToAdd = 2;
-                                len = 0;
-                            } else {
-                                layoutToAdd = 3;
-                            }
-                        }
-                    }
-                }
+        ((PostsWithVideoViewHolder) holder).like_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(mContex, "Liked", Toast.LENGTH_SHORT).show();
+
             }
-        }
+        });
+
+        ((PostsWithVideoViewHolder) holder).comment_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Pass the postId to the CommentBottomSheetDialogFragment constructor
+                String postID=post.getPost_id();
+                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID);
+                bottomSheetDialogFragment.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
+
+            }
+        });
+
+//        if (post.getTagged_communities().size() > 0) {
+//            int n = post.getTagged_communities().size();
+//            if (n <= 2) {
+//                ((PostsWithVideoViewHolder) holder).secondCateogryHolder.setVisibility(View.GONE);
+//                ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.setVisibility(View.GONE);
+//                for (int i = 0; i < post.getTagged_communities().size(); i++) {
+//                    TextView textView = new TextView(mContex);
+//                    textView.setText(post.getTagged_communities().get(i));
+//                    textView.setTextColor(Color.WHITE);
+//                    textView.setTextSize(14);
+//                    textView.setBackgroundResource(R.drawable.background_search);
+//                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
+//                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    lp.setMarginStart(16);
+//                    textView.setLayoutParams(lp);
+//                    textView.setPadding(8, 4, 8, 4);
+//                    ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
+//                }
+//            } else {
+//                int dist = 0;
+//                if (n <= 6) {
+//                    ((PostsWithVideoViewHolder) holder).secondCateogryHolder.setVisibility(View.VISIBLE);
+//                    dist = 2;
+//                } else {
+//                    ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.setVisibility(View.VISIBLE);
+//                    dist = 3;
+//                }
+//                int len = 0;
+//                int layoutToAdd = 1;
+//                for (int i = 0; i < post.getTagged_communities().size(); i++) {
+//                    TextView textView = new TextView(mContex);
+//                    textView.setText(post.getTagged_communities().get(i));
+//                    textView.setTextColor(Color.WHITE);
+//                    textView.setTextSize(14);
+//                    textView.setBackgroundResource(R.drawable.background_search);
+//                    textView.getBackground().setColorFilter(randomizeColor(), PorterDuff.Mode.SRC_ATOP);
+//                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    lp.setMarginStart(16);
+//                    textView.setLayoutParams(lp);
+//                    textView.setPadding(8, 4, 8, 4);
+//                    if (dist == 2) {
+//                        if (layoutToAdd == 1) {
+//                            ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 1;
+//                            }
+//                        } else {
+//                            ((PostsWithVideoViewHolder) holder).secondCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 1;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 2;
+//                            }
+//                        }
+//                    } else {
+//                        if (layoutToAdd == 1) {
+//                            ((PostsWithVideoViewHolder) holder).firstCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 1;
+//                            }
+//                        } else if (layoutToAdd == 2) {
+//                            ((PostsWithVideoViewHolder) holder).secondCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 3;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 2;
+//                            }
+//                        } else {
+//                            ((PostsWithVideoViewHolder) holder).thirdCateogryHolder.addView(textView);
+//                            len += post.getTagged_communities().get(i).length();
+//                            if (len > 35) {
+//                                layoutToAdd = 2;
+//                                len = 0;
+//                            } else {
+//                                layoutToAdd = 3;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     public void setDataSet(List<PostModel> posts) {
@@ -556,10 +619,15 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private CircleImageView postItemUserImg;
         private TextView postItemUserName;
         private LinearLayout titleAndBodyLayout;
-        private LinearLayout firstCateogryHolder;
-        private LinearLayout secondCateogryHolder;
-        private LinearLayout thirdCateogryHolder;
+//        private LinearLayout firstCateogryHolder;
+//        private LinearLayout secondCateogryHolder;
+//        private LinearLayout thirdCateogryHolder;
+
+        private LinearLayout rlLike;
         private Button btnDelete;
+        private ImageView like_icon;
+        private ImageView comment_icon;
+
 
         public PostsWithNoImageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -570,10 +638,12 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             postItemUserImg = itemView.findViewById(R.id.post_item_postedUserImg_imgView);
             postItemUserName = itemView.findViewById(R.id.post_item_postedUserName_txtview);
             titleAndBodyLayout = itemView.findViewById(R.id.titleAndBodyLayout);
-            firstCateogryHolder = itemView.findViewById(R.id.postItemFirstCategoryLayout);
-            secondCateogryHolder = itemView.findViewById(R.id.postItemSecondCategoryLayout);
-            thirdCateogryHolder = itemView.findViewById(R.id.postItemThirdCategoryLayout);
-            btnDelete=itemView.findViewById(R.id.btnDelete);
+            rlLike= itemView.findViewById(R.id.rlLike);
+            like_icon = itemView.findViewById(R.id.like_icon);
+            comment_icon = itemView.findViewById(R.id.comment_icon);
+//            firstCateogryHolder = itemView.findViewById(R.id.postItemFirstCategoryLayout);
+//            secondCateogryHolder = itemView.findViewById(R.id.postItemSecondCategoryLayout);
+//            thirdCateogryHolder = itemView.findViewById(R.id.postItemThirdCategoryLayout);
         }
     }
 
@@ -585,9 +655,13 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private CircleImageView postImageItemUserImg;
         private ImageView postImageMainImage;
         private TextView postImageItemUserName;
-        private LinearLayout firstCateogryHolder;
-        private LinearLayout secondCateogryHolder;
-        private LinearLayout thirdCateogryHolder;
+
+        private ImageView like_icon;
+        private ImageView comment_icon;
+
+//        private LinearLayout firstCateogryHolder;
+//        private LinearLayout secondCateogryHolder;
+//        private LinearLayout thirdCateogryHolder;
 
         public PostsWithImageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -597,9 +671,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             postImageItemUserImg = itemView.findViewById(R.id.post_image_item_postedUserImg_imgView);
             postImageItemUserName = itemView.findViewById(R.id.post_image_item_postedUserName_txtview);
             postImageMainImage = itemView.findViewById(R.id.main_image_post_image_imgview);
-            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
-            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
-            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);
+            like_icon = itemView.findViewById(R.id.like_icon);
+            comment_icon = itemView.findViewById(R.id.comment_icon);
+//            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
+//            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
+//            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);
         }
     }
 
@@ -613,9 +689,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private CircleImageView postImageItemUserImg;
         private VideoView createVideoPostMainVideo;
         private TextView postImageItemUserName;
-        private LinearLayout firstCateogryHolder;
-        private LinearLayout secondCateogryHolder;
-        private LinearLayout thirdCateogryHolder;
+//        private LinearLayout firstCateogryHolder;
+//        private LinearLayout secondCateogryHolder;
+//        private LinearLayout thirdCateogryHolder;
+        private ImageView like_icon;
+        private ImageView comment_icon;
 
         public PostsWithVideoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -625,9 +703,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             postImageItemUserImg = itemView.findViewById(R.id.post_image_item_postedUserImg_imgView);
             postImageItemUserName = itemView.findViewById(R.id.post_image_item_postedUserName_txtview);
             createVideoPostMainVideo = itemView.findViewById(R.id.createVideoPostMainVideo);
-            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
-            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
-            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);
+            like_icon = itemView.findViewById(R.id.like_icon);
+            comment_icon = itemView.findViewById(R.id.comment_icon);
+//            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
+//            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
+//            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);
         }
     }
 

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragements.CommentBottomSheetDialogFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Existing Comments -->
+        <TextView
+            android:id="@+id/text_existing_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Existing Comments"
+            android:textSize="16sp"
+            android:textColor="@color/bottomNavigationBackground"
+            android:fontFamily="@font/montserrat"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_existing_comments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Add Comment Section -->
+        <TextView
+            android:id="@+id/text_add_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add a Comment"
+            android:textSize="16sp"
+            android:fontFamily="@font/montserrat"
+            android:textColor="@color/bottomNavigationBackground"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/edit_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write your comment here"
+            android:maxLines="3"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btn_post_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bottomNavigationBackground"
+            android:fontFamily="@font/montserrat"
+            android:textColor="@color/whiteTextColor"
+            android:text="Post Comment" />
+
+    </LinearLayout>
+
+
+</FrameLayout>
