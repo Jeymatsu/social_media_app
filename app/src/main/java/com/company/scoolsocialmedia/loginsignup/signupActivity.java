@@ -27,8 +27,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -99,43 +103,61 @@ public class signupActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                // Create a BasicUser object with user information
-                                BasicUser basicUser = new BasicUser("", "", "", "", "", email, "", user.getUid(), academicNumber);
-                                // Store user information in Firebase Database
+                                // Check if the academic number already exists
                                 DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("User_Information");
-                                usersRef.child(user.getUid()).setValue(basicUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                Query academicNumberQuery = usersRef.orderByChild("academic_number").equalTo(academicNumber);
+                                academicNumberQuery.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-
-                                        if (task.isSuccessful()) {
-                                            // Send verification email
-                                            user.sendEmailVerification()
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                            // Academic number already exists, show error message to the user
+                                            progressBar.hide();
+                                            signUp.setVisibility(View.VISIBLE);
+                                            Toast.makeText(signupActivity.this, "The academic number has already been taken", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            // Academic number is unique, proceed with user registration
+                                            BasicUser basicUser = new BasicUser("", "", "", "", "", email, "", user.getUid(), academicNumber);
+                                            // Store user information in Firebase Database
+                                            usersRef.child(user.getUid()).setValue(basicUser)
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             if (task.isSuccessful()) {
-                                                                showEmailSentDialog();
+                                                                // Send verification email
+                                                                user.sendEmailVerification()
+                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                if (task.isSuccessful()) {
+                                                                                    showEmailSentDialog();
+                                                                                }
+                                                                            }
+                                                                        });
+                                                            } else {
+                                                                progressBar.hide();
+                                                                Toast.makeText(signupActivity.this, "Registration failed.", Toast.LENGTH_SHORT).show();
                                                             }
                                                         }
                                                     });
-                                        } else {
-                                            progressBar.hide();
-                                            Toast.makeText(signupActivity.this, "Registration failed.",
-                                                    Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
-
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        // Handle error
+                                        progressBar.hide();
+                                        signUp.setVisibility(View.VISIBLE);
+                                        Toast.makeText(signupActivity.this, "Database error", Toast.LENGTH_SHORT).show();
+                                    }
                                 });
-
                             } else {
                                 signUp.setVisibility(View.VISIBLE);
                                 progressBar.hide();
-                                Toast.makeText(signupActivity.this, Objects.requireNonNull(task.getException()).getLocalizedMessage(),
-                                        Toast.LENGTH_LONG).show();
+                                Toast.makeText(signupActivity.this, Objects.requireNonNull(task.getException()).getLocalizedMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
+
         }
     }
 

@@ -46,9 +46,13 @@ public class CreateProfile extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mAuth = FirebaseAuth.getInstance();
-        Intent intent=new Intent();
-        academicNumber=intent.getStringExtra("ACADEMIC_NUMBER");
-        Toast.makeText(this, academicNumber, Toast.LENGTH_SHORT).show();
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            academicNumber = intent.getStringExtra("ACADEMIC_NUMBER");
+
+        }
+
 
         fname_v = findViewById(R.id.signUpFNametextInputEditText);
         lname_v = findViewById(R.id.signUpLNametextInputEditText);
@@ -88,6 +92,7 @@ public class CreateProfile extends AppCompatActivity {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
         } else {
             try {
+                Toast.makeText(this, academicNumber, Toast.LENGTH_SHORT).show();
                 FirebaseUser user = mAuth.getCurrentUser();
                 BasicUser newUser = new BasicUser(fname + " " + lname, gender, country, city, community, user.getEmail(), "none",user.getUid(),academicNumber);
                 FirebaseDatabase database = FirebaseDatabase.getInstance();

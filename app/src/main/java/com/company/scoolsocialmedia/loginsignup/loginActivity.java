@@ -55,6 +55,7 @@ public class loginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private TextView adminLogin;
+    String academicNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +91,8 @@ public class loginActivity extends AppCompatActivity {
         emailView = findViewById(R.id.email);
         adminLogin=findViewById(R.id.adminLogin);
 
+
+
         adminLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,7 +104,8 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (perfromCheck()) {
-                    loginWithAcademicNumber(emailView.getText().toString().trim(), passwordView.getText().toString().trim());
+                    academicNumber=emailView.getText().toString();
+                    loginWithAcademicNumber(academicNumber, passwordView.getText().toString().trim());
                 }
             }
         });
@@ -168,8 +172,7 @@ public class loginActivity extends AppCompatActivity {
 
     private void openCreateProfile(){
         Intent intent=new Intent(loginActivity.this,CreateProfile.class);
-        Toast.makeText(this,emailView.getText().toString() , Toast.LENGTH_SHORT).show();
-        intent.putExtra("ACADEMIC_NUMBER",emailView.getText().toString());
+        intent.putExtra("ACADEMIC_NUMBER",academicNumber);
         startActivity(intent);
     }
 
