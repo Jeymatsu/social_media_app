@@ -1,6 +1,10 @@
 package com.company.scoolsocialmedia.adapters;
 
+import static android.content.ContentValues.TAG;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -30,8 +34,11 @@ import com.company.scoolsocialmedia.activities.ImageDetailActivity;
 import com.company.scoolsocialmedia.fragements.CommentBottomSheetDialogFragment;
 import com.company.scoolsocialmedia.listeners.OnPostClickListener;
 import com.company.scoolsocialmedia.listeners.OnPostUserImageClickListener;
+import com.company.scoolsocialmedia.model.BasicUser;
 import com.company.scoolsocialmedia.model.NotificationManager;
 import com.company.scoolsocialmedia.model.PostModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -60,6 +67,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private OnPostClickListener mOnPostClickListener;
     private OnPostUserImageClickListener listener;
     private Boolean isAdmin;
+
+
 
 
     public PostsAdapter(List<PostModel> mPostsList, Context mContex, OnPostClickListener listener, OnPostUserImageClickListener listener2, Boolean isAdmin) {
@@ -122,19 +131,82 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
+
+    public void removePost(int position) {
+        mPostsList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+
+
+    private void deletePostFromDB(String postID) {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("Posts_Table");
+        usersRef.child(postID).removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // User data successfully deleted from Firebase
+                        Toast.makeText(mContex, "POST DELETED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Error occurred while deleting user data
+                        Log.e(TAG, "Error deleting user data: " + e.getMessage());
+                        // You may want to show a toast or handle the error in some way
+                    }
+                });
+
+
+    }
+
+    private void deletePost(String postId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContex);
+        builder.setTitle("Delete Post");
+        builder.setMessage("Are you sure you want to delete this post?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deletePostFromDB(postId);
+                // Remove the post from the RecyclerView
+
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // User clicked No, do nothing
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
     private void handlePostWithNoImage(RecyclerView.ViewHolder holder, final PostModel post) {
 
-//        ((PostsWithNoImageViewHolder) holder).setIsRecyclable(false);
+        ((PostsWithNoImageViewHolder) holder).setIsRecyclable(false);
 
 
-//        if (isAdmin) {
-//            ((PostsWithNoImageViewHolder) holder).btnDelete.setVisibility(View.VISIBLE);
-//
-//        }else {
-//            ((PostsWithNoImageViewHolder) holder).btnDelete.setVisibility(View.GONE);
-//
-//
-//        }
+        if (isAdmin) {
+            ((PostsWithNoImageViewHolder) holder).btnDelete.setVisibility(View.VISIBLE);
+            ((PostsWithNoImageViewHolder) holder).btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                  deletePost(post.getPost_id());
+
+                }
+            });
+
+
+        }else {
+            ((PostsWithNoImageViewHolder) holder).btnDelete.setVisibility(View.GONE);
+
+
+        }
+
         ((PostsWithNoImageViewHolder) holder).postItemBody.setText(post.getPost_body());
         ((PostsWithNoImageViewHolder) holder).postItemTitle.setText(post.getPost_title());
         ((PostsWithNoImageViewHolder) holder).postItemType.setText(post.getPost_type());
@@ -345,6 +417,24 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void handlePostWithImage(final RecyclerView.ViewHolder holder, final PostModel post) {
         ((PostsWithImageViewHolder) holder).setIsRecyclable(false);
+
+        if (isAdmin) {
+            ((PostsWithImageViewHolder) holder).btnDelete.setVisibility(View.VISIBLE);
+            ((PostsWithImageViewHolder) holder).btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    deletePost(post.getPost_id());
+
+                }
+            });
+
+
+        }else {
+            ((PostsWithImageViewHolder) holder).btnDelete.setVisibility(View.GONE);
+
+
+        }
         ((PostsWithImageViewHolder) holder).postImageItemImageInfo.setText(post.getPost_image_info());
         ((PostsWithImageViewHolder) holder).postImageItemType.setText(post.getPost_type());
         ((PostsWithImageViewHolder) holder).postImageItemDate.setText(post.getPost_date());
@@ -573,6 +663,24 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     private void handlePostWithVideo(final RecyclerView.ViewHolder holder, final PostModel post) {
         ((PostsWithVideoViewHolder) holder).setIsRecyclable(false);
+
+        if (isAdmin) {
+            ((PostsWithVideoViewHolder) holder).btnDelete.setVisibility(View.VISIBLE);
+            ((PostsWithVideoViewHolder) holder).btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    deletePost(post.getPost_id());
+
+                }
+            });
+
+
+        }else {
+            ((PostsWithVideoViewHolder) holder).btnDelete.setVisibility(View.GONE);
+
+
+        }
         ((PostsWithVideoViewHolder) holder).postImageItemImageInfo.setText(post.getPost_image_info());
         ((PostsWithVideoViewHolder) holder).postImageItemType.setText("Video");
         ((PostsWithVideoViewHolder) holder).postImageItemDate.setText(post.getPost_date());
@@ -854,10 +962,13 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //        private LinearLayout thirdCateogryHolder;
 
         private LinearLayout rlLike;
-        private Button btnDelete;
+
         private ImageView like_icon;
         private ImageView comment_icon;
         private TextView txtNumberLikes;
+
+        private Button btnDelete;
+
 
 
         public PostsWithNoImageViewHolder(@NonNull View itemView) {
@@ -873,10 +984,22 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             like_icon = itemView.findViewById(R.id.like_icon);
             comment_icon = itemView.findViewById(R.id.comment_icon);
             txtNumberLikes=itemView.findViewById(R.id.txtNumberLikes);
+            btnDelete=itemView.findViewById(R.id.btnDelete);
+
 //            firstCateogryHolder = itemView.findViewById(R.id.postItemFirstCategoryLayout);
 //            secondCateogryHolder = itemView.findViewById(R.id.postItemSecondCategoryLayout);
 //            thirdCateogryHolder = itemView.findViewById(R.id.postItemThirdCategoryLayout);
+
+
+
+
+
+
         }
+
+
+
+
     }
 
     public static class PostsWithImageViewHolder extends RecyclerView.ViewHolder {
@@ -896,6 +1019,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //        private LinearLayout thirdCateogryHolder;
           private TextView txtNumberLikes;
 
+        private Button btnDelete;
+
         public PostsWithImageViewHolder(@NonNull View itemView) {
             super(itemView);
             postImageItemImageInfo = itemView.findViewById(R.id.post_image_item_postBody_txtview);
@@ -907,6 +1032,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             like_icon = itemView.findViewById(R.id.like_icon);
             comment_icon = itemView.findViewById(R.id.comment_icon);
             txtNumberLikes=itemView.findViewById(R.id.txtNumberLikes);
+            btnDelete=itemView.findViewById(R.id.btnDelete);
 //            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
 //            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
 //            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);
@@ -929,6 +1055,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private ImageView like_icon;
         private ImageView comment_icon;
         private TextView txtNumberLikes;
+        private Button btnDelete;
 
         public PostsWithVideoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -941,6 +1068,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             like_icon = itemView.findViewById(R.id.like_icon);
             comment_icon = itemView.findViewById(R.id.comment_icon);
             txtNumberLikes=itemView.findViewById(R.id.txtNumberLikes);
+            btnDelete=itemView.findViewById(R.id.btnDelete);
 //            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
 //            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
 //            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);

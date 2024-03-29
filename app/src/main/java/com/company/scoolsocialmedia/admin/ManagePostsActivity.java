@@ -80,7 +80,7 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
         mPosts = new ArrayList<>();
         mTempPosts = new ArrayList<>();
         mAllPosts = new ArrayList<>();
-        mAdapter = new PostsAdapter(mPosts, getApplicationContext(), this, this,true);
+        mAdapter = new PostsAdapter(mPosts, this, this, this,true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);

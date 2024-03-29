@@ -1,5 +1,7 @@
 package com.company.scoolsocialmedia;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,8 +9,10 @@ import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Settings extends AppCompatActivity {
     private LinearLayout disable;
-    private MaterialTextView userLblName, userLblPhone, userLblEmail, userLblLogout,userLblChangepass;
+    private MaterialTextView userLblName, userLblPhone, userLblEmail, userLblLogout,userLblChangepass,userLblDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +58,38 @@ public class Settings extends AppCompatActivity {
         userLblEmail = findViewById(R.id.userLblEmail);
         userLblLogout =findViewById(R.id.userLblLogout);
         userLblChangepass =findViewById(R.id.userLblChangepass);
+        userLblDelete=findViewById(R.id.userLblDelete);
 
+        userLblDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+                builder.setTitle(Html.fromHtml("<b>Logout Confirmation</b>"));
+                builder.setMessage("Are you sure you want to logout?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Yes"
+                        // Sign out the user
+                      deleteUserAndData();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "No"
+                        // Dismiss the dialog
+                        dialogInterface.dismiss();
+                    }
+                });
+                // Set custom icon
+                builder.setIcon(R.drawable.ic_logout);
+
+                // Show the dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
         // Retrieve user data and display in TextViews
         if (currentUser != null) {
             String userId = currentUser.getUid();
@@ -101,10 +136,7 @@ public class Settings extends AppCompatActivity {
                         // Sign out the user
                         FirebaseAuth.getInstance().signOut();
                         Toast.makeText(Settings.this, "Log Out Successful!", Toast.LENGTH_SHORT).show();
-                        // Redirect to your login or home activity
-                        Intent intent = new Intent(getApplicationContext(), loginActivity.class);
-                        startActivity(intent);
-                        finish();
+                        logout();
                     }
                 });
                 builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -124,13 +156,20 @@ public class Settings extends AppCompatActivity {
                 dialog.show();
             }
         });
-
-
-
-
-
     }
+    private void logout() {
+        // Clear the stored email and password
+        SharedPreferences  prefs = getSharedPreferences("loginDetails", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("email");
+        editor.remove("password");
+        editor.apply();
 
+        // Redirect the user to the login screen
+        Intent intent = new Intent(this, loginActivity.class);
+        startActivity(intent);
+        finish(); // Close the current activity to prevent the user from going back to it using the back button
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -175,5 +214,45 @@ public class Settings extends AppCompatActivity {
             }
         });
     }
+
+    private void deleteUserAndData() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Delete user's data from the Realtime Database or Firestore
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("User_Information").child(user.getUid());
+            userRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        // User's data deleted successfully, now delete the authentication account
+                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    // User account deleted successfully
+                                    Log.d(TAG, "User account deleted.");
+                                    // Redirect the user to the login screen or perform any other action
+                                    logout(); // Implement the logout method as described in the previous response
+                                } else {
+                                    // Failed to delete user account
+                                    Log.w(TAG, "Failed to delete user account.", task.getException());
+                                    Toast.makeText(getApplicationContext(), "Failed to delete user account.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    } else {
+                        // Failed to delete user's data
+                        Log.w(TAG, "Failed to delete user's data.", task.getException());
+                        Toast.makeText(getApplicationContext(), "Failed to delete user's data.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            // No user is currently signed in
+            Log.w(TAG, "No user is currently signed in.");
+            Toast.makeText(getApplicationContext(), "No user is currently signed in.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }

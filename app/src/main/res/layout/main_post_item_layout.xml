@@ -177,6 +177,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/second_line">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DELETE"
+                android:id="@+id/btnDelete"
+                android:fontFamily="@font/montserrat"
+                android:textColor="@color/whiteTextColor"
+                android:textStyle="bold"
+                android:background="@color/redBorderColor"/>
 
 
             <LinearLayout
@@ -184,10 +193,12 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="3dp"
                 android:gravity="end"
-                android:id="@+id/rlLike"
+                android:id="@+id/linearLike"
                 android:orientation="horizontal"
                 android:layout_below="@+id/second_line"
                 android:layout_height="wrap_content">
+
+
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -218,6 +229,7 @@
                     android:src="@drawable/baseline_comment_24"
                     tools:ignore="UseAppTint" />
             </LinearLayout>
+
 
             <!--            <TextView-->
             <!--                android:id="@+id/textView5"-->

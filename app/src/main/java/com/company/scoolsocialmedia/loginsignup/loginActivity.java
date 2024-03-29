@@ -69,7 +69,7 @@ public class loginActivity extends AppCompatActivity {
         String password = prefs.getString("password", "none");
         if (!email.equals("none") && !password.equals("none")) {
             showGeneralLoadingLayout();
-            quickLogin(email, password);
+            quickLogin(email,password);
         } else {
             setViews();
         }
@@ -131,13 +131,35 @@ public class loginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Constants.uid= user.getUid();
-//                            setToken(user.getUid());
-                            getUserInformation();
+                            if (user.isEmailVerified()) {
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference("User_Information").child(user.getUid());
+                                Map<String, Object> updates = new HashMap<>();
+                                myRef.updateChildren(updates, new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                                        if (databaseError == null) {
+                                            Log.d(TAG, "verification status updated successfully");
+                                        } else {
+                                            Log.d(TAG, "Error updating verification status " + databaseError.getMessage());
+                                        }
+                                    }
+                                });
+
+                                Constants.uid = user.getUid();
+//                                setToken(user.getUid());
+                                getUserInformation();
+                            } else {
+                                showVerificationFailDialog(user);
+                                FirebaseAuth.getInstance().signOut();
+                            }
                         } else {
-                            setViews();
+
+                            Toast.makeText(loginActivity.this, "Error signing in", Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
     }

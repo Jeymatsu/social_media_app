@@ -46,7 +46,7 @@ public class ManageChatRooms extends AppCompatActivity {
 
         chatRoomsRecyclerView = findViewById(R.id.chat_rooms_recycler_view);
         chatRoomsList = new ArrayList<>();
-        chatRoomAdapter = new ChatRoomAdapter(chatRoomsList);
+        chatRoomAdapter = new ChatRoomAdapter(chatRoomsList,true);
         chatRoomsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         chatRoomsRecyclerView.setAdapter(chatRoomAdapter);
 
