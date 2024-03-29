@@ -309,6 +309,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                         post.getTagged_communities().addAll(mSelectedCommunities);
                                         post.setShow_skills(showSkill);
                                         post.setPost_type(postType);
+                                        post.setLikes(0);
 
                                         postRef = FirebaseDatabase.getInstance().getReference("Posts_Table");
                                         postRef.push().setValue(post).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -369,6 +370,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                                         updates.put("post_image_info", imgInfo);
                                                         updates.put("post_image", downUri.toString());
                                                         updates.put("post_type", postType);
+                                                        updates.put("likes", 0);
                                                         updates.put("show_skills", showSkill);
                                                         updates.put("user_id", post.getUser_id());
                                                         updates.put("post_date", post.getPost_date());
@@ -419,6 +421,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                     updates.put("post_image", post.getPost_image());
                                     updates.put("post_type", postType);
                                     updates.put("show_skills", showSkill);
+                                    updates.put("likes", 0);
                                     updates.put("user_id", post.getUser_id());
                                     updates.put("tagged_communities", mSelectedCommunities);
                                     updates.put("post_date", post.getPost_date());
@@ -492,6 +495,8 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                         post.setUser_id(Constants.getConstantUid());
                                         post.getTagged_communities().addAll(mSelectedCommunities);
                                         post.setShow_skills(showSkill);
+                                        post.setLikes(0);
+
                                         post.setPost_type(postType);
 
                                         postRef = FirebaseDatabase.getInstance().getReference("Posts_Table");
@@ -554,6 +559,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                                         updates.put("post_video", downUri.toString());
                                                         updates.put("post_type", postType);
                                                         updates.put("show_skills", showSkill);
+                                                        updates.put("likes", 0);
                                                         updates.put("user_id", post.getUser_id());
                                                         updates.put("post_date", post.getPost_date());
                                                         updates.put("tagged_communities", mSelectedCommunities);
@@ -604,6 +610,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                     updates.put("post_type", postType);
                                     updates.put("show_skills", showSkill);
                                     updates.put("user_id", post.getUser_id());
+                                    updates.put("likes", 0);
                                     updates.put("tagged_communities", mSelectedCommunities);
                                     updates.put("post_date", post.getPost_date());
 
@@ -664,6 +671,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
                             post.setPost_title(postTitle);
                             post.setPost_body(postBody);
                             post.setPost_type(postType);
+                            post.setLikes(0);
                             post.setShow_skills(skillShow);
                             post.setUser_id(Constants.getConstantUid());
                             post.setPost_date(getTimeDate());
@@ -710,6 +718,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                 updates.put("post_type", postType);
                                 updates.put("show_skills", skillShow);
                                 updates.put("user_id", post.getUser_id());
+                                updates.put("likes", 0);
                                 updates.put("post_date", post.getPost_date());
                                 updates.put("tagged_communities", mSelectedCommunities);
 
