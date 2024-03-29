@@ -159,7 +159,7 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
                     emptyMsgLayout.setVisibility(View.VISIBLE);
                     postSwitchBtn.setVisibility(View.VISIBLE);
                 } else {
-                    PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                    PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                     mPosts.add(0, post);
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyMsgLayout.setVisibility(View.GONE);
@@ -185,7 +185,7 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
                         emptyMsgLayout.setVisibility(View.VISIBLE);
                         postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);
@@ -214,7 +214,7 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
                         emptyMsgLayout.setVisibility(View.VISIBLE);
                         postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);
@@ -241,7 +241,7 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
                         emptyMsgLayout.setVisibility(View.VISIBLE);
                         postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);

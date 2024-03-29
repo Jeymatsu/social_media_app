@@ -34,6 +34,7 @@ import com.company.scoolsocialmedia.Proposals.ProposalListActivity;
 import com.company.scoolsocialmedia.activities.ChatRoomsActivity;
 import com.company.scoolsocialmedia.activities.CreateImagePostActivity;
 import com.company.scoolsocialmedia.activities.CreateNoImagePostActivity;
+import com.company.scoolsocialmedia.activities.NotiificationActivity;
 import com.company.scoolsocialmedia.activities.PostDetailActivity;
 import com.company.scoolsocialmedia.activities.SearchActivity;
 import com.company.scoolsocialmedia.activities.SearchUsersActivity;
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
     boolean ifShowingMyPosts = false;
     boolean isViewingBook = false;
 
+    private ImageView notification;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,6 +149,14 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
 //        toolbarLearningTxt = findViewById(R.id.learning_txt);
         emptyMsgCP = findViewById(R.id.emptyMsgCreatePost);
         emptyMsgUI = findViewById(R.id.emptyMsgUploadImg);
+        notification=findViewById(R.id.notification);
+
+        notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToNotifications();
+            }
+        });
         loadLoggedInUserDetails();
 
         emptyMsgCP.setOnClickListener(new View.OnClickListener() {
@@ -513,7 +524,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
                     emptyMsgLayout.setVisibility(View.VISIBLE);
                     postSwitchBtn.setVisibility(View.VISIBLE);
                 } else {
-                    PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                    PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                     mPosts.add(0, post);
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyMsgLayout.setVisibility(View.GONE);
@@ -539,7 +550,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
                         emptyMsgLayout.setVisibility(View.VISIBLE);
                         postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);
@@ -568,7 +579,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
                         emptyMsgLayout.setVisibility(View.VISIBLE);
                         postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);
@@ -595,7 +606,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
                         emptyMsgLayout.setVisibility(View.VISIBLE);
                         postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);
@@ -829,6 +840,10 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
         i.putExtra("uid", id);
         startActivity(i);
     }
+    public void goToNotifications() {
+        Intent i = new Intent(MainActivity.this, NotiificationActivity.class);
+        startActivity(i);
+    }
 
     @Override
     protected void onResume() {
@@ -858,6 +873,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
 
         return super.onOptionsItemSelected(item);
     }
+
 
 
 }

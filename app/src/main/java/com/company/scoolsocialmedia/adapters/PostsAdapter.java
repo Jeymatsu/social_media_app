@@ -18,6 +18,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,7 +30,16 @@ import com.company.scoolsocialmedia.activities.ImageDetailActivity;
 import com.company.scoolsocialmedia.fragements.CommentBottomSheetDialogFragment;
 import com.company.scoolsocialmedia.listeners.OnPostClickListener;
 import com.company.scoolsocialmedia.listeners.OnPostUserImageClickListener;
+import com.company.scoolsocialmedia.model.NotificationManager;
 import com.company.scoolsocialmedia.model.PostModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import org.apache.commons.text.WordUtils;
 
@@ -130,6 +140,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ((PostsWithNoImageViewHolder) holder).postItemType.setText(post.getPost_type());
         ((PostsWithNoImageViewHolder) holder).postItemDate.setText(post.getPost_date());
         ((PostsWithNoImageViewHolder) holder).postItemUserName.setText(WordUtils.capitalize(post.getPost_user_posted_name()));
+        // Retrieve and display the like count for the post
+        ((PostsWithNoImageViewHolder) holder).txtNumberLikes.setText(String.valueOf(post.getLikes())+ " Likes");
+
         ((PostsWithNoImageViewHolder) holder).postItemUserImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,9 +169,72 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(mContex, "Liked", Toast.LENGTH_SHORT).show();
+                DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference("Likes_Table").child(post.getPost_id()).child(FirebaseAuth.getInstance().getUid());
+                likesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // User has already liked the post, show a message indicating that
+                            Toast.makeText(mContex, "You have already liked this post", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // User has not liked the post yet, increment the like count
+                            DatabaseReference postRef = FirebaseDatabase.getInstance().getReference("Posts_Table").child(post.getPost_id());
+                            postRef.child("likes").runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                                    Integer currentLikes = mutableData.getValue(Integer.class);
+                                    if (currentLikes == null) {
+                                        // If likes node does not exist, set likes to 1
+                                        mutableData.setValue(1);
+                                    } else {
+                                        // Increment likes count
+                                        mutableData.setValue(currentLikes + 1);
+                                    }
+                                    return Transaction.success(mutableData);
+                                }
 
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                                    if (error != null) {
+                                        // Handle error
+                                    } else {
+                                        // User has successfully liked the post, store the like in Likes_Table
+                                        likesRef.setValue(true);
+                                        // Fetch the username of the post author
+                                        NotificationManager notificationManager = new NotificationManager();
+                                        notificationManager.getUsernameFromFirebase(FirebaseAuth.getInstance().getUid(), new NotificationManager.UsernameCallback() {
+                                            @Override
+                                            public void onUsernameReceived(String postAuthorUsername) {
+                                                // Construct the notification message using the post author's username
+                                                String notificationMessage = "New Like on Your Post '" + post.getPost_title() + "' by " + postAuthorUsername;
+                                                // Send the notification
+                                                notificationManager.sendNotification(" Like " ,notificationMessage,post.getPost_id());
+                                            }
+
+                                            @Override
+                                            public void onError(String errorMessage) {
+                                                // Handle error while fetching username
+                                            }
+                                        });
+                                        Toast.makeText(mContex, "Liked", Toast.LENGTH_SHORT).show();      }
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle error
+                    }
+                });
             }
+
+
+
+
+
+
         });
 
         ((PostsWithNoImageViewHolder) holder).comment_icon.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +242,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onClick(View v) {
                 // Pass the postId to the CommentBottomSheetDialogFragment constructor
                 String postID=post.getPost_id();
-                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID);
+                String postUserId=post.getUser_id();
+                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID,postUserId);
                 bottomSheetDialogFragment.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
 
             }
@@ -272,6 +349,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ((PostsWithImageViewHolder) holder).postImageItemType.setText(post.getPost_type());
         ((PostsWithImageViewHolder) holder).postImageItemDate.setText(post.getPost_date());
         ((PostsWithImageViewHolder) holder).postImageItemUserName.setText(WordUtils.capitalize(post.getPost_user_posted_name()));
+        // Retrieve and display the like count for the post
+        ((PostsWithImageViewHolder) holder).txtNumberLikes.setText(String.valueOf(post.getLikes())+ " Likes");
         ((PostsWithImageViewHolder) holder).postImageItemUserImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -315,10 +394,84 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onClick(View v) {
                 // Pass the postId to the CommentBottomSheetDialogFragment constructor
                 String postID=post.getPost_id();
-                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID);
+                String postUserId=post.getUser_id();
+                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID,postUserId);
                 bottomSheetDialogFragment.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
 
             }
+        });
+
+
+        ((PostsWithImageViewHolder) holder).like_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference("Likes_Table").child(post.getPost_id()).child(FirebaseAuth.getInstance().getUid());
+                likesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // User has already liked the post, show a message indicating that
+                            Toast.makeText(mContex, "You have already liked this post", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // User has not liked the post yet, increment the like count
+                            DatabaseReference postRef = FirebaseDatabase.getInstance().getReference("Posts_Table").child(post.getPost_id());
+                            postRef.child("likes").runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                                    Integer currentLikes = mutableData.getValue(Integer.class);
+                                    if (currentLikes == null) {
+                                        // If likes node does not exist, set likes to 1
+                                        mutableData.setValue(1);
+                                    } else {
+                                        // Increment likes count
+                                        mutableData.setValue(currentLikes + 1);
+                                    }
+                                    return Transaction.success(mutableData);
+                                }
+
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                                    if (error != null) {
+                                        // Handle error
+                                    } else {
+                                        // User has successfully liked the post, store the like in Likes_Table
+                                        likesRef.setValue(true);
+                                        // Fetch the username of the post author
+                                        NotificationManager notificationManager = new NotificationManager();
+                                        notificationManager.getUsernameFromFirebase(FirebaseAuth.getInstance().getUid(), new NotificationManager.UsernameCallback() {
+                                            @Override
+                                            public void onUsernameReceived(String postAuthorUsername) {
+                                                // Construct the notification message using the post author's username
+                                                String notificationMessage = "New Like on Your Post '" + post.getPost_title() + "' by " + postAuthorUsername;
+                                                // Send the notification
+                                                notificationManager.sendNotification(" Like " ,notificationMessage,post.getPost_id());
+                                            }
+
+                                            @Override
+                                            public void onError(String errorMessage) {
+                                                // Handle error while fetching username
+                                            }
+                                        });
+                                        Toast.makeText(mContex, "Liked", Toast.LENGTH_SHORT).show();      }
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle error
+                    }
+                });
+            }
+
+
+
+
+
+
         });
 
 
@@ -424,6 +577,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         ((PostsWithVideoViewHolder) holder).postImageItemType.setText("Video");
         ((PostsWithVideoViewHolder) holder).postImageItemDate.setText(post.getPost_date());
         ((PostsWithVideoViewHolder) holder).postImageItemUserName.setText(WordUtils.capitalize(post.getPost_user_posted_name()));
+        // Retrieve and display the like count for the post
+        ((PostsWithVideoViewHolder) holder).txtNumberLikes.setText(String.valueOf(post.getLikes()) + " Likes");
         ((PostsWithVideoViewHolder) holder).postImageItemUserImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -453,6 +608,80 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
+        ((PostsWithVideoViewHolder) holder).like_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DatabaseReference likesRef = FirebaseDatabase.getInstance().getReference("Likes_Table").child(post.getPost_id()).child(FirebaseAuth.getInstance().getUid());
+                likesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            // User has already liked the post, show a message indicating that
+                            Toast.makeText(mContex, "You have already liked this post", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // User has not liked the post yet, increment the like count
+                            DatabaseReference postRef = FirebaseDatabase.getInstance().getReference("Posts_Table").child(post.getPost_id());
+                            postRef.child("likes").runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                                    Integer currentLikes = mutableData.getValue(Integer.class);
+                                    if (currentLikes == null) {
+                                        // If likes node does not exist, set likes to 1
+                                        mutableData.setValue(1);
+                                    } else {
+                                        // Increment likes count
+                                        mutableData.setValue(currentLikes + 1);
+                                    }
+                                    return Transaction.success(mutableData);
+                                }
+
+                                @Override
+                                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                                    if (error != null) {
+                                        // Handle error
+                                    } else {
+                                        // User has successfully liked the post, store the like in Likes_Table
+                                        likesRef.setValue(true);
+                                        // Fetch the username of the post author
+                                        NotificationManager notificationManager = new NotificationManager();
+                                        notificationManager.getUsernameFromFirebase(FirebaseAuth.getInstance().getUid(), new NotificationManager.UsernameCallback() {
+                                            @Override
+                                            public void onUsernameReceived(String postAuthorUsername) {
+                                                // Construct the notification message using the post author's username
+                                                String notificationMessage = "New Like on Your Post '" + post.getPost_body()+ "' by " + postAuthorUsername;
+                                                // Send the notification
+                                                notificationManager.sendNotification("Like",notificationMessage, post.getUser_id());
+                                                Toast.makeText(mContex, "Liked", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            @Override
+                                            public void onError(String errorMessage) {
+                                                // Handle error while fetching username
+                                            }
+                                        });
+
+                                    }
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Handle error
+                    }
+                });
+            }
+
+
+
+
+
+
+        });
+
 //        ((PostsWithVideoViewHolder) holder).postImageMainImage.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -480,7 +709,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             public void onClick(View v) {
                 // Pass the postId to the CommentBottomSheetDialogFragment constructor
                 String postID=post.getPost_id();
-                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID);
+                String postUserId=post.getUser_id();
+                CommentBottomSheetDialogFragment bottomSheetDialogFragment = new CommentBottomSheetDialogFragment(postID,postUserId);
                 bottomSheetDialogFragment.show(((AppCompatActivity) v.getContext()).getSupportFragmentManager(), bottomSheetDialogFragment.getTag());
 
             }
@@ -627,6 +857,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private Button btnDelete;
         private ImageView like_icon;
         private ImageView comment_icon;
+        private TextView txtNumberLikes;
 
 
         public PostsWithNoImageViewHolder(@NonNull View itemView) {
@@ -641,6 +872,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             rlLike= itemView.findViewById(R.id.rlLike);
             like_icon = itemView.findViewById(R.id.like_icon);
             comment_icon = itemView.findViewById(R.id.comment_icon);
+            txtNumberLikes=itemView.findViewById(R.id.txtNumberLikes);
 //            firstCateogryHolder = itemView.findViewById(R.id.postItemFirstCategoryLayout);
 //            secondCateogryHolder = itemView.findViewById(R.id.postItemSecondCategoryLayout);
 //            thirdCateogryHolder = itemView.findViewById(R.id.postItemThirdCategoryLayout);
@@ -662,6 +894,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //        private LinearLayout firstCateogryHolder;
 //        private LinearLayout secondCateogryHolder;
 //        private LinearLayout thirdCateogryHolder;
+          private TextView txtNumberLikes;
 
         public PostsWithImageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -673,6 +906,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             postImageMainImage = itemView.findViewById(R.id.main_image_post_image_imgview);
             like_icon = itemView.findViewById(R.id.like_icon);
             comment_icon = itemView.findViewById(R.id.comment_icon);
+            txtNumberLikes=itemView.findViewById(R.id.txtNumberLikes);
 //            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
 //            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
 //            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);
@@ -694,6 +928,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 //        private LinearLayout thirdCateogryHolder;
         private ImageView like_icon;
         private ImageView comment_icon;
+        private TextView txtNumberLikes;
 
         public PostsWithVideoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -705,6 +940,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             createVideoPostMainVideo = itemView.findViewById(R.id.createVideoPostMainVideo);
             like_icon = itemView.findViewById(R.id.like_icon);
             comment_icon = itemView.findViewById(R.id.comment_icon);
+            txtNumberLikes=itemView.findViewById(R.id.txtNumberLikes);
 //            firstCateogryHolder = itemView.findViewById(R.id.postImgItemFirstCategoryLayout);
 //            secondCateogryHolder = itemView.findViewById(R.id.postImgItemSecondCategoryLayout);
 //            thirdCateogryHolder = itemView.findViewById(R.id.postImgItemThirdCategoryLayout);

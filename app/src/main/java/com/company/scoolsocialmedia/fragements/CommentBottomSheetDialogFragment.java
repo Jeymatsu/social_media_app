@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.adapters.CommentsAdapter;
 import com.company.scoolsocialmedia.model.Comment;
+import com.company.scoolsocialmedia.model.NotificationManager;
 import com.company.scoolsocialmedia.model.PostModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +38,7 @@ public class CommentBottomSheetDialogFragment extends BottomSheetDialogFragment 
     private List<Comment> commentList;
     private DatabaseReference commentsRef;
     private String postId;
+    private String postIdUserID;
 
     private Button btn_post_comment;
 
@@ -50,8 +52,9 @@ public class CommentBottomSheetDialogFragment extends BottomSheetDialogFragment 
         // Required empty public constructor
     }
 
-    public CommentBottomSheetDialogFragment(String postId) {
+    public CommentBottomSheetDialogFragment(String postId, String postIdUserID) {
         this.postId = postId;
+        this.postIdUserID = postIdUserID;
     }
 
     public static CommentBottomSheetDialogFragment newInstance(String param1, String param2) {
@@ -141,6 +144,9 @@ public class CommentBottomSheetDialogFragment extends BottomSheetDialogFragment 
 
         // Write comment to Firebase
         commentsRef.child(commentId).setValue(comment);
+
+        // Send notification
+        sendNotificationToPostAuthor(postIdUserID, getCurrentUserId(), username);
     }
 
     // Method to get current user ID
@@ -183,6 +189,19 @@ public class CommentBottomSheetDialogFragment extends BottomSheetDialogFragment 
                 Log.e("Username", "Error retrieving username: " + databaseError.getMessage());
             }
         });
+    }
+
+    private void sendNotificationToPostAuthor(String postAuthorId, String commenterId, String commenterName) {
+
+        // Check if the post author is not the same as the commenter
+        NotificationManager notificationManager = new NotificationManager();
+        notificationManager.sendNotification("New Comment on Your Post", commenterName + " commented on your post" , postAuthorId);
+
+//        if (!postAuthorId.equals(commenterId)) {
+//            // Save notification to the post author's notifications node
+//            NotificationManager notificationManager = new NotificationManager();
+//            notificationManager.sendNotification("New Comment on Your Post", commenterName + " commented on your post '"  + "'", postAuthorId);
+//        }
     }
 
 

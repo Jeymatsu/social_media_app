@@ -188,6 +188,16 @@
                 android:orientation="horizontal"
                 android:layout_below="@+id/second_line"
                 android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="100 Likes"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/bottomNavigationBackground"
+                    android:id="@+id/txtNumberLikes"/>
                 <!-- Like icon -->
                 <ImageView
                     android:id="@+id/like_icon"

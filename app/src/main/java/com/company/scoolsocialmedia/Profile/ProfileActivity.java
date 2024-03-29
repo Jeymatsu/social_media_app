@@ -35,10 +35,12 @@ import com.company.scoolsocialmedia.listeners.OnPostUserImageClickListener;
 import com.company.scoolsocialmedia.model.BasicUser;
 import com.company.scoolsocialmedia.Constants;
 import com.company.scoolsocialmedia.R;
+import com.company.scoolsocialmedia.model.NotificationManager;
 import com.company.scoolsocialmedia.model.PostModel;
 import com.company.scoolsocialmedia.model.UserProfile;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -97,7 +99,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
 
     List<PostModel> mPosts, mTempPosts, mAllPosts;
     PostsAdapter mAdapter;
-
+   String username;
 
 
 
@@ -114,6 +116,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
         }
         getFollowersCount();
         getFollowingCount();
+        getUsernameFromFirebase();
         loadData(mode);
         initRecyclerView();
         subscribeToPosts(uid);
@@ -561,6 +564,55 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
         }
     }
 
+    private void sendNotificationToPostAuthor(String postAuthorId, String commenterName) {
+
+        // Check if the post author is not the same as the commenter
+        NotificationManager notificationManager = new NotificationManager();
+        notificationManager.sendNotification("New  follower", commenterName + " has followed you" , postAuthorId);
+
+//        if (!postAuthorId.equals(commenterId)) {
+//            // Save notification to the post author's notifications node
+//            NotificationManager notificationManager = new NotificationManager();
+//            notificationManager.sendNotification("New Comment on Your Post", commenterName + " commented on your post '"  + "'", postAuthorId);
+//        }
+    }
+
+
+    private void getUsernameFromFirebase() {
+        // Get the reference to the current user's information in the Firebase database
+        DatabaseReference userInfoRef = FirebaseDatabase.getInstance().getReference("User_Information")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        // Attach a listener to retrieve the username
+        userInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check if the user's information exists
+                if (dataSnapshot.exists()) {
+                    // Check if the username exists
+                    if (dataSnapshot.hasChild("name")) {
+                        // Retrieve the username
+                        username = dataSnapshot.child("name").getValue(String.class);
+                        // Use the username as needed
+                        Log.d("Username", "Username: " + username);
+                    } else {
+                        // Handle the case where the username does not exist
+                        Log.d("Username", "No username found");
+                    }
+                } else {
+                    // Handle the case where the user's information does not exist
+                    Log.d("Username", "User information not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors that occur during the data retrieval process
+                Log.e("Username", "Error retrieving username: " + databaseError.getMessage());
+            }
+        });
+    }
+
     private void followerAdded(){
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Followers").child(Constants.getConstantUid()).child("following");
@@ -582,6 +634,12 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
                             Log.i(TAG,"Added following");
                             follow_follower_indicator_view_text.setText("Following");
                             follow_follower_indicator_view.setVisibility(View.VISIBLE);
+
+                            // Check if the post author is not the same as the commenter
+                            NotificationManager notificationManager = new NotificationManager();
+                            notificationManager.sendNotification("New Follower",   username +" has followed you" ,uid);
+
+
                         }
                         else{
                             Log.i(TAG," Error Added following");
@@ -617,6 +675,10 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
                     public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                         if (databaseError == null){
                             Log.i(TAG,"Added follower");
+                            // Check if the post author is not the same as the commenter
+                            NotificationManager notificationManager = new NotificationManager();
+                            notificationManager.sendNotification("New Follower",   username +" has followed you" ,uid);
+
                         }
                         else{
                             Log.i(TAG," Error Added follower");
@@ -771,7 +833,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
                 if (mPosts.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
                 } else {
-                    PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                    PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                     mPosts.add(0, post);
                     recyclerView.setVisibility(View.VISIBLE);
                     changeDisplayedItems();
@@ -793,7 +855,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
                         recyclerView.setVisibility(View.GONE);
 
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
 
@@ -819,7 +881,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
                         recyclerView.setVisibility(View.GONE);
 
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
 
@@ -843,7 +905,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
                         recyclerView.setVisibility(View.GONE);
 
                     } else {
-                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null);
+                        PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
 
