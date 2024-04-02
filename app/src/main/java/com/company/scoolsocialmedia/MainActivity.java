@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements OnPostClickListen
         emptyMsgCP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, CreateNoImagePostActivity.class).putExtra("actionType", "newPost"));
+                startActivity(new Intent(MainActivity.this, CreateImagePostActivity.class).putExtra("actionType", "textPost"));
             }
         });
 

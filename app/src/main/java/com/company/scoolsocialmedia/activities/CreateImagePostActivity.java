@@ -71,7 +71,6 @@ public class CreateImagePostActivity extends AppCompatActivity {
     private TextView exchangeTxt, postShareTxtView, tagCommsTxt;
     private ImageView mainImage, removeMainImgBtn;
     private EditText postImgInfo;
-
     private Spinner typeSpinner;
     private RadioGroup skillGroup;
     private RadioButton checkBtn;
@@ -125,6 +124,8 @@ public class CreateImagePostActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+
 
         createTextPostContent=findViewById(R.id.createTextPostContent);
         createVideoPostMainVideo=findViewById(R.id.createVideoPostMainVideo);
@@ -929,6 +930,11 @@ public class CreateImagePostActivity extends AppCompatActivity {
             checkBtn = findViewById(R.id.createImgPostYesBtn);
             checkBtn.setChecked(true);
 //            exchangeTxt.setText("Create Post");
+        }
+
+        if (intent.getStringExtra("actionType").equalsIgnoreCase("textPost")){
+
+            typeSpinner.setSelection(1);
         }
     }
 
