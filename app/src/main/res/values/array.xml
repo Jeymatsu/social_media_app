@@ -27,27 +27,26 @@
     </string-array>
 
     <string-array name="community_list2">
-        <item>Architecture</item>
-        <item>Biosciences</item>
-        <item>Chemical Engineering</item>
-        <item>Chemistry</item>
-        <item>Civil Engineering</item>
+        <item>Software Engineering</item>
         <item>Computer Science</item>
-        <item>Department of Biotechnology</item>
-        <item>Development Studies</item>
-        <item>Earth Sciences</item>
-        <item>Economics</item>
-        <item>Electrical and Computer Engineering</item>
-        <item>Environmental Sciences</item>
-        <item>Health Informatics</item>
-        <item>Humanities</item>
-        <item>Management Sciences</item>
-        <item>Mathematics</item>
-        <item>Mechanical Engineering</item>
-        <item>Meteorology</item>
-        <item>Pharmacy</item>
+        <item>Computer and Networks Engineering</item>
+        <item>Law</item>
+        <item>Information System</item>
         <item>Physics</item>
-        <item>Statistics</item>
+        <item>Chemistry</item>
+        <item>Biology</item>
+        <item>Business Administration</item>
+        <item>Islamic Studies</item>
+        <item>Interior Design</item>
+        <item>Chemical Engineering</item>
+        <item>Civil Engineering</item>
+        <item>Nursing</item>
+        <item>Medicine</item>
+        <item>Dentistry</item>
+        <item>Laboratories</item>
+        <item>Physical therapy</item>
+        <item>Pharmacy</item>
+        <item>Arts</item>
 
     </string-array>
 

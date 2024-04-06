@@ -40,7 +40,7 @@ public class AdminLogin extends AppCompatActivity {
             public void onClick(View v) {
                 String ID_ADMIN=ID.getText().toString();
                 String Password=password.getText().toString();
-                if(ID_ADMIN.equals("12345678") && Password.equals("Admin")){
+                if(ID_ADMIN.equals("Admin01") && Password.equals("Az38#GHwe1")){
                     signInAnonymously();
                 }else {
                     Toast.makeText(AdminLogin.this, "ID or Password is wrong", Toast.LENGTH_SHORT).show();

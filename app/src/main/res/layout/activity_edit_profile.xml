@@ -11,13 +11,9 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary">
 
-        <include
-            android:id="@+id/toolbarLayout"
-            layout="@layout/toolbar" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_centerHorizontal="true"
-            android:layout_below="@id/toolbarLayout"
             android:id="@+id/profileImgLayout"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
@@ -100,7 +96,7 @@
                 android:background="@null"
                 android:backgroundTint="@color/fullwhite"
                 android:fontFamily="@font/open_sans_light"
-                android:hint="Overview (At least 80 Characters)"
+                android:hint="Bio (At least 80 Characters)"
                 android:text=""
                 android:inputType="textMultiLine"
                 android:paddingStart="8dp"
@@ -284,7 +280,7 @@
             android:layout_marginEnd="8dp"
             app:cardElevation="0dp"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/postSelectorBtnColor"
+            app:cardBackgroundColor="@color/bottomNavigationBackground"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"

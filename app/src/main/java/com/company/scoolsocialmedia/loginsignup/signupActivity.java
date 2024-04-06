@@ -88,10 +88,26 @@ public class signupActivity extends AppCompatActivity {
         String password = password_v.getText().toString().trim();
         String cPassword=c_password.getText().toString().trim();
 
-        if ( email.length() == 0
-        ) {
+        if ( academicNumber.length() == 0) {
+            Toast.makeText(this, "Please enter academic number", Toast.LENGTH_SHORT).show();
+        } else if (!academicNumber.equals("421205687")
+                ||!academicNumber.equals("451206758" )
+                ||!academicNumber.equals("391208788" )
+                ||!academicNumber.equals("421205852" )
+                ||!academicNumber.equals("451205704" )
+                ||!academicNumber.equals("441100383" )
+                ||!academicNumber.equals("421204688" )
+                ||!academicNumber.equals("421205658" )
+                ||!academicNumber.equals("421204722" )
+                ||!academicNumber.equals("421204370" )
+                ||!academicNumber.equals("421204660" )) {
+
+            Toast.makeText(this, "Invalid academic number", Toast.LENGTH_SHORT).show();
+
+        } else if (email.length()==0) {
             Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
-        } else if (password.length() == 0) {
+        }
+        else if (password.length() == 0) {
             Toast.makeText(this, "Please enter a password", Toast.LENGTH_SHORT).show();
         } else  {
             signUp.setVisibility(View.INVISIBLE);

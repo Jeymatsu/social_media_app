@@ -58,7 +58,7 @@
             android:layout_marginTop="32dp"
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/montserrat"
-            android:text="Create account with your email"
+            android:text="Create your account with your personal information"
             android:textColor="@color/drawerMenuGray"
             android:textSize="16sp" />
 

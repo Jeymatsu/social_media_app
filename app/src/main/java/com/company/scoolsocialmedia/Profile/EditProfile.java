@@ -74,24 +74,21 @@ public class EditProfile extends AppCompatActivity {
     private ImageView chooseImg;
     private StorageReference storageRef;
     private DatabaseReference dbRef;
-    private Toolbar toolbar;
-    private TextView exhangeTxt, learningTxt;
+//    private Toolbar toolbar;
+
     private boolean isProfileImgChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
-        }
-        exhangeTxt = findViewById(R.id.exchange_txt);
-        learningTxt = findViewById(R.id.learning_txt);
-        learningTxt.setVisibility(View.GONE);
-        exhangeTxt.setText("Update Profile");
+//        toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        if (getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        }
+
         titleView = findViewById(R.id.updateProfileTitleEdit);
         universityView = findViewById(R.id.updateProfileUniEdit);
         departmentView = findViewById(R.id.updateProfileDptEdit);
@@ -387,7 +384,7 @@ public class EditProfile extends AppCompatActivity {
                         }
                     });
                 } else {
-                    Toast.makeText(EditProfile.this, "Minimum 30 Characters required for overview", Toast.LENGTH_LONG).show();
+                    Toast.makeText(EditProfile.this, "Minimum 30 Characters required for bio", Toast.LENGTH_LONG).show();
                     hideProgress();
                 }
             }
