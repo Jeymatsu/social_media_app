@@ -212,7 +212,7 @@
                     android:layout_weight="4"
                     android:fontFamily="@font/open_sans_light"
                     android:gravity="center_vertical"
-                    android:text="Community"
+                    android:text="Major"
                     android:textColor="@color/darkGray"
                     android:textSize="18sp" />
 

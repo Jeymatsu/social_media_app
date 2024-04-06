@@ -123,7 +123,7 @@ public class CreateProfile extends AppCompatActivity {
     }
 
     private void populateCommunity() {
-        String[] spinnerArray = getResources().getStringArray(R.array.community_list);
+        String[] spinnerArray = getResources().getStringArray(R.array.community_list2);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, spinnerArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
