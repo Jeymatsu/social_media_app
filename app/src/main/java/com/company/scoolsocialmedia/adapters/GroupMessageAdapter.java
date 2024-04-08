@@ -1,8 +1,10 @@
 package com.company.scoolsocialmedia.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -10,8 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import com.bumptech.glide.Glide;
 import com.company.scoolsocialmedia.Constants;
 import com.company.scoolsocialmedia.R;
+import com.company.scoolsocialmedia.activities.ImageDetailActivity;
+import com.company.scoolsocialmedia.activities.VideoPlayerActivity;
 import com.company.scoolsocialmedia.listeners.OnMsgLayoutLongClick;
 import com.company.scoolsocialmedia.model.ChatMessageModel;
 import com.google.firebase.database.DataSnapshot;
@@ -34,39 +39,70 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.listener = listener;
     }
 
-    public static final int SENT_MESSAGE_TYPE = 1;
-    public static final int RECEIVED_MESSAGE_TYPE = 2;
-    public static final int WELCOME_MESSAGE_TYPE = 3;
+    // Message types
+    private static final int SENT_MESSAGE_TYPE = 1;
+    private static final int RECEIVED_MESSAGE_TYPE = 2;
+    private static final int WELCOME_MESSAGE_TYPE = 3;
+    private static final int SENT_IMAGE_MESSAGE_TYPE = 4;
+    private static final int RECEIVED_IMAGE_MESSAGE_TYPE = 5;
+    private static final int SENT_VIDEO_MESSAGE_TYPE = 6;
+    private static final int RECEIVED_VIDEO_MESSAGE_TYPE = 7;
 
     @Override
     public int getItemViewType(int position) {
+
         ChatMessageModel message = mMessages.get(position);
-        if (message.getSender_id().equalsIgnoreCase(Constants.getConstantUid()) && !message.getDate().equalsIgnoreCase("welcome")) {
-            return SENT_MESSAGE_TYPE;
-        } else if (!message.getSender_id().equalsIgnoreCase(Constants.getConstantUid()) && !message.getDate().equalsIgnoreCase("welcome")) {
-            return RECEIVED_MESSAGE_TYPE;
-        } else if (message.getDate().equalsIgnoreCase("welcome")) {
+        if (message.getDate().equalsIgnoreCase("welcome")) {
             return WELCOME_MESSAGE_TYPE;
+        } else if (message.getSender_id().equalsIgnoreCase(Constants.getConstantUid())) {
+            if (message.getType().equalsIgnoreCase("image")) {
+                return SENT_IMAGE_MESSAGE_TYPE;
+            } else if (message.getType().equalsIgnoreCase("video")) {
+                return SENT_VIDEO_MESSAGE_TYPE;
+            } else {
+                return SENT_MESSAGE_TYPE;
+            }
+        } else {
+            if (message.getType().equalsIgnoreCase("image")) {
+                return RECEIVED_IMAGE_MESSAGE_TYPE;
+            } else if (message.getType().equalsIgnoreCase("video")) {
+                return RECEIVED_VIDEO_MESSAGE_TYPE;
+            } else {
+                return RECEIVED_MESSAGE_TYPE;
+            }
         }
-        return 0;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view;
         switch (viewType) {
             case SENT_MESSAGE_TYPE:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_sent_message_layout, parent, false);
+                view = inflater.inflate(R.layout.chat_sent_message_layout, parent, false);
                 return new SentMessageViewHolder(view);
             case RECEIVED_MESSAGE_TYPE:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_received_msg_layout, parent, false);
+                view = inflater.inflate(R.layout.chat_received_msg_layout, parent, false);
                 return new ReceivedMessageViewHolder(view);
             case WELCOME_MESSAGE_TYPE:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_welcome_msg_layout, parent, false);
+                view = inflater.inflate(R.layout.chat_welcome_msg_layout, parent, false);
                 return new WelcomeMessageViewHolder(view);
+            case SENT_IMAGE_MESSAGE_TYPE:
+                view = inflater.inflate(R.layout.chat_sent_image_layout, parent, false);
+                return new SentImageMessageViewHolder(view);
+            case RECEIVED_IMAGE_MESSAGE_TYPE:
+                view = inflater.inflate(R.layout.chat_received_image_layout, parent, false);
+                return new ReceivedImageMessageViewHolder(view);
+            case SENT_VIDEO_MESSAGE_TYPE:
+                view = inflater.inflate(R.layout.chat_sent_video_layout, parent, false);
+                return new SentVideoMessageViewHolder(view);
+            case RECEIVED_VIDEO_MESSAGE_TYPE:
+                view = inflater.inflate(R.layout.chat_received_video_layout, parent, false);
+                return new ReceivedVideoMessageViewHolder(view);
+            default:
+                return null;
         }
-        return null;
     }
 
     public int getItemPosition(ChatMessageModel msg) {
@@ -90,6 +126,18 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 break;
             case WELCOME_MESSAGE_TYPE:
                 handleWelcomeMessage(holder, message);
+                break;
+            case SENT_IMAGE_MESSAGE_TYPE:
+                handleSentImageMessage(holder, message);
+                break;
+            case RECEIVED_IMAGE_MESSAGE_TYPE:
+                handleReceivedImageMessage(holder, message);
+                break;
+            case SENT_VIDEO_MESSAGE_TYPE:
+                handleSentVideoMessage(holder, message);
+                break;
+            case RECEIVED_VIDEO_MESSAGE_TYPE:
+                handleReceivedVideoMessage(holder, message);
                 break;
         }
     }
@@ -129,6 +177,85 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
         });
     }
+
+
+    private void handleSentImageMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
+        SentImageMessageViewHolder viewHolder = (SentImageMessageViewHolder) holder;
+        // Load and display the sent image using Glide or any other image loading library
+        Glide.with(holder.itemView.getContext())
+                .load(message.getImageUrl()) // Replace message.getImageUrl() with the actual URL of the sent image
+                .placeholder(R.drawable.default_image) // Placeholder image until the actual image loads
+                .into(viewHolder.imageView);
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), ImageDetailActivity.class);
+                intent.putExtra("imageUrl", message.getImageUrl()); // Pass the URL of the video to the VideoPlayerActivity
+                v.getContext().startActivity(intent);
+            }
+        });
+    }
+
+    private void handleReceivedImageMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
+        ReceivedImageMessageViewHolder viewHolder = (ReceivedImageMessageViewHolder) holder;
+        // Load and display the received image using Glide or any other image loading library
+        Glide.with(holder.itemView.getContext())
+                .load(message.getImageUrl()) // Replace message.getImageUrl() with the actual URL of the received image
+                .placeholder(R.drawable.default_image) // Placeholder image until the actual image loads
+                .into(viewHolder.imageView);
+        viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), ImageDetailActivity.class);
+                intent.putExtra("imageUrl", message.getImageUrl()); // Pass the URL of the video to the VideoPlayerActivity
+                v.getContext().startActivity(intent);
+            }
+        });
+    }
+
+    private void handleSentVideoMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
+        SentVideoMessageViewHolder viewHolder = (SentVideoMessageViewHolder) holder;
+        // Load and display the video thumbnail using Glide or any other image loading library
+        Glide.with(holder.itemView.getContext())
+                .load(message.getVideoThumbnailUrl()) // Replace message.getVideoThumbnailUrl() with the actual URL of the video thumbnail
+                .placeholder(R.drawable.baseline_play_circle_outline_24) // Placeholder thumbnail until the actual thumbnail loads
+                .into(viewHolder.sentVideoThumbnail);
+
+        // Set click listener to play the video
+        viewHolder.sentVideoThumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Implement logic to play the video
+                // For example, you can start a new activity with a VideoView to play the video
+                // Or you can use a video player library to handle video playback
+                Intent intent = new Intent(v.getContext(), VideoPlayerActivity.class);
+                intent.putExtra("videoUrl", message.getVideoThumbnailUrl()); // Pass the URL of the video to the VideoPlayerActivity
+                v.getContext().startActivity(intent);
+            }
+        });
+    }
+
+    private void handleReceivedVideoMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
+        ReceivedVideoMessageViewHolder viewHolder = (ReceivedVideoMessageViewHolder) holder;
+        // Load and display the video thumbnail using Glide or any other image loading library
+        Glide.with(holder.itemView.getContext())
+                .load(message.getVideoThumbnailUrl()) // Replace message.getVideoThumbnailUrl() with the actual URL of the video thumbnail
+                .placeholder(R.drawable.baseline_play_circle_outline_24) // Placeholder thumbnail until the actual thumbnail loads
+                .into(viewHolder.receivedVideoThumbnail);
+
+        // Set click listener to play the video
+        viewHolder.receivedVideoThumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Implement logic to play the video
+                // For example, you can start a new activity with a VideoView to play the video
+                Intent intent = new Intent(v.getContext(), VideoPlayerActivity.class);
+                intent.putExtra("videoUrl", message.getVideoThumbnailUrl()); // Pass the URL of the video to the VideoPlayerActivity
+                v.getContext().startActivity(intent);
+            }
+        });
+    }
+
 
     @Override
     public int getItemCount() {
@@ -170,6 +297,46 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             mainLayout = itemView.findViewById(R.id.chatReceivedMsgLayout);
         }
     }
+
+
+    private static class SentImageMessageViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+
+        SentImageMessageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.sent_image_view);
+        }
+    }
+
+    private static class ReceivedImageMessageViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+
+        ReceivedImageMessageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.received_image_view);
+        }
+    }
+
+    private static class SentVideoMessageViewHolder extends RecyclerView.ViewHolder {
+        ImageView sentVideoThumbnail;
+
+        SentVideoMessageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            sentVideoThumbnail = itemView.findViewById(R.id.sent_video_thumbnail);
+            // Add any additional initialization or click listeners here
+        }
+    }
+
+    private static class ReceivedVideoMessageViewHolder extends RecyclerView.ViewHolder {
+        ImageView receivedVideoThumbnail;
+
+        ReceivedVideoMessageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            receivedVideoThumbnail = itemView.findViewById(R.id.received_video_thumbnail);
+            // Add any additional initialization or click listeners here
+        }
+    }
+
 
     public static class WelcomeMessageViewHolder extends ViewHolder {
 

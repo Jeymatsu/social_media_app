@@ -25,10 +25,15 @@ import com.company.scoolsocialmedia.Profile.ProfileActivity;
 import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.model.BasicUser;
 import com.company.scoolsocialmedia.model.Notification;
+import com.company.scoolsocialmedia.model.NotificationManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +52,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         this.context=context;
 
     }
-
     public void setFilteredList(List<BasicUser> filteredList) {
         this.userList = filteredList;
         notifyDataSetChanged();
     }
-
     @NonNull
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -78,10 +81,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     class UserViewHolder extends RecyclerView.ViewHolder {
         private TextView userNameTextView;
         private CheckBox userCheckBox;
-
         private RelativeLayout rlDelete;
         private ImageView imgDelete;
-
         private ImageView imgWarning;
         private CardView chatRoomLayout;
 
@@ -199,6 +200,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                                 userList.remove(position);
                                 notifyItemRemoved(position);
                             }
+
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -209,6 +212,24 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
                             // You may want to show a toast or handle the error in some way
                         }
                     });
+
+            // Delete posts associated with the user
+            DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("Posts_Table");
+            Query userPostsQuery = postsRef.orderByChild("user_id").equalTo(user.getUserId());
+            userPostsQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        postSnapshot.getRef().removeValue();
+                        // Optionally, delete other related data associated with the post
+                    }
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Handle error
+                    Log.e(TAG, "Error deleting user posts: " + databaseError.getMessage());
+                }
+            });
             // Update the RecyclerView after deletion
             int position = getAdapterPosition();
             userList.remove(position);
@@ -217,29 +238,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
 
         private void sendNotificationToDatabase(BasicUser user) {
-            DatabaseReference notificationsRef=FirebaseDatabase.getInstance().getReference().child("notifications");
 
-            // Get current timestamp
-            String timestamp = String.valueOf(System.currentTimeMillis());
+            // Check if the post author is not the same as the commenter
+            NotificationManager notificationManager = new NotificationManager();
+            notificationManager.sendNotification("Warning",   "You have violated community guidelines." , user.getUserId());
 
-            // Create a Notification object with relevant data
-            Notification notification = new Notification(timestamp, "", "", user.getUserId());
-
-            // Store the notification in the database
-            notificationsRef.child(timestamp).setValue(notification)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // Notification data successfully stored in the database
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            // Failed to store notification data in the database
-                            Log.e("WarningActivity", "Failed to send notification", e);
-                        }
-                    });
         }
 
         public void bind(BasicUser user,boolean showCheckbox) {

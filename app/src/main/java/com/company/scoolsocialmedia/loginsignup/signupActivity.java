@@ -91,16 +91,16 @@ public class signupActivity extends AppCompatActivity {
         if ( academicNumber.length() == 0) {
             Toast.makeText(this, "Please enter academic number", Toast.LENGTH_SHORT).show();
         } else if (!academicNumber.equals("421205687")
-                ||!academicNumber.equals("451206758" )
-                ||!academicNumber.equals("391208788" )
-                ||!academicNumber.equals("421205852" )
-                ||!academicNumber.equals("451205704" )
-                ||!academicNumber.equals("441100383" )
-                ||!academicNumber.equals("421204688" )
-                ||!academicNumber.equals("421205658" )
-                ||!academicNumber.equals("421204722" )
-                ||!academicNumber.equals("421204370" )
-                ||!academicNumber.equals("421204660" )) {
+                &&!academicNumber.equals("451206758" )
+                &&!academicNumber.equals("391208788" )
+                &&!academicNumber.equals("421205852" )
+                &&!academicNumber.equals("451205704" )
+                &&!academicNumber.equals("441100383" )
+                &&!academicNumber.equals("421204688" )
+                &&!academicNumber.equals("421205658" )
+                &&!academicNumber.equals("421204722" )
+                &&!academicNumber.equals("421204370" )
+                &&!academicNumber.equals("421204660" )) {
 
             Toast.makeText(this, "Invalid academic number", Toast.LENGTH_SHORT).show();
 
@@ -109,7 +109,7 @@ public class signupActivity extends AppCompatActivity {
         }
         else if (password.length() == 0) {
             Toast.makeText(this, "Please enter a password", Toast.LENGTH_SHORT).show();
-        } else  {
+        } else {
             signUp.setVisibility(View.INVISIBLE);
             hideKeyboard(signupActivity.this);
             progressBar.show();
@@ -176,9 +176,6 @@ public class signupActivity extends AppCompatActivity {
 
         }
     }
-
-
-
     public void showEmailSentDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.verification_email_sent_layout, null, false);

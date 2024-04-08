@@ -74,7 +74,7 @@ public class ChatActivity extends AppCompatActivity implements OnMsgLayoutLongCl
         setContentView(R.layout.activity_chat);
         initUI();
         initRecyclerView();
-        handleIntent();
+//        handleIntent();
     }
 
     private void subscribeToConversation(String uID, String type) {
@@ -161,7 +161,7 @@ public class ChatActivity extends AppCompatActivity implements OnMsgLayoutLongCl
         msgSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMsg();
+//                sendMsg();
             }
         });
 
@@ -187,78 +187,78 @@ public class ChatActivity extends AppCompatActivity implements OnMsgLayoutLongCl
         });
     }
 
-    private void handleIntent() {
-        String action = getIntent().getStringExtra("action");
-        if (action.equalsIgnoreCase("chat")) {
-            chatRoom = (ChatRoomModel) getIntent().getSerializableExtra("chatRoom");
-            uID = chatRoom.getChatRoomId();
-            type = getIntent().getStringExtra("type");
-            toolbarTxt.setText(WordUtils.capitalize(chatRoom.getUserName()));
-            subscribeToConversation(uID, type);
-        } else if (action.equalsIgnoreCase("welcome")) {
-            type = getIntent().getStringExtra("type");
-            uID = getIntent().getStringExtra("uID");
-            initiateNewChat(uID, type);
-        }
-    }
+//    private void handleIntent() {
+//        String action = getIntent().getStringExtra("action");
+//        if (action.equalsIgnoreCase("chat")) {
+//            chatRoom = (ChatRoomModel) getIntent().getSerializableExtra("chatRoom");
+//            uID = chatRoom.getChatRoomId();
+//            type = getIntent().getStringExtra("type");
+//            toolbarTxt.setText(WordUtils.capitalize(chatRoom.getUserName()));
+//            subscribeToConversation(uID, type);
+//        } else if (action.equalsIgnoreCase("welcome")) {
+//            type = getIntent().getStringExtra("type");
+//            uID = getIntent().getStringExtra("uID");
+//            initiateNewChat(uID, type);
+//        }
+//    }
 
-    private void initiateNewChat(final String uId, final String type) {
-        showProgress();
-        chatRef = FirebaseDatabase.getInstance().getReference("User_Information").child(uId);
-        chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String name = WordUtils.capitalize(dataSnapshot.child("name").getValue().toString());
-                toolbarTxt.setText(name);
-                String finalID = uId;
-                if (finalID.compareTo(Constants.getConstantUid()) > 0) {
-                    finalID = Constants.getConstantUid() + finalID;
-                } else {
-                    finalID = finalID + Constants.getConstantUid();
-                }
-                if (type.equalsIgnoreCase("post")) {
-                    chatRef = FirebaseDatabase.getInstance().getReference("Chats_Table").child("Posts_Chats").child(finalID);
-                    ChatMessageModel welcomeMsg = new ChatMessageModel("welcome", name + "_" + Constants.getuName(), Constants.getConstantUid(), "unseen");
-                    final String finalID1 = finalID;
-                    chatRef.push().setValue(welcomeMsg).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                subscribeToConversation(finalID1, type);
-                            }
-                        }
-                    });
-                } else {
-                    chatRef = FirebaseDatabase.getInstance().getReference("Chats_Table").child("Books_Chats").child(finalID);
-                    ChatMessageModel welcomeMsg = new ChatMessageModel("welcome", name + "_" + Constants.getuName(), Constants.getConstantUid(), "unseen");
-                    final String finalID1 = finalID;
-                    chatRef.push().setValue(welcomeMsg).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                subscribeToConversation(finalID1, type);
-                            }
-                        }
-                    });
-                }
-            }
+//    private void initiateNewChat(final String uId, final String type) {
+//        showProgress();
+//        chatRef = FirebaseDatabase.getInstance().getReference("User_Information").child(uId);
+//        chatRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                String name = WordUtils.capitalize(dataSnapshot.child("name").getValue().toString());
+//                toolbarTxt.setText(name);
+//                String finalID = uId;
+//                if (finalID.compareTo(Constants.getConstantUid()) > 0) {
+//                    finalID = Constants.getConstantUid() + finalID;
+//                } else {
+//                    finalID = finalID + Constants.getConstantUid();
+//                }
+////                if (type.equalsIgnoreCase("post")) {
+////                    chatRef = FirebaseDatabase.getInstance().getReference("Chats_Table").child("Posts_Chats").child(finalID);
+////                    ChatMessageModel welcomeMsg = new ChatMessageModel("welcome", name + "_" + Constants.getuName(), Constants.getConstantUid(), "unseen");
+////                    final String finalID1 = finalID;
+////                    chatRef.push().setValue(welcomeMsg).addOnCompleteListener(new OnCompleteListener<Void>() {
+////                        @Override
+////                        public void onComplete(@NonNull Task<Void> task) {
+////                            if (task.isSuccessful()) {
+////                                subscribeToConversation(finalID1, type);
+////                            }
+////                        }
+////                    });
+//                } else {
+////                    chatRef = FirebaseDatabase.getInstance().getReference("Chats_Table").child("Books_Chats").child(finalID);
+////                    ChatMessageModel welcomeMsg = new ChatMessageModel("welcome", name + "_" + Constants.getuName(), Constants.getConstantUid(), "unseen");
+////                    final String finalID1 = finalID;
+////                    chatRef.push().setValue(welcomeMsg).addOnCompleteListener(new OnCompleteListener<Void>() {
+////                        @Override
+////                        public void onComplete(@NonNull Task<Void> task) {
+////                            if (task.isSuccessful()) {
+////                                subscribeToConversation(finalID1, type);
+////                            }
+////                        }
+////                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//            }
+//        });
+//    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-            }
-        });
-    }
-
-    private void sendMsg() {
-        if (msgEditText.getText() != null) {
-            if (msgEditText.getText().length() != 0) {
-                String key = chatRef.push().getKey();
-                ChatMessageModel message = new ChatMessageModel(getTimeDate(), msgEditText.getText().toString().trim(), Constants.getConstantUid(), "unseen");
-                chatRef.child(key).setValue(message);
-                msgEditText.getText().clear();
-            }
-        }
-    }
+//    private void sendMsg() {
+//        if (msgEditText.getText() != null) {
+//            if (msgEditText.getText().length() != 0) {
+//                String key = chatRef.push().getKey();
+//                ChatMessageModel message = new ChatMessageModel(getTimeDate(), msgEditText.getText().toString().trim(), Constants.getConstantUid(), "unseen");
+//                chatRef.child(key).setValue(message);
+//                msgEditText.getText().clear();
+//            }
+//        }
+//    }
 
     private void showProgress() {
         recyclerView.setVisibility(View.GONE);
