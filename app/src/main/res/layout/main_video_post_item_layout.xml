@@ -126,23 +126,21 @@
             app:autoSizeMinTextSize="16sp"
             app:autoSizeStepGranularity="2dp"
             app:autoSizeTextType="uniform"
-            app:layout_constraintBottom_toTopOf="@+id/createVideoPostMainVideo"
+            app:layout_constraintBottom_toTopOf="@+id/main_image_post_image_imgview"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/first_line" />
 
 
 
-        <!-- VideoView for displaying video -->
-        <VideoView
-            android:id="@+id/createVideoPostMainVideo"
+        <ImageView
+            android:id="@+id/main_image_post_image_imgview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="32dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="32dp"
             android:layout_marginBottom="8dp"
+            android:maxHeight="600dp"
+            android:minHeight="300dp"
+            android:src="@drawable/main_post_image_avatart"
             app:layout_constraintBottom_toTopOf="@id/second_line"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -158,7 +156,7 @@
             app:layout_constraintBottom_toTopOf="@+id/footer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/createVideoPostMainVideo" />
+            app:layout_constraintTop_toBottomOf="@id/main_image_post_image_imgview" />
 
         <LinearLayout
             android:id="@+id/footer"

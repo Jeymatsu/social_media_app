@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.activities.ImageDetailActivity;
+import com.company.scoolsocialmedia.activities.VideoPlayerActivity;
 import com.company.scoolsocialmedia.fragements.CommentBottomSheetDialogFragment;
 import com.company.scoolsocialmedia.listeners.OnPostClickListener;
 import com.company.scoolsocialmedia.listeners.OnPostUserImageClickListener;
@@ -724,22 +725,26 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 listener.showProfile(post.getUser_id());
             }
         });
-        Uri videoUri = Uri.parse(post.getPost_video()); // Assuming getPost_video() returns the URI of the video
-        ((PostsWithVideoViewHolder) holder).createVideoPostMainVideo.setVideoURI(videoUri);
-        ((PostsWithVideoViewHolder) holder).createVideoPostMainVideo.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+
+        Glide.with(holder.itemView.getContext())
+                .load(post.getPost_video()) // Assuming getPost_video_thumbnail() returns the URL of the video thumbnail
+                .placeholder(R.drawable.baseline_play_circle_outline_24) // Placeholder thumbnail until the actual thumbnail loads
+                .into(((PostsWithVideoViewHolder) holder).main_image_post_image_imgview);
+
+        ((PostsWithVideoViewHolder) holder).main_image_post_image_imgview.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                // Adjust the size of the video view
-                mediaPlayer.start();
+            public void onClick(View view) {
+                // Implement logic to play the video
+                // For example, you can start a new activity with a VideoView to play the video
+                Intent intent = new Intent(view.getContext(), VideoPlayerActivity.class);
+                intent.putExtra("videoUrl", post.getPost_video()); // Pass the URL of the video to the VideoPlayerActivity
+                view.getContext().startActivity(intent);
             }
         });
-        ((PostsWithVideoViewHolder) holder).createVideoPostMainVideo.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-            @Override
-            public boolean onError(MediaPlayer mp, int what, int extra) {
-                Log.e("VideoError", "Error occurred while playing video: " + what + ", " + extra);
-                return false;
-            }
-        });
+
+
+
+
 
         ((PostsWithVideoViewHolder) holder).like_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1072,7 +1077,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         private TextView postImageItemDate;
         private TextView postImageItemType;
         private CircleImageView postImageItemUserImg;
-        private VideoView createVideoPostMainVideo;
+        private ImageView main_image_post_image_imgview;
         private TextView postImageItemUserName;
 //        private LinearLayout firstCateogryHolder;
 //        private LinearLayout secondCateogryHolder;
@@ -1089,7 +1094,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             postImageItemType = itemView.findViewById(R.id.post_image_item_postType_txtview);
             postImageItemUserImg = itemView.findViewById(R.id.post_image_item_postedUserImg_imgView);
             postImageItemUserName = itemView.findViewById(R.id.post_image_item_postedUserName_txtview);
-            createVideoPostMainVideo = itemView.findViewById(R.id.createVideoPostMainVideo);
+            main_image_post_image_imgview = itemView.findViewById(R.id.main_image_post_image_imgview);
             like_icon = itemView.findViewById(R.id.like_icon);
             comment_icon = itemView.findViewById(R.id.comment_icon);
             txtNumberLikes=itemView.findViewById(R.id.txtNumberLikes);
