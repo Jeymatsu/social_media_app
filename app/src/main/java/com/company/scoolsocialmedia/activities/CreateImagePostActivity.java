@@ -68,14 +68,14 @@ public class CreateImagePostActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
 
-    private TextView exchangeTxt, postShareTxtView, tagCommsTxt;
+    private TextView exchangeTxt, postShareTxtView;
     private ImageView mainImage, removeMainImgBtn;
     private EditText postImgInfo;
     private Spinner typeSpinner;
-    private RadioGroup skillGroup;
+
     private RadioButton checkBtn;
     private AVLoadingIndicatorView avi;
-    private CardView multiSpinner;
+
 
     private ArrayList<MultiSelectModel> multiArrayList;
     private MultiSelectDialog multiSelectDialog;
@@ -143,7 +143,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
         mainImage = findViewById(R.id.createImgPostMainImage);
         removeMainImgBtn = findViewById(R.id.mainImgRemoveBtn);
         uploadImgLayout = findViewById(R.id.uploadImgLayout);
-        skillGroup = findViewById(R.id.createImgPostSkillRg);
+
 
         removeMainImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,14 +195,6 @@ public class CreateImagePostActivity extends AppCompatActivity {
         });
 
 
-        multiSpinner = findViewById(R.id.postImgMultiLayout);
-        tagCommsTxt = findViewById(R.id.postImgtagCommTxtView);
-        multiSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initMultiSpinner();
-            }
-        });
 
 
         postShareBtn = findViewById(R.id.createImgPostShareBtn);
@@ -259,9 +251,9 @@ public class CreateImagePostActivity extends AppCompatActivity {
                         mSelectedCommunities.clear();
                         mSelectedCommunities.addAll(arrayList1);
                         if (mSelectedCommunities.size() > 0) {
-                            tagCommsTxt.setText(mSelectedCommunities.size() + " communities tagged");
+
                         } else {
-                            tagCommsTxt.setText("Tag Communities");
+
                         }
                         if (!isActionNewPost) {
                             isCommunitiesChangedOnUpdate = true;
@@ -279,13 +271,12 @@ public class CreateImagePostActivity extends AppCompatActivity {
 
     private void shareOrUpdatePost() {
         final String imgInfo = postImgInfo.getText().toString().trim();
-        final String showSkill = getSkillStatus();
         final String postType = typeSpinner.getSelectedItem().toString();
 
         if (imgInfo.length() != 0) {
             if (isImageLoaded && uri != null) {
                 if (isActionNewPost) {
-                    if (mSelectedCommunities != null && mSelectedCommunities.size() != 0) {
+
                         if (!imgInfo.isEmpty()) {
                             showProgress();
                             storageRef = FirebaseStorage.getInstance().getReference().child("post-images/").child(Constants.getConstantUid() + "/" + Constants.getConstantUid() + "_image" + DateTimeUtils.getCurrentDateTime());
@@ -307,8 +298,6 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                         post.setPost_image(downUri.toString());
                                         post.setPost_date(getTimeDate());
                                         post.setUser_id(Constants.getConstantUid());
-                                        post.getTagged_communities().addAll(mSelectedCommunities);
-                                        post.setShow_skills(showSkill);
                                         post.setPost_type(postType);
                                         post.setLikes(0);
 
@@ -336,16 +325,13 @@ public class CreateImagePostActivity extends AppCompatActivity {
                             Toast.makeText(this, "Image info should be at least 20 characters", Toast.LENGTH_SHORT).show();
                             hideProgress();
                         }
-                    } else {
-                        Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
-                    }
+
                 } else {
                     if (imgInfo.equalsIgnoreCase(post.getPost_image_info()) && postType.equalsIgnoreCase(post.getPost_type())
-                            && showSkill.equalsIgnoreCase(post.getShow_skills()) && !isImageChangedForUpdate && !isCommunitiesChangedOnUpdate) {
+                            &&!isCommunitiesChangedOnUpdate) {
                         Toast.makeText(this, "No changes detected", Toast.LENGTH_LONG).show();
                     } else {
                         if (isImageChangedForUpdate) {
-                            if (mSelectedCommunities != null && mSelectedCommunities.size() != 0) {
                                 if (imgInfo.length() >  20) {
                                     showProgress();
                                     storageRef = FirebaseStorage.getInstance().getReference().child("post-images/").child(Constants.getConstantUid() + "/" + Constants.getConstantUid() + "_image" + DateTimeUtils.getCurrentDateTime());
@@ -372,10 +358,8 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                                         updates.put("post_image", downUri.toString());
                                                         updates.put("post_type", postType);
                                                         updates.put("likes", 0);
-                                                        updates.put("show_skills", showSkill);
                                                         updates.put("user_id", post.getUser_id());
                                                         updates.put("post_date", post.getPost_date());
-                                                        updates.put("tagged_communities", mSelectedCommunities);
 
                                                         postRef.updateChildren(updates, new DatabaseReference.CompletionListener() {
                                                             @Override
@@ -409,11 +393,9 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                     Toast.makeText(this, "Image info should be at least 20 characters", Toast.LENGTH_SHORT).show();
                                     hideProgress();
                                 }
-                            } else {
-                                Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
-                            }
+
                         } else {
-                            if (mSelectedCommunities != null && mSelectedCommunities.size() != 0) {
+                            if (mSelectedCommunities == null && mSelectedCommunities.size() != 0) {
                                 if (imgInfo.length() > 20) {
                                     postRef = FirebaseDatabase.getInstance().getReference("Posts_Table").child(post.getPost_id());
                                     showProgress();
@@ -421,10 +403,8 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                     updates.put("post_image_info", imgInfo);
                                     updates.put("post_image", post.getPost_image());
                                     updates.put("post_type", postType);
-                                    updates.put("show_skills", showSkill);
                                     updates.put("likes", 0);
                                     updates.put("user_id", post.getUser_id());
-                                    updates.put("tagged_communities", mSelectedCommunities);
                                     updates.put("post_date", post.getPost_date());
 
                                     postRef.updateChildren(updates, new DatabaseReference.CompletionListener() {
@@ -463,12 +443,12 @@ public class CreateImagePostActivity extends AppCompatActivity {
 
     private void shareOrUpdateVideoPost() {
         final String imgInfo = postImgInfo.getText().toString().trim();
-        final String showSkill = getSkillStatus();
+
         final String postType = typeSpinner.getSelectedItem().toString();
         if (imgInfo.length() != 0) {
             if (isVideoLoaded && uri != null) {
                 if (isActionNewPost) {
-                    if (mSelectedCommunities != null && mSelectedCommunities.size() != 0) {
+
                         if (!imgInfo.isEmpty()) {
                             showProgress();
                             storageRef = FirebaseStorage.getInstance().getReference().child("post-images/").child(Constants.getConstantUid() + "/" + Constants.getConstantUid() + "_video" + DateTimeUtils.getCurrentDateTime());
@@ -494,8 +474,6 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                         post.setPost_video(downUri.toString());
                                         post.setPost_date(getTimeDate());
                                         post.setUser_id(Constants.getConstantUid());
-                                        post.getTagged_communities().addAll(mSelectedCommunities);
-                                        post.setShow_skills(showSkill);
                                         post.setLikes(0);
 
                                         post.setPost_type(postType);
@@ -524,16 +502,14 @@ public class CreateImagePostActivity extends AppCompatActivity {
                             Toast.makeText(this, "Image info should be at least 20 characters", Toast.LENGTH_SHORT).show();
                             hideProgress();
                         }
-                    } else {
-                        Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
-                    }
+
                 } else {
                     if (imgInfo.equalsIgnoreCase(post.getPost_image_info()) && postType.equalsIgnoreCase(post.getPost_type())
-                            && showSkill.equalsIgnoreCase(post.getShow_skills()) && !isImageChangedForUpdate && !isCommunitiesChangedOnUpdate) {
+                             && !isImageChangedForUpdate && !isCommunitiesChangedOnUpdate) {
                         Toast.makeText(this, "No changes detected", Toast.LENGTH_LONG).show();
                     } else {
                         if (isImageChangedForUpdate) {
-                            if (mSelectedCommunities != null && mSelectedCommunities.size() != 0) {
+
                                 if (imgInfo.length() >  20) {
                                     showProgress();
                                     storageRef = FirebaseStorage.getInstance().getReference().child("post-images/").child(Constants.getConstantUid() + "/" + Constants.getConstantUid() + "_video" + DateTimeUtils.getCurrentDateTime());
@@ -559,11 +535,11 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                                         updates.put("post_image_info", imgInfo);
                                                         updates.put("post_video", downUri.toString());
                                                         updates.put("post_type", postType);
-                                                        updates.put("show_skills", showSkill);
+
                                                         updates.put("likes", 0);
                                                         updates.put("user_id", post.getUser_id());
                                                         updates.put("post_date", post.getPost_date());
-                                                        updates.put("tagged_communities", mSelectedCommunities);
+
 
                                                         postRef.updateChildren(updates, new DatabaseReference.CompletionListener() {
                                                             @Override
@@ -597,9 +573,7 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                     Toast.makeText(this, "Image info should be at least 20 characters", Toast.LENGTH_SHORT).show();
                                     hideProgress();
                                 }
-                            } else {
-                                Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
-                            }
+
                         } else {
                             if (mSelectedCommunities != null && mSelectedCommunities.size() != 0) {
                                 if (imgInfo.length() > 20) {
@@ -609,7 +583,6 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                     updates.put("post_image_info", imgInfo);
                                     updates.put("post_video", post.getPost_video());
                                     updates.put("post_type", postType);
-                                    updates.put("show_skills", showSkill);
                                     updates.put("user_id", post.getUser_id());
                                     updates.put("likes", 0);
                                     updates.put("tagged_communities", mSelectedCommunities);
@@ -654,17 +627,13 @@ public class CreateImagePostActivity extends AppCompatActivity {
     private void shareOrUpdateTextPost() {
         String postTitle = postImgInfo.getText().toString().trim();
         String postBody = createNoImgPostBody.getText().toString().trim();
-        String skillShow = getSkillStatus();
+//        String skillShow = getSkillStatus();
         String postType = typeSpinner.getSelectedItem().toString().trim();
 
         if (isActionNewPost) {
             if (postTitle.length() == 0 || postBody.length() == 0) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             } else {
-                if (mSelectedCommunities != null) {
-                    if (mSelectedCommunities.size() == 0) {
-                        Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
-                    } else {
                         if (!postTitle.isEmpty() && !postBody.isEmpty()) {
                             postRef = FirebaseDatabase.getInstance().getReference("Posts_Table");
                             showProgress();
@@ -673,10 +642,9 @@ public class CreateImagePostActivity extends AppCompatActivity {
                             post.setPost_body(postBody);
                             post.setPost_type(postType);
                             post.setLikes(0);
-                            post.setShow_skills(skillShow);
+
                             post.setUser_id(Constants.getConstantUid());
                             post.setPost_date(getTimeDate());
-                            post.getTagged_communities().addAll(mSelectedCommunities);
 
                             postRef.push().setValue(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -695,21 +663,15 @@ public class CreateImagePostActivity extends AppCompatActivity {
                             hideProgress();
                             Toast.makeText(this, "Title and body should be at least 10 and 60 characters respectively", Toast.LENGTH_LONG).show();
                         }
-                    }
-                } else {
-                    Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
-                }
+
+
             }
         } else {
             if (postTitle.length() != 0 || postBody.length() != 0) {
                 if (postTitle.equalsIgnoreCase(post.getPost_title()) && postBody.equalsIgnoreCase(post.getPost_body())
-                        && postType.equalsIgnoreCase(post.getPost_type()) && skillShow.equalsIgnoreCase(post.getShow_skills()) && !isCommunitiesChangedOnUpdate) {
+                        && postType.equalsIgnoreCase(post.getPost_type())  && !isCommunitiesChangedOnUpdate) {
                     Toast.makeText(getApplicationContext(), "No changes made", Toast.LENGTH_SHORT).show();
                 } else {
-                    if (mSelectedCommunities != null) {
-                        if (mSelectedCommunities.size() == 0) {
-                            Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
-                        } else {
                             if (!postBody.isEmpty() && !postTitle.isEmpty()) {
                                 postRef = FirebaseDatabase.getInstance().getReference("Posts_Table").child(post.getPost_id());
                                 showProgress();
@@ -717,11 +679,9 @@ public class CreateImagePostActivity extends AppCompatActivity {
                                 updates.put("post_title", postTitle);
                                 updates.put("post_body", postBody);
                                 updates.put("post_type", postType);
-                                updates.put("show_skills", skillShow);
                                 updates.put("user_id", post.getUser_id());
                                 updates.put("likes", 0);
                                 updates.put("post_date", post.getPost_date());
-                                updates.put("tagged_communities", mSelectedCommunities);
 
                                 postRef.updateChildren(updates, new DatabaseReference.CompletionListener() {
                                     @Override
@@ -739,10 +699,8 @@ public class CreateImagePostActivity extends AppCompatActivity {
                             } else {
                                 hideProgress();
                                 Toast.makeText(this, "Title and body should be at least 10 and 60 characters respectively", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    } else {
-                        Toast.makeText(this, "Please tag at least 1 community", Toast.LENGTH_SHORT).show();
+
+
                     }
                 }
             } else {
@@ -893,44 +851,6 @@ public class CreateImagePostActivity extends AppCompatActivity {
 
     private void handleIntent() {
         Intent intent = getIntent();
-        if (intent.getStringExtra("actionType").equalsIgnoreCase("editPost")) {
-            isActionNewPost = false;
-            postShareTxtView.setText("UPDATE POST");
-            exchangeTxt.setText("Edit Post");
-            post = (PostModel) intent.getSerializableExtra("post");
-            postImgInfo.setText(post.getPost_image_info());
-            if (post.getTagged_communities() != null && post.getTagged_communities().size() != 0) {
-                tagCommsTxt.setText(post.getTagged_communities().size() + " communities tagged");
-                for (int i = 0; i < post.getTagged_communities().size(); i++) {
-                    int id = getCommunityID(post.getTagged_communities().get(i));
-                    if (id != -1) {
-                        mSelectedCommunities.add(multiArrayList.get(id).getName());
-                        mSelectedCommunitiesIDs.add(id);
-                    }
-                }
-            }
-            loadImageIntoView(Uri.parse(post.getPost_image()));
-            if (post.getShow_skills().toLowerCase().equalsIgnoreCase("yes")) {
-                checkBtn = findViewById(R.id.createImgPostYesBtn);
-                checkBtn.setChecked(true);
-            } else {
-                checkBtn = findViewById(R.id.createImgPostNoBtn);
-                checkBtn.setChecked(true);
-            }
-            if (post.getPost_type().equalsIgnoreCase("@Exchange")) {
-                typeSpinner.setSelection(0);
-            } else if (post.getPost_type().equalsIgnoreCase("@Price")) {
-                typeSpinner.setSelection(1);
-            } else {
-                typeSpinner.setSelection(2);
-            }
-        } else {
-            isActionNewPost = true;
-            removeMainImage();
-            checkBtn = findViewById(R.id.createImgPostYesBtn);
-            checkBtn.setChecked(true);
-//            exchangeTxt.setText("Create Post");
-        }
 
         if (intent.getStringExtra("actionType").equalsIgnoreCase("textPost")){
 
@@ -938,15 +858,15 @@ public class CreateImagePostActivity extends AppCompatActivity {
         }
     }
 
-    private String getSkillStatus() {
-        try {
-            int selectedId = skillGroup.getCheckedRadioButtonId();
-            RadioButton radioButton = findViewById(selectedId);
-            return radioButton.getText().toString();
-        } catch (Exception e) {
-            return null;
-        }
-    }
+//    private String getSkillStatus() {
+//        try {
+//            int selectedId = skillGroup.getCheckedRadioButtonId();
+//            RadioButton radioButton = findViewById(selectedId);
+//            return radioButton.getText().toString();
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
     @Override
     protected void onDestroy() {
         post = null;
