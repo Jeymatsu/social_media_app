@@ -14,6 +14,7 @@ import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.adapters.UserAdapter;
 import com.company.scoolsocialmedia.admin.ManageUsersActivity;
 import com.company.scoolsocialmedia.model.BasicUser;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -69,17 +70,19 @@ public class SearchUsersActivity extends AppCompatActivity {
             }
         });
         // Load users from Firebase database
-        loadUsers();
+        loadUsers(FirebaseAuth.getInstance().getUid());
     }
 
-    private void loadUsers() {
+    private void loadUsers(String currentUserId) {
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     BasicUser user = snapshot.getValue(BasicUser.class);
-                    userList.add(user);
+                    if (user != null && !user.getUserId().equals(currentUserId)) {
+                        userList.add(user);
+                    }
                 }
                 userAdapter.notifyDataSetChanged();
             }
@@ -91,6 +94,7 @@ public class SearchUsersActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void filterList(String text) {
         String query = text.toLowerCase().trim();

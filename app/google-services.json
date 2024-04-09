@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "216244648603",
-    "firebase_url": "https://schoolsmedia-b7172-default-rtdb.firebaseio.com",
-    "project_id": "schoolsmedia-b7172",
-    "storage_bucket": "schoolsmedia-b7172.appspot.com"
+    "project_number": "644655030708",
+    "project_id": "julink-766a1",
+    "storage_bucket": "julink-766a1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:216244648603:android:8a67aea75d1d8c0654643e",
+        "mobilesdk_app_id": "1:644655030708:android:0c04880bd16516c30852e1",
         "android_client_info": {
           "package_name": "com.company.scoolsocialmedia"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDgbsnnVFnwODPSSPkd-legAKyDCtLw2js"
+          "current_key": "AIzaSyAX-8331YF2B5BJDAB9-Siu-1gVn0OeO2c"
         }
       ],
       "services": {

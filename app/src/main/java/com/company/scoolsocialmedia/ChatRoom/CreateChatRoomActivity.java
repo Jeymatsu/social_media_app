@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.company.scoolsocialmedia.MainActivity;
 import com.company.scoolsocialmedia.R;
+import com.company.scoolsocialmedia.activities.SearchUsersActivity;
 import com.company.scoolsocialmedia.adapters.UserAdapter;
 import com.company.scoolsocialmedia.model.BasicUser;
 import com.company.scoolsocialmedia.model.ChatRoom;
@@ -80,7 +81,7 @@ public class CreateChatRoomActivity extends AppCompatActivity {
 
 
         // Load users from Firebase database
-        loadUsers();
+        loadUsers(FirebaseAuth.getInstance().getUid());
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -95,14 +96,16 @@ public class CreateChatRoomActivity extends AppCompatActivity {
         });
     }
 
-    private void loadUsers() {
+    private void loadUsers(String currentUserId) {
         usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     BasicUser user = snapshot.getValue(BasicUser.class);
-                    userList.add(user);
+                    if (user != null && !user.getUserId().equals(currentUserId)) {
+                        userList.add(user);
+                    }
                 }
                 userAdapter.notifyDataSetChanged();
             }
