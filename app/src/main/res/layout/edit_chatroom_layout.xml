@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/bottomNavigationBackground"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            app:srcCompat="@drawable/ic_edit"
+            app:tint="@color/whiteTextColor" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/open_sans_light"
+        android:lines="1"
+        android:maxLines="1"
+        android:text="Edit Chat Room Name"
+        android:textColor="@color/fullBlack"
+        android:textSize="26sp" />
+
+    <EditText
+        android:id="@+id/chatRoomName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edt_input"
+        android:padding="10dp"
+        android:hint="Edit Chat room name"
+        android:layout_below="@id/title"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:fontFamily="@font/open_sans_light"
+        android:textColor="@color/darkGray"
+        android:textSize="16sp" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cancelDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chatRoomName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:elevation="0dp"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/bottomNavigationBackground"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:text="Proceed"
+            android:textColor="@color/fullwhite"
+            android:textSize="18sp" />
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

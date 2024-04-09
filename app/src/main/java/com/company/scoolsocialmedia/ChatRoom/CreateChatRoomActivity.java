@@ -59,7 +59,7 @@ public class CreateChatRoomActivity extends AppCompatActivity {
         usersRef = FirebaseDatabase.getInstance().getReference().child("User_Information");
 
         userList = new ArrayList<>();
-        userAdapter = new UserAdapter(this,userList,true);
+        userAdapter = new UserAdapter(this,userList,true,false);
         searchView = findViewById(R.id.userSearchView);
         // Set up RecyclerView
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -118,21 +118,19 @@ public class CreateChatRoomActivity extends AppCompatActivity {
     private void createChatRoom(String chatroomName) {
         String roomId = chatroomsRef.push().getKey();
         ChatRoom chatRoom = new ChatRoom(roomId, chatroomName, "", new ArrayList<>());
+
+        // Add the chat room to the database
         chatroomsRef.child(roomId).setValue(chatRoom)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(CreateChatRoomActivity.this, "Chat room created successfully", Toast.LENGTH_SHORT).show();
 
-                    // Logging statement to check selected users
+                    // Get selected users from the adapter
                     List<BasicUser> selectedUsers = userAdapter.getSelectedUsers();
-                    Log.d(TAG, "Selected users: " + selectedUsers.toString());
 
                     // Add selected users to the chat room
-                    for (BasicUser user : selectedUsers) {
-                        addUserToChatRoom(roomId, user.getUserId());
-                    }
-                    // Add the creator user after adding selected users
-                    addUserToChatRoom(roomId, FirebaseAuth.getInstance().getCurrentUser().getUid());
-                    startActivity(new Intent(CreateChatRoomActivity.this, MainActivity.class));
+                    addUserToChatRoom(roomId, selectedUsers);
+
+                    // Finish activity after adding users
                     finish();
                 })
                 .addOnFailureListener(e -> {
@@ -141,40 +139,30 @@ public class CreateChatRoomActivity extends AppCompatActivity {
     }
 
 
-    private void addUserToChatRoom(String roomId, String userId) {
-        Log.d(TAG, "Adding user " + userId + " to chat room " + roomId);
-        chatroomsRef.child(roomId).child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<String> participants = new ArrayList<>();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String participantId = snapshot.getValue(String.class);
-                    participants.add(participantId);
-                }
-                Log.d(TAG, "Existing participants for chat room " + roomId + ": " + participants.toString());
-                // Check if the user is already a participant
-                if (!participants.contains(userId)) {
-                    // Add the user as a participant
-                    participants.add(userId);
-                    chatroomsRef.child(roomId).child("participants").setValue(participants)
-                            .addOnSuccessListener(aVoid -> {
-                                Log.d(TAG, "User " + userId + " added to chat room " + roomId + " successfully");
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e(TAG, "Failed to add user " + userId + " to chat room " + roomId + ": " + e.getMessage());
-                            });
-                } else {
-                    Log.d(TAG, "User " + userId + " is already a participant of chat room " + roomId);
-                }
-            }
+    private void addUserToChatRoom(String roomId, List<BasicUser> selectedUsers) {
+        Log.d(TAG, "Adding users to chat room " + roomId);
+        List<String> participantIds = new ArrayList<>();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle error
-                Log.e(TAG, "Failed to retrieve participants: " + databaseError.getMessage());
-            }
-        });
+        // Extract user IDs from selected users
+        for (BasicUser user : selectedUsers) {
+            participantIds.add(user.getUserId());
+        }
+
+        // Add the creator user (current user) if not already in the list
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (!participantIds.contains(currentUserId)) {
+            participantIds.add(currentUserId);
+        }
+
+        chatroomsRef.child(roomId).child("participants").setValue(participantIds)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Users added to chat room " + roomId + " successfully");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to add users to chat room " + roomId + ": " + e.getMessage());
+                });
     }
+
 
     private void filterList(String text) {
         String query = text.toLowerCase().trim();

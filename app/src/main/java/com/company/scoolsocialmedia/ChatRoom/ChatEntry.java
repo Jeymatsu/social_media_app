@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.company.scoolsocialmedia.R;
 import com.company.scoolsocialmedia.adapters.ChatRoomAdapter;
 import com.company.scoolsocialmedia.model.ChatRoom;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -62,28 +63,35 @@ public class ChatEntry extends AppCompatActivity {
         chatRoomsRecyclerView.setAdapter(chatRoomAdapter);
 
         chatRoomsRef = FirebaseDatabase.getInstance().getReference().child("chatrooms");
-        fetchChatRooms();
+        fetchChatRoomsForUser(FirebaseAuth.getInstance().getUid());
 
     }
 
-    private void fetchChatRooms() {
+    private void fetchChatRoomsForUser(String userId) {
         chatRoomsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 chatRoomsList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     ChatRoom chatRoom = snapshot.getValue(ChatRoom.class);
-                    chatRoomsList.add(chatRoom);
+                    if (chatRoom != null && chatRoom.getParticipants() != null && chatRoom.getParticipants().contains(userId)) {
+                        // Add the chat room to the list only if the user is a participant
+                        chatRoomsList.add(chatRoom);
+                    }
                 }
                 chatRoomAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(ChatEntry.this, "Failed to load chat rooms", Toast.LENGTH_SHORT).show();
+                // Handle error
             }
         });
     }
+
+
+
+
 
     @Override
     public void onBackPressed() {

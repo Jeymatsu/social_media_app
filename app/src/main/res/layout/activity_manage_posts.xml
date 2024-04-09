@@ -233,7 +233,6 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?attr/selectableItemBackground"
-                            android:text="Create Post"
                             android:textColor="@color/hamburger"
                             android:textSize="17sp"
                             android:textStyle="bold" />
@@ -243,7 +242,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="4dp"
-                            android:text="OR"
                             android:textColor="@color/lessGray" />
 
                         <TextView
@@ -253,7 +251,6 @@
                             android:clickable="true"
                             android:focusable="true"
                             android:foreground="?attr/selectableItemBackground"
-                            android:text="Upload Image"
                             android:textColor="@color/hamburger"
                             android:textSize="17sp"
                             android:textStyle="bold" />
@@ -272,64 +269,64 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <androidx.cardview.widget.CardView
-        android:visibility="gone"
-        android:id="@+id/postSelectorLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="48dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginBottom="8dp"
-        android:elevation="0dp"
-        app:cardCornerRadius="16dp">
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:visibility="gone"-->
+<!--        android:id="@+id/postSelectorLayout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="48dp"-->
+<!--        android:layout_marginEnd="48dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:elevation="0dp"-->
+<!--        app:cardCornerRadius="16dp">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal">-->
 
-            <TextView
-                android:id="@+id/main_all_post_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/postSelectorBtnColor"
-                android:clickable="true"
-                android:ellipsize="end"
-                android:focusable="true"
-                android:fontFamily="@font/montserrat"
-                android:foreground="?attr/selectableItemBackground"
-                android:gravity="center"
-                android:lines="1"
-                android:maxLines="1"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:text="All Posts"
-                android:textColor="@android:color/white"
-                android:textSize="14sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/main_all_post_btn"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:background="@color/postSelectorBtnColor"-->
+<!--                android:clickable="true"-->
+<!--                android:ellipsize="end"-->
+<!--                android:focusable="true"-->
+<!--                android:fontFamily="@font/montserrat"-->
+<!--                android:foreground="?attr/selectableItemBackground"-->
+<!--                android:gravity="center"-->
+<!--                android:lines="1"-->
+<!--                android:maxLines="1"-->
+<!--                android:paddingTop="7dp"-->
+<!--                android:paddingBottom="7dp"-->
+<!--                android:text="All Posts"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="14sp" />-->
 
-            <TextView
-                android:id="@+id/main_community_post_btn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:ellipsize="end"
-                android:focusable="true"
-                android:fontFamily="@font/montserrat"
-                android:foreground="?attr/selectableItemBackground"
-                android:gravity="center"
-                android:lines="1"
-                android:maxLines="1"
-                android:paddingTop="7dp"
-                android:paddingBottom="7dp"
-                android:text="My Community"
-                android:textColor="@color/darkGray"
-                android:textSize="14sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/main_community_post_btn"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:clickable="true"-->
+<!--                android:ellipsize="end"-->
+<!--                android:focusable="true"-->
+<!--                android:fontFamily="@font/montserrat"-->
+<!--                android:foreground="?attr/selectableItemBackground"-->
+<!--                android:gravity="center"-->
+<!--                android:lines="1"-->
+<!--                android:maxLines="1"-->
+<!--                android:paddingTop="7dp"-->
+<!--                android:paddingBottom="7dp"-->
+<!--                android:text="My Community"-->
+<!--                android:textColor="@color/darkGray"-->
+<!--                android:textSize="14sp" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
-    </androidx.cardview.widget.CardView>
+<!--    </androidx.cardview.widget.CardView>-->
 
 </RelativeLayout>

@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_edit_name"
+        android:title="Edit chat room"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_group_members"
+        android:title="Chat Room Members"
+        android:orderInCategory="100"
+        android:icon="@drawable/user_icon"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_add_members"
+        android:title="Add Room Members"
+        android:orderInCategory="100"
+        android:icon="@drawable/user_icon"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_chat_rooms"
         android:title="Leave chat room"
         android:orderInCategory="100"
-        android:icon="@drawable/baseline_chat_24"
+        android:icon="@drawable/ic_logout"
+        android:iconTint="@color/bottomNavigationBackground"
         app:showAsAction="never" />
 </menu>

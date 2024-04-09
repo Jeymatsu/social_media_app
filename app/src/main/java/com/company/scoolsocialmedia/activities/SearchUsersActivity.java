@@ -52,7 +52,7 @@ public class SearchUsersActivity extends AppCompatActivity {
 
         usersRef = FirebaseDatabase.getInstance().getReference().child("User_Information");
         userList = new ArrayList<>();
-        userAdapter = new UserAdapter(this,userList,true);
+        userAdapter = new UserAdapter(this,userList,true,true);
         // Set up RecyclerView
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         usersRecyclerView.setAdapter(userAdapter);

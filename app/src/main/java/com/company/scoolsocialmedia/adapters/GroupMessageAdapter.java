@@ -199,6 +199,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void handleReceivedImageMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
         ReceivedImageMessageViewHolder viewHolder = (ReceivedImageMessageViewHolder) holder;
         // Load and display the received image using Glide or any other image loading library
+        fetchUserName(message.getSender_id(), viewHolder.text_view_sender_name);
         Glide.with(holder.itemView.getContext())
                 .load(message.getImageUrl()) // Replace message.getImageUrl() with the actual URL of the received image
                 .placeholder(R.drawable.default_image) // Placeholder image until the actual image loads
@@ -237,6 +238,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private void handleReceivedVideoMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
         ReceivedVideoMessageViewHolder viewHolder = (ReceivedVideoMessageViewHolder) holder;
+        fetchUserName(message.getSender_id(), viewHolder.text_view_sender_name);
         // Load and display the video thumbnail using Glide or any other image loading library
         Glide.with(holder.itemView.getContext())
                 .load(message.getVideoThumbnailUrl()) // Replace message.getVideoThumbnailUrl() with the actual URL of the video thumbnail
@@ -309,11 +311,15 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private static class ReceivedImageMessageViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView text_view_sender_name;
         ImageView imageView;
 
         ReceivedImageMessageViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.received_image_view);
+            text_view_sender_name = itemView.findViewById(R.id.text_view_sender_name);
+
         }
     }
 
@@ -328,10 +334,12 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private static class ReceivedVideoMessageViewHolder extends RecyclerView.ViewHolder {
+        private TextView text_view_sender_name;
         ImageView receivedVideoThumbnail;
 
         ReceivedVideoMessageViewHolder(@NonNull View itemView) {
             super(itemView);
+            text_view_sender_name = itemView.findViewById(R.id.text_view_sender_name);
             receivedVideoThumbnail = itemView.findViewById(R.id.received_video_thumbnail);
             // Add any additional initialization or click listeners here
         }

@@ -1,6 +1,9 @@
 package com.company.scoolsocialmedia.adapters;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Intent.getIntent;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,6 +13,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +72,15 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private OnPostClickListener mOnPostClickListener;
     private OnPostUserImageClickListener listener;
     private Boolean isAdmin;
+
+    private RefreshListener refreshListener;
+    public interface RefreshListener {
+        void onRefresh();
+    }
+
+    public void setRefreshListener(RefreshListener listener) {
+        this.refreshListener = listener;
+    }
 
 
 
@@ -147,6 +161,11 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     public void onSuccess(Void aVoid) {
                         // User data successfully deleted from Firebase
                         Toast.makeText(mContex, "POST DELETED SUCCESSFULLY", Toast.LENGTH_SHORT).show();
+                        // Notify the activity to refresh
+                        if (refreshListener != null) {
+                            refreshListener.onRefresh();
+                        }
+
 
                     }
                 })
@@ -162,8 +181,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     }
 
-    private void deletePost(String postId) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContex);
+    private void deletePost(String postId, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Delete Post");
         builder.setMessage("Are you sure you want to delete this post?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -181,7 +200,13 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
         AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                alertDialog.show();
+            }
+        });
+
     }
 
     private void handlePostWithNoImage(RecyclerView.ViewHolder holder, final PostModel post) {
@@ -195,7 +220,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View v) {
 
-                  deletePost(post.getPost_id());
+                  deletePost(post.getPost_id(),mContex);
 
                 }
             });
@@ -424,7 +449,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View v) {
 
-                    deletePost(post.getPost_id());
+                    deletePost(post.getPost_id(),mContex);
 
                 }
             });
@@ -670,7 +695,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 @Override
                 public void onClick(View v) {
 
-                    deletePost(post.getPost_id());
+                    deletePost(post.getPost_id(),mContex);
 
                 }
             });

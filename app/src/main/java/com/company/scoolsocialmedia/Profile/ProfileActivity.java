@@ -60,7 +60,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity  implements OnPostClickListener, OnPostUserImageClickListener {
+public class ProfileActivity extends AppCompatActivity  implements OnPostClickListener, OnPostUserImageClickListener, PostsAdapter.RefreshListener {
 
     private static final String TAG = "ProfileActivityTAG";
     private String uid = Constants.getConstantUid();
@@ -100,6 +100,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
     List<PostModel> mPosts, mTempPosts, mAllPosts;
     PostsAdapter mAdapter;
    String username;
+   private TextView txtPosts;
 
 
 
@@ -114,6 +115,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
                 mode = false;
             }
         }
+        txtPosts=findViewById(R.id.txtPosts);
         getFollowersCount();
         getFollowingCount();
         getUsernameFromFirebase();
@@ -128,7 +130,7 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
         mPosts = new ArrayList<>();
         mTempPosts = new ArrayList<>();
         mAllPosts = new ArrayList<>();
-        mAdapter = new PostsAdapter(mPosts, getApplicationContext(), this, this,false);
+        mAdapter = new PostsAdapter(mPosts, ProfileActivity.this, this, this,true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
@@ -268,11 +270,13 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
                 if (dataSnapshot.exists()) {
                     if (dataSnapshot.hasChildren()) {
                         long totalPosts = dataSnapshot.getChildrenCount();
+                        String totalPostsString = String.valueOf(totalPosts);
                         for (DataSnapshot dsp : dataSnapshot.getChildren()) {
                             PostModel post = dsp.getValue(PostModel.class);
                             post.setPost_id(dsp.getKey());
                             fetchPostUserInfo(post, totalPosts);
                         }
+                        txtPosts.setText(totalPostsString+" POSTS");
                     } else {
                         prepareRecyclerView(true, false);
                     }
@@ -934,5 +938,13 @@ public class ProfileActivity extends AppCompatActivity  implements OnPostClickLi
     @Override
     public void showProfile(String id) {
 
+    }
+
+    @Override
+    public void onRefresh() {
+        // Refresh your activity by recreating it
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
 }

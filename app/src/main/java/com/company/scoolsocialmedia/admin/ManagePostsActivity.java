@@ -50,7 +50,7 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
     int totalPostsLoaded = 0;
 
     LinearLayout emptyMsgLayout;
-    CardView postSwitchBtn;
+//    CardView postSwitchBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,7 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
         toolbar = findViewById(R.id.toolbar);
         aviLoadingView = findViewById(R.id.avi);
         emptyMsgLayout = findViewById(R.id.empty_msg);
-        postSwitchBtn = findViewById(R.id.postSelectorLayout);
+//        postSwitchBtn = findViewById(R.id.postSelectorLayout);
 
         initRecyclerView();
         subscribeToPosts();
@@ -157,13 +157,13 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
                 if (mPosts.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
                     emptyMsgLayout.setVisibility(View.VISIBLE);
-                    postSwitchBtn.setVisibility(View.VISIBLE);
+//                    postSwitchBtn.setVisibility(View.VISIBLE);
                 } else {
                     PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                     mPosts.add(0, post);
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyMsgLayout.setVisibility(View.GONE);
-                    postSwitchBtn.setVisibility(View.VISIBLE);
+//                    postSwitchBtn.setVisibility(View.VISIBLE);
                     changeDisplayedItems();
                 }
                 mTempPosts.clear();
@@ -183,13 +183,13 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
                     if (mPosts.isEmpty()) {
                         recyclerView.setVisibility(View.GONE);
                         emptyMsgLayout.setVisibility(View.VISIBLE);
-                        postSwitchBtn.setVisibility(View.VISIBLE);
+//                        postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
                         PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);
-                        postSwitchBtn.setVisibility(View.VISIBLE);
+//                        postSwitchBtn.setVisibility(View.VISIBLE);
                         changeDisplayedItems();
                     }
                     hideProgressBar();
@@ -212,13 +212,13 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
                     if (mPosts.isEmpty()) {
                         recyclerView.setVisibility(View.GONE);
                         emptyMsgLayout.setVisibility(View.VISIBLE);
-                        postSwitchBtn.setVisibility(View.VISIBLE);
+//                        postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
                         PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);
-                        postSwitchBtn.setVisibility(View.VISIBLE);
+//                        postSwitchBtn.setVisibility(View.VISIBLE);
                         changeDisplayedItems();
                     }
                     mTempPosts.clear();
@@ -239,13 +239,13 @@ public class ManagePostsActivity extends AppCompatActivity implements OnPostClic
                     if (mPosts.isEmpty()) {
                         recyclerView.setVisibility(View.GONE);
                         emptyMsgLayout.setVisibility(View.VISIBLE);
-                        postSwitchBtn.setVisibility(View.VISIBLE);
+//                        postSwitchBtn.setVisibility(View.VISIBLE);
                     } else {
                         PostModel post = new PostModel(null, null, null, null, "NoMorePost", null, null, null, null, null, null, null,null,0);
                         mPosts.add(0,post);
                         recyclerView.setVisibility(View.VISIBLE);
                         emptyMsgLayout.setVisibility(View.GONE);
-                        postSwitchBtn.setVisibility(View.VISIBLE);
+//                        postSwitchBtn.setVisibility(View.VISIBLE);
                         changeDisplayedItems();
                     }
                     mTempPosts.clear();

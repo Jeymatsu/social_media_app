@@ -51,7 +51,7 @@ public class ManageUsersActivity extends AppCompatActivity {
 
         usersRef = FirebaseDatabase.getInstance().getReference().child("User_Information");
         userList = new ArrayList<>();
-        userAdapter = new UserAdapter(this,userList,false);
+        userAdapter = new UserAdapter(this,userList,false,false);
 
         // Set up RecyclerView
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));

@@ -42,13 +42,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     private List<BasicUser> userList;
     private List<BasicUser> selectedUsers;
     private boolean showCheckbox;
+    private boolean isSearchActivity;
     private Context context;
 
 
-    public UserAdapter(Context context,List<BasicUser> userList, boolean showCheckbox) {
+    public UserAdapter(Context context,List<BasicUser> userList, boolean showCheckbox,boolean isSearchActivity) {
         this.userList = userList;
         this.selectedUsers = new ArrayList<>();
         this.showCheckbox = showCheckbox;
+        this.isSearchActivity = isSearchActivity;
         this.context=context;
 
     }
@@ -66,7 +68,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         BasicUser user = userList.get(position);
-        holder.bind(user,showCheckbox);
+        holder.bind(user,showCheckbox,isSearchActivity);
     }
 
     @Override
@@ -245,13 +247,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
         }
 
-        public void bind(BasicUser user,boolean showCheckbox) {
+        public void bind(BasicUser user,boolean showCheckbox,boolean isSearchActivity) {
             userNameTextView.setText(user.getName());
             userNameTextView.setText(user.getName());
             if (showCheckbox) {
-                userCheckBox.setVisibility(View.VISIBLE);
-                rlDelete.setVisibility(View.GONE);
-                userCheckBox.setChecked(selectedUsers.contains(user));
+                if(isSearchActivity){
+                    userCheckBox.setVisibility(View.GONE);
+                    rlDelete.setVisibility(View.GONE);
+//                    userCheckBox.setChecked(selectedUsers.contains(user));
+                }else {
+                    userCheckBox.setVisibility(View.VISIBLE);
+                    rlDelete.setVisibility(View.GONE);
+                    userCheckBox.setChecked(selectedUsers.contains(user));
+                }
+
             } else {
                 userCheckBox.setVisibility(View.GONE);
                 rlDelete.setVisibility(View.VISIBLE);
