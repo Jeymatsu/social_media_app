@@ -1,5 +1,8 @@
 package com.company.scoolsocialmedia.adapters;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +23,8 @@ import com.company.scoolsocialmedia.activities.ImageDetailActivity;
 import com.company.scoolsocialmedia.activities.VideoPlayerActivity;
 import com.company.scoolsocialmedia.listeners.OnMsgLayoutLongClick;
 import com.company.scoolsocialmedia.model.ChatMessageModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,8 +39,10 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     List<ChatMessageModel> mMessages;
     OnMsgLayoutLongClick listener;
+    Context context;
 
-    public GroupMessageAdapter(List<ChatMessageModel> mMessages, OnMsgLayoutLongClick listener) {
+    public GroupMessageAdapter(Context context,List<ChatMessageModel> mMessages, OnMsgLayoutLongClick listener) {
+        this.context = context;
         this.mMessages = mMessages;
         this.listener = listener;
     }
@@ -119,7 +127,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ChatMessageModel message = mMessages.get(position);
         switch (holder.getItemViewType()) {
             case SENT_MESSAGE_TYPE:
-                handleSentMessage(holder, message);
+                handleSentMessage(holder, message,position);
                 break;
             case RECEIVED_MESSAGE_TYPE:
                 handleReceivedMessage(holder, message);
@@ -128,13 +136,13 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 handleWelcomeMessage(holder, message);
                 break;
             case SENT_IMAGE_MESSAGE_TYPE:
-                handleSentImageMessage(holder, message);
+                handleSentImageMessage(holder, message,position);
                 break;
             case RECEIVED_IMAGE_MESSAGE_TYPE:
                 handleReceivedImageMessage(holder, message);
                 break;
             case SENT_VIDEO_MESSAGE_TYPE:
-                handleSentVideoMessage(holder, message);
+                handleSentVideoMessage(holder, message,position);
                 break;
             case RECEIVED_VIDEO_MESSAGE_TYPE:
                 handleReceivedVideoMessage(holder, message);
@@ -153,12 +161,24 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ((WelcomeMessageViewHolder) holder).mainWelcomeMsg.setText(msg);
     }
 
-    private void handleSentMessage(ViewHolder holder, final ChatMessageModel message) {
+    private void handleSentMessage(ViewHolder holder, final ChatMessageModel message,int position) {
         ((SentMessageViewHolder) holder).mainSentMsg.setText(message.getMessage());
         ((SentMessageViewHolder) holder).mainLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 listener.showMsgInfo(message);
+                return false;
+            }
+        });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // Check if position is valid
+                if (position != RecyclerView.NO_POSITION) {
+                    // Show delete option or handle deletion here
+                    showDeleteDialog(position,v.getContext());
+                    return true; // indicates that the long click event is consumed
+                }
                 return false;
             }
         });
@@ -179,7 +199,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    private void handleSentImageMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
+    private void handleSentImageMessage(RecyclerView.ViewHolder holder, ChatMessageModel message,int position) {
         SentImageMessageViewHolder viewHolder = (SentImageMessageViewHolder) holder;
         // Load and display the sent image using Glide or any other image loading library
         Glide.with(holder.itemView.getContext())
@@ -194,7 +214,45 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 v.getContext().startActivity(intent);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // Check if position is valid
+                if (position != RecyclerView.NO_POSITION) {
+                    // Show delete option or handle deletion here
+                    showDeleteDialog(position,v.getContext());
+                    return true; // indicates that the long click event is consumed
+                }
+                return false;
+            }
+        });
+
     }
+    private void showDeleteDialog(final int position, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Delete Message");
+        builder.setMessage("Are you sure you want to delete this message?");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Handle message deletion here
+                Toast.makeText(context, "Message Deleted Successfully", Toast.LENGTH_SHORT).show();
+                mMessages.remove(position);
+                notifyItemRemoved(position);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+
+
+
 
     private void handleReceivedImageMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
         ReceivedImageMessageViewHolder viewHolder = (ReceivedImageMessageViewHolder) holder;
@@ -214,7 +272,7 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         });
     }
 
-    private void handleSentVideoMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
+    private void handleSentVideoMessage(RecyclerView.ViewHolder holder, ChatMessageModel message,int position) {
         SentVideoMessageViewHolder viewHolder = (SentVideoMessageViewHolder) holder;
         // Load and display the video thumbnail using Glide or any other image loading library
         Glide.with(holder.itemView.getContext())
@@ -234,7 +292,22 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 v.getContext().startActivity(intent);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // Check if position is valid
+                if (position != RecyclerView.NO_POSITION) {
+                    // Show delete option or handle deletion here
+                    showDeleteDialog(position,v.getContext());
+                    return true; // indicates that the long click event is consumed
+                }
+                return false;
+            }
+        });
+
     }
+
+
 
     private void handleReceivedVideoMessage(RecyclerView.ViewHolder holder, ChatMessageModel message) {
         ReceivedVideoMessageViewHolder viewHolder = (ReceivedVideoMessageViewHolder) holder;
@@ -278,13 +351,25 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         private TextView mainSentMsg;
         private RelativeLayout mainLayout;
+        private View itemView;
 
         public SentMessageViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
             mainSentMsg = itemView.findViewById(R.id.sent_msg_text_body_textview);
             mainLayout = itemView.findViewById(R.id.chatSentMsgMainLayout);
+            // Set long click listener
+
+
         }
+
+
     }
+
+
+
+
+
 
     public static class ReceivedMessageViewHolder extends ViewHolder {
 
@@ -303,9 +388,11 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private static class SentImageMessageViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
+        private View itemView;
 
         SentImageMessageViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
             imageView = itemView.findViewById(R.id.sent_image_view);
         }
     }
@@ -325,9 +412,11 @@ public class GroupMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private static class SentVideoMessageViewHolder extends RecyclerView.ViewHolder {
         ImageView sentVideoThumbnail;
+        private View itemView;
 
         SentVideoMessageViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
             sentVideoThumbnail = itemView.findViewById(R.id.sent_video_thumbnail);
             // Add any additional initialization or click listeners here
         }

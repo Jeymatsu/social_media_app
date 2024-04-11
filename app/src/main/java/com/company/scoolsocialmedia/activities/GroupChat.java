@@ -130,7 +130,7 @@ public class GroupChat extends AppCompatActivity {
 
         // Set up RecyclerView adapter
         List<ChatMessageModel> messagesList = new ArrayList<>();
-        messageAdapter = new GroupMessageAdapter(messagesList, new OnMsgLayoutLongClick() {
+        messageAdapter = new GroupMessageAdapter(this,messagesList, new OnMsgLayoutLongClick() {
             @Override
             public void showMsgInfo(ChatMessageModel message) {
                 // Handle long click on message
