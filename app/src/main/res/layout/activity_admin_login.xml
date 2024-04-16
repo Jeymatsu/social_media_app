@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edt_input"
                 android:fontFamily="@font/open_sans_light"
-                android:hint="ID"
+                android:hint="Username"
                 android:inputType="textEmailAddress"
                 android:lines="1"
                 android:maxLines="1"

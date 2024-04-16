@@ -455,10 +455,8 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 }
             });
 
-
         }else {
             ((PostsWithImageViewHolder) holder).btnDelete.setVisibility(View.GONE);
-
 
         }
         ((PostsWithImageViewHolder) holder).postImageItemImageInfo.setText(post.getPost_image_info());
@@ -726,6 +724,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
+
         Glide.with(holder.itemView.getContext())
                 .load(post.getPost_video()) // Assuming getPost_video_thumbnail() returns the URL of the video thumbnail
                 .placeholder(R.drawable.baseline_play_circle_outline_24) // Placeholder thumbnail until the actual thumbnail loads
@@ -742,9 +741,9 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
-
-
-
+        if (post.getPost_user_posted_image() != null) {
+            Glide.with(((PostsWithVideoViewHolder) holder).itemView.getContext()).load(post.getPost_user_posted_image()).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(R.drawable.main_user_profile_avatar).into(((PostsWithVideoViewHolder) holder).postImageItemUserImg);
+        }
 
         ((PostsWithVideoViewHolder) holder).like_icon.setOnClickListener(new View.OnClickListener() {
             @Override

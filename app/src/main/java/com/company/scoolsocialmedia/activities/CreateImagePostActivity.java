@@ -121,10 +121,9 @@ public class CreateImagePostActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-
 
 
         createTextPostContent=findViewById(R.id.createTextPostContent);
@@ -141,7 +140,9 @@ public class CreateImagePostActivity extends AppCompatActivity {
 
         postImgInfo = findViewById(R.id.createImgPostInfo);
         mainImage = findViewById(R.id.createImgPostMainImage);
+
         removeMainImgBtn = findViewById(R.id.mainImgRemoveBtn);
+
         uploadImgLayout = findViewById(R.id.uploadImgLayout);
 
 
@@ -151,6 +152,8 @@ public class CreateImagePostActivity extends AppCompatActivity {
                 removeMainImage();
             }
         });
+
+        removeMainImage();
 
         uploadImgLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -936,5 +939,12 @@ public class CreateImagePostActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+        return true;
     }
 }
