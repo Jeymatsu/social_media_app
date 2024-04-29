@@ -1,6 +1,7 @@
 package com.company.scoolsocialmedia.activities;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -424,5 +425,10 @@ public class ChatActivity extends AppCompatActivity implements OnMsgLayoutLongCl
             return postDate;
         }
     }
-
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+        return true;
+    }
 }

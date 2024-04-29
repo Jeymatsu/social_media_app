@@ -729,6 +729,13 @@ public class PostDetailActivity extends AppCompatActivity implements PopupMenu.O
                 return false;
         }
     }
+
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+        return true;
+    }
 }
 
 

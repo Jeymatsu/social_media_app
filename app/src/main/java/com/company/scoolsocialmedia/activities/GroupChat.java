@@ -746,4 +746,11 @@ public class GroupChat extends AppCompatActivity {
         });
     }
 
+    public boolean onSupportNavigateUp() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+        finish();
+        return true;
+    }
+
 }
