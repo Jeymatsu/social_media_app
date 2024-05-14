@@ -100,8 +100,12 @@ public class signupActivity extends AppCompatActivity {
                 &&!academicNumber.equals("421205658" )
                 &&!academicNumber.equals("421204722" )
                 &&!academicNumber.equals("421204370" )
-                &&!academicNumber.equals("421204660" )) {
-
+                &&!academicNumber.equals("421204660" )
+                &&!academicNumber.equals("421201288" )
+                &&!academicNumber.equals("441203914" )
+                &&!academicNumber.equals("431206743" )
+                &&!academicNumber.equals("441203831" )
+                &&!academicNumber.equals("421207792" )) {
             Toast.makeText(this, "Invalid academic number", Toast.LENGTH_SHORT).show();
 
         } else if (email.length()==0) {
