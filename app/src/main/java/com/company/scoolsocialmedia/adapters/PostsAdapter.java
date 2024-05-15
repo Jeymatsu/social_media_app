@@ -963,7 +963,7 @@ public class PostsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     Integer updatedLikes = dataSnapshot.getValue(Integer.class);
                     // Update your UI with the new like count
                     // For example:
-                    ((PostsWithNoImageViewHolder) holder).txtNumberLikes.setText(String.valueOf(updatedLikes)+ " Likes");                }
+                    ((PostsWithVideoViewHolder) holder).txtNumberLikes.setText(String.valueOf(updatedLikes)+ " Likes");                }
             }
 
             @Override
